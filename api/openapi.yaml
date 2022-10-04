@@ -1,0 +1,1931 @@
+openapi: 3.0.0
+info:
+  contact:
+    email: metafabproject@gmail.com
+    name: MetaFab Team
+    url: https://trymetafab.com
+  description: " Complete MetaFab API references and guides can be found at: https://trymetafab.com"
+  termsOfService: https://trymetafab.com
+  title: MetaFab API
+  version: 1.0.0
+servers:
+- description: MetaFab API Server
+  url: https://api.trymetafab.com
+tags:
+- description: Contract related operations
+  name: Contracts
+- description: Currency related operations
+  name: Currencies
+- description: Game related operations
+  name: Games
+- description: Transaction related operations
+  name: Transactions
+- description: Player related operations
+  name: Players
+- description: Wallet related operations
+  name: Wallets
+paths:
+  /v1/contracts:
+    get:
+      description: Returns an array of active contracts deployed by the game associated
+        with the provided `X-Game-Key`.
+      operationId: getContracts
+      parameters:
+      - description: "The `publishedKey` of a specific game. This can be shared or\
+          \ included in game clients, websites, etc."
+        example: game_pk_4SOqpDi8pQdnQgfCOBW29qR8YmwOhxVPz5iHoMgUEJLDdPXgwLuHqZf8ewo2GajZ
+        explode: false
+        in: header
+        name: X-Game-Key
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/ContractModel'
+                type: array
+          description: Successfully retrieved an array of contracts for the game associated
+            with the provided `X-Game-Key`.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+      summary: Get contracts
+      tags:
+      - Contracts
+      x-accepts: application/json
+    post:
+      description: Create a MetaFab custom contract entry from an existing contract
+        address and contract abi. This allows the game and players belonging to the
+        authenticated game to interact with the contract's read and write functions
+        through MetaFab's read and write contract endpoints.
+      operationId: createContract
+      parameters:
+      - description: The `secretKey` of the authenticating game.
+        example: game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createContract_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractModel'
+          description: Successfully created a MetaFab contract entry. Returns a contract
+            object.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Create custom contract
+      tags:
+      - Contracts
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/contracts/{contractId}/reads:
+    get:
+      description: "Oftentimes you'll want to query and retrieve some data from a\
+        \ contract. This is incredibly easy to do for any contract deployed through\
+        \ MetaFab.\n\nUsing this endpoint, you can get the data returned by any readable\
+        \ function listed in a contracts ABI. This could be things like querying the\
+        \ totalSupply of a currency contract, the number of owners of an items contract,\
+        \ and more."
+      operationId: readContract
+      parameters:
+      - description: Any contract id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: contractId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: "A contract function name. This can be any valid function from\
+          \ the the ABI of the contract you are interacting with. For example, `balanceOf`."
+        explode: true
+        in: query
+        name: func
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: "A comma seperated list of basic data type arguments. This is\
+          \ optional and only necessary if the function being invoked requires arguments\
+          \ per the contract ABI. For example, `123,\"Hello\",false`."
+        example: "123,\"Hello\",false"
+        explode: true
+        in: query
+        name: args
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnyValue'
+          description: Successfully retrieved value returned by contract function.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+      summary: Read contract data
+      tags:
+      - Contracts
+      x-accepts: application/json
+  /v1/contracts/{contractId}/writes:
+    post:
+      description: "MetaFab's convenience endpoints for contract interactions may\
+        \ not be flexible enough depending on your use case. For these situations,\
+        \ you can interact with contracts and create transactions directly.\n\nUsing\
+        \ this endpoint, you can execute a transaction for any writeable contract\
+        \ method as defined in the contract's ABI for the MetaFab contractId provided.\
+        \ Both Games and Player resources have authority to use this endpoint to execute\
+        \ transactions against any valid MetaFab contractId.\n\nAdditionally, MetaFab\
+        \ will automatically attempt to perform a gasless transaction for players\
+        \ interacting with a contract through this endpoint. Gasless transactions\
+        \ by players through this endpoint will only work if the target contract was\
+        \ deployed through MetaFab or supports MetaFab's ERC2771 trusted forwarder\
+        \ contract."
+      operationId: writeContract
+      parameters:
+      - description: Any contract id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: contractId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The `secretKey` of a specific game or the `accessToken` of a
+          specific player.
+        example:
+        - game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        - player_at_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The password of the authenticating game or player. Required to
+          decrypt and perform blockchain transactions with the game or player primary
+          wallet.
+        example: mySecurePassword
+        explode: false
+        in: header
+        name: X-Password
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/writeContract_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionModel'
+          description: Successfully executed and confirmed the transaction. Returns
+            a transaction object.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Write contract data
+      tags:
+      - Contracts
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/currencies:
+    get:
+      description: Returns an array of active currencies for the game associated with
+        the provided `X-Game-Key`.
+      operationId: getCurrencies
+      parameters:
+      - description: "The `publishedKey` of a specific game. This can be shared or\
+          \ included in game clients, websites, etc."
+        example: game_pk_4SOqpDi8pQdnQgfCOBW29qR8YmwOhxVPz5iHoMgUEJLDdPXgwLuHqZf8ewo2GajZ
+        explode: false
+        in: header
+        name: X-Game-Key
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/getCurrencies_200_response_inner'
+                type: array
+          description: Successfully retrieved an array of currencies for the game
+            associated with the provided `X-Game-Key`
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+      summary: Get currencies
+      tags:
+      - Currencies
+      x-accepts: application/json
+    post:
+      description: "Creates a new game currency and deploys an ERC20 token contract\
+        \ on behalf of the authenticating game's primary wallet. The deployed ERC20\
+        \ contract is preconfigured to fully support bridging across blockchains,\
+        \ batched transfers and gasless transactions on any supported blockchain as\
+        \ well as full support for gasless transactions from player managed wallets."
+      operationId: createCurrency
+      parameters:
+      - description: The `secretKey` of the authenticating game.
+        example: game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The password of the authenticating game. Required to decrypt
+          and perform blockchain transactions with the game primary wallet.
+        example: mySecurePassword
+        explode: false
+        in: header
+        name: X-Password
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createCurrency_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createCurrency_200_response'
+          description: Successfully created a new currency and deployed its associated
+            ERC20 token contract on the chain specified. Returns a currency object
+            containing a contract property with the deployment transaction.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Create currency
+      tags:
+      - Currencies
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/currencies/{currencyId}/balances:
+    get:
+      description: Returns the current currency balance of the provided wallet address
+        or or the wallet address associated with the provided walletId.
+      operationId: getCurrencyBalances
+      parameters:
+      - description: Any currency id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: currencyId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: "A valid EVM based address. For example, `0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D`."
+        example: 0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D
+        explode: true
+        in: query
+        name: address
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Any wallet id within the MetaFab ecosystem.
+        explode: true
+        in: query
+        name: walletId
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: number
+          description: Successfully retrieved currency balance for the provided address
+            or walletId. Balance is returned as a string to handle uint256 numbers.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+      summary: Get currency balance
+      tags:
+      - Currencies
+      x-accepts: application/json
+  /v1/currencies/{currencyId}/batchTransfers:
+    post:
+      description: "Transfers multiple amounts of currency to multiple provided wallet\
+        \ addresses or wallet addresses associated with the provided walletIds. You\
+        \ may also provide a combination of addresses and walletIds in one request,\
+        \ the proper receipients will be automatically determined, with `addresses`\
+        \ getting `amounts` order priority first.\nOptional references may be included\
+        \ for the transfer. References are useful for identifying transfers intended\
+        \ to pay for items, trades, services and more."
+      operationId: batchTransferCurrency
+      parameters:
+      - description: Any currency id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: currencyId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The `secretKey` of a specific game or the `accessToken` of a
+          specific player.
+        example:
+        - game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        - player_at_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The password of the authenticating game or player. Required to
+          decrypt and perform blockchain transactions with the game or player primary
+          wallet.
+        example: mySecurePassword
+        explode: false
+        in: header
+        name: X-Password
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/batchTransferCurrency_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionModel'
+          description: Successfully transferred the currency amounts to the provided
+            wallet addresses and/or wallet addresses of the provided walletIds. Returns
+            a transaction object.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Batch transfer currency
+      tags:
+      - Currencies
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/currencies/{currencyId}/burns:
+    post:
+      description: Removes (burns) the provided amount of currency from the authenticating
+        game or players wallet. The currency amount is permanently removed from the
+        circulating supply of the currency.
+      operationId: burnCurrency
+      parameters:
+      - description: Any currency id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: currencyId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The `secretKey` of a specific game or the `accessToken` of a
+          specific player.
+        example:
+        - game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        - player_at_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The password of the authenticating game or player. Required to
+          decrypt and perform blockchain transactions with the game or player primary
+          wallet.
+        example: mySecurePassword
+        explode: false
+        in: header
+        name: X-Password
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/burnCurrency_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionModel'
+          description: Successfully removed (burned) the currency amount from the
+            authenticating game or player's wallet. Returns a transaction object.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Burn currency
+      tags:
+      - Currencies
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/currencies/{currencyId}/fees:
+    get:
+      description: Returns the current fee recipient address and fees of the currency
+        for the provided currencyId. Fees are only applicable for gasless transactions
+        performed by default by players.
+      operationId: getCurrencyFees
+      parameters:
+      - description: Any currency id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: currencyId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getCurrencyFees_200_response'
+          description: Successfully retrieved currency fees for the currency of the
+            provided currencyId.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+      summary: Get currency fees
+      tags:
+      - Currencies
+      x-accepts: application/json
+    post:
+      description: "Sets the recipient address, basis points, fixed amount and cap\
+        \ amount for a currency's fees."
+      operationId: setCurrencyFees
+      parameters:
+      - description: Any currency id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: currencyId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The `secretKey` of the authenticating game.
+        example: game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The password of the authenticating game. Required to decrypt
+          and perform blockchain transactions with the game primary wallet.
+        example: mySecurePassword
+        explode: false
+        in: header
+        name: X-Password
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/setCurrencyFees_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionModel'
+          description: Successfuly set the currency's fees. Returns a transaction
+            object.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Set currency fees
+      tags:
+      - Currencies
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/currencies/{currencyId}/mints:
+    post:
+      description: Creates (mints) the provided amount of currency  to the provided
+        wallet address or wallet address associated with the provided walletId.
+      operationId: mintCurrency
+      parameters:
+      - description: Any currency id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: currencyId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The `secretKey` of the authenticating game.
+        example: game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The password of the authenticating game. Required to decrypt
+          and perform blockchain transactions with the game primary wallet.
+        example: mySecurePassword
+        explode: false
+        in: header
+        name: X-Password
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/mintCurrency_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionModel'
+          description: Successfully created (minted) the currency amount to the provided
+            wallet address or wallet address of the provided walletId. Returns a transaction
+            object.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Mint currency
+      tags:
+      - Currencies
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/currencies/{currencyId}/transfers:
+    post:
+      description: "Transfers an amount of currency to the provided wallet address\
+        \ or wallet address associated with the provided walletId. If you want to\
+        \ transfer to multiple wallets with different amounts and optional references\
+        \ in one API request, please see the Batch transfer currency documentation.\n\
+        \nAn optional reference may be included for the transfer. References are useful\
+        \ for identifying transfers intended to pay for items, trades, services and\
+        \ more."
+      operationId: transferCurrency
+      parameters:
+      - description: Any currency id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: currencyId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The `secretKey` of a specific game or the `accessToken` of a
+          specific player.
+        example:
+        - game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        - player_at_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The password of the authenticating game or player. Required to
+          decrypt and perform blockchain transactions with the game or player primary
+          wallet.
+        example: mySecurePassword
+        explode: false
+        in: header
+        name: X-Password
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/transferCurrency_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionModel'
+          description: Successfully transferred the currency amount to the provided
+            wallet address or wallet address of the provided wallet Id. Returns a
+            transaction object.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Transfer currency
+      tags:
+      - Currencies
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/games:
+    get:
+      description: Returns an existing game object containing authorization keys and
+        credentials when provided a valid email (in place of username) and password
+        login using Basic Auth.
+      operationId: authGame
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/authGame_200_response'
+          description: Succesfully authorized the request and retrieved a game object
+            containing authorization keys and credentials.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      security:
+      - basicAuth: []
+      summary: Authenticate game
+      tags:
+      - Games
+      x-accepts: application/json
+    post:
+      description: "Create a new game. A game is the root entity required for all\
+        \ API interactions. Contracts, currencies, items and more are deployed by\
+        \ games, player accounts are created and registered to games, etc.\n\nTo use\
+        \ any of MetaFab's services, you must first create a game through this endpoint.\n\
+        \n**Game creation is limited during our closed beta. Please contact ArkDev#4501\
+        \ on Discord to be a part of our beta.**"
+      operationId: createGame
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createGame_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/authGame_200_response'
+          description: "Successfully created a new game. Returns a game object containing\
+            \ a wallet and fundingWallet property, respectively representing the games\
+            \ primary wallet address (used to deploy & interact with contract) and\
+            \ funding wallet address (used to cover gasless transaction fees)."
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Create game
+      tags:
+      - Games
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/games/{gameId}:
+    patch:
+      description: "Update various fields specific to a game. Such as changing its\
+        \ password, resetting its published or secret key, or updating its RPCs."
+      operationId: updateGame
+      parameters:
+      - description: Any game id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: gameId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The `secretKey` of the authenticating game.
+        example: game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateGame_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameModel'
+          description: Returns the updated game object.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Update game
+      tags:
+      - Games
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/players:
+    get:
+      description: "Returns an existing player object containing access token, wallet,\
+        \ and other details for a game when provided a valid username and password\
+        \ login using Basic Auth."
+      operationId: authPlayer
+      parameters:
+      - description: "The `publishedKey` of a specific game. This can be shared or\
+          \ included in game clients, websites, etc."
+        example: game_pk_4SOqpDi8pQdnQgfCOBW29qR8YmwOhxVPz5iHoMgUEJLDdPXgwLuHqZf8ewo2GajZ
+        explode: false
+        in: header
+        name: X-Game-Key
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/authPlayer_200_response'
+          description: "Succesfully authorized the request and retrieved a player\
+            \ object containing access token, wallet, and other details."
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      security:
+      - basicAuth: []
+      summary: Authenticate player
+      tags:
+      - Players
+      x-accepts: application/json
+    post:
+      description: "Create a new player for a game. Players are automatically associated\
+        \ with an internally managed wallet.\n\nPlayer access tokens can be used to\
+        \ directly interact with any MetaFab managed contracts, currencies, items\
+        \ collections, marketplaces and more. Player interactions are also gasless\
+        \ by default, completely removing all crypto friction for players to engage\
+        \ with your MetaFab supported games."
+      operationId: createPlayer
+      parameters:
+      - description: "The `publishedKey` of a specific game. This can be shared or\
+          \ included in game clients, websites, etc."
+        example: game_pk_4SOqpDi8pQdnQgfCOBW29qR8YmwOhxVPz5iHoMgUEJLDdPXgwLuHqZf8ewo2GajZ
+        explode: false
+        in: header
+        name: X-Game-Key
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createPlayer_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/authPlayer_200_response'
+          description: "Successfully created a new player. Returns a player object\
+            \ containing a wallet (used to interact with contracts, currencies, etc)."
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Create player
+      tags:
+      - Players
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/players/{playerId}:
+    patch:
+      description: Update various fields specific to a player. Such as changing its
+        password and resetting its access token.
+      operationId: updatePlayer
+      parameters:
+      - description: Any player id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: playerId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The `accessToken` of the authenticating player.
+        example: player_at_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updatePlayer_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlayerModel'
+          description: Returns the updated player object.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Update player
+      tags:
+      - Players
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/transactions/{transactionId}:
+    get:
+      description: "Returns an executed transaction object for the provided transactionId.\
+        \ Transactions are created by MetaFab when interacting with contracts, currencies,\
+        \ items and other MetaFab resources."
+      operationId: getTransaction
+      parameters:
+      - description: Any transaction id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: transactionId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionModel'
+          description: Successfully retrieved a transaction object for the provided
+            transactionId.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+      summary: Get transaction
+      tags:
+      - Transactions
+      x-accepts: application/json
+  /v1/wallets/{walletId}/balances:
+    get:
+      description: "Returns the current native token balance for all chains supported\
+        \ by MetaFab for the provided walletId. This includes balances like Eth, Matic\
+        \ and other native tokens from chains MetaFab supports."
+      operationId: getWalletBalances
+      parameters:
+      - description: Any wallet id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: walletId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                additionalProperties:
+                  type: number
+                type: object
+          description: Successfully retrieved native token balances of the provided
+            walletId's address for each chain supported by MetaFab.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+      summary: Get wallet balances
+      tags:
+      - Wallets
+      x-accepts: application/json
+  /v1/wallets/{walletId}/transactions:
+    get:
+      description: Returns an array of MetaFab initiated transactions performed by
+        the provided walletId. Transactions returned are ordered chronologically from
+        newest to oldest.
+      operationId: getWalletTransactions
+      parameters:
+      - description: Any wallet id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: walletId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/TransactionModel'
+                type: array
+          description: Successfully retrieved an array of transactions performed by
+            the provided walletId.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+      summary: Get wallet transactions
+      tags:
+      - Wallets
+      x-accepts: application/json
+components:
+  parameters:
+    headerGameKey:
+      description: "The `publishedKey` of a specific game. This can be shared or included\
+        \ in game clients, websites, etc."
+      example: game_pk_4SOqpDi8pQdnQgfCOBW29qR8YmwOhxVPz5iHoMgUEJLDdPXgwLuHqZf8ewo2GajZ
+      explode: false
+      in: header
+      name: X-Game-Key
+      required: true
+      schema:
+        type: string
+      style: simple
+    headerAuthorizationGame:
+      description: The `secretKey` of the authenticating game.
+      example: game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+      explode: false
+      in: header
+      name: X-Authorization
+      required: true
+      schema:
+        type: string
+      style: simple
+    headerAuthorizationPlayer:
+      description: The `accessToken` of the authenticating player.
+      example: player_at_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+      explode: false
+      in: header
+      name: X-Authorization
+      required: true
+      schema:
+        type: string
+      style: simple
+    headerAuthorizationGameOrPlayer:
+      description: The `secretKey` of a specific game or the `accessToken` of a specific
+        player.
+      example:
+      - game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+      - player_at_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+      explode: false
+      in: header
+      name: X-Authorization
+      required: true
+      schema:
+        type: string
+      style: simple
+    headerPasswordGame:
+      description: The password of the authenticating game. Required to decrypt and
+        perform blockchain transactions with the game primary wallet.
+      example: mySecurePassword
+      explode: false
+      in: header
+      name: X-Password
+      required: true
+      schema:
+        type: string
+      style: simple
+    headerPasswordPlayer:
+      description: The password of the authenticating player. Required to decrypt
+        and perform blockchain transactions with the player primary wallet.
+      example: mySecurePassword
+      explode: false
+      in: header
+      name: X-Password
+      required: true
+      schema:
+        type: string
+      style: simple
+    headerPasswordGameOrPlayer:
+      description: The password of the authenticating game or player. Required to
+        decrypt and perform blockchain transactions with the game or player primary
+        wallet.
+      example: mySecurePassword
+      explode: false
+      in: header
+      name: X-Password
+      required: true
+      schema:
+        type: string
+      style: simple
+    pathContractId:
+      description: Any contract id within the MetaFab ecosystem.
+      explode: false
+      in: path
+      name: contractId
+      required: true
+      schema:
+        type: string
+      style: simple
+    pathCurrencyId:
+      description: Any currency id within the MetaFab ecosystem.
+      explode: false
+      in: path
+      name: currencyId
+      required: true
+      schema:
+        type: string
+      style: simple
+    pathGameId:
+      description: Any game id within the MetaFab ecosystem.
+      explode: false
+      in: path
+      name: gameId
+      required: true
+      schema:
+        type: string
+      style: simple
+    pathTransactionId:
+      description: Any transaction id within the MetaFab ecosystem.
+      explode: false
+      in: path
+      name: transactionId
+      required: true
+      schema:
+        type: string
+      style: simple
+    pathPlayerId:
+      description: Any player id within the MetaFab ecosystem.
+      explode: false
+      in: path
+      name: playerId
+      required: true
+      schema:
+        type: string
+      style: simple
+    pathWalletId:
+      description: Any wallet id within the MetaFab ecosystem.
+      explode: false
+      in: path
+      name: walletId
+      required: true
+      schema:
+        type: string
+      style: simple
+    queryAddress:
+      description: "A valid EVM based address. For example, `0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D`."
+      example: 0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D
+      explode: true
+      in: query
+      name: address
+      required: false
+      schema:
+        type: string
+      style: form
+    queryArgs:
+      description: "A comma seperated list of basic data type arguments. This is optional\
+        \ and only necessary if the function being invoked requires arguments per\
+        \ the contract ABI. For example, `123,\"Hello\",false`."
+      example: "123,\"Hello\",false"
+      explode: true
+      in: query
+      name: args
+      required: false
+      schema:
+        type: string
+      style: form
+    queryFunc:
+      description: "A contract function name. This can be any valid function from\
+        \ the the ABI of the contract you are interacting with. For example, `balanceOf`."
+      explode: true
+      in: query
+      name: func
+      required: true
+      schema:
+        type: string
+      style: form
+    queryWalletId:
+      description: Any wallet id within the MetaFab ecosystem.
+      explode: true
+      in: query
+      name: walletId
+      required: false
+      schema:
+        type: string
+      style: form
+  responses:
+    "400":
+      content:
+        application/json:
+          schema:
+            type: string
+      description: An API level error occurred. This is often due to problematic data
+        being provided by you.
+    "401":
+      content:
+        application/json:
+          schema:
+            type: string
+      description: "An authorization error occured. This is often due to incorrect\
+        \ tokens or keys being provided, or accessing a resource that the provided\
+        \ tokens or keys do not have access to."
+  schemas:
+    GameModel:
+      example:
+        walletId: walletId
+        createdAt: createdAt
+        secretKey: secretKey
+        name: name
+        publishedKey: publishedKey
+        id: id
+        rpcs: "{}"
+        fundingWalletId: fundingWalletId
+        email: email
+        updatedAt: updatedAt
+      properties:
+        id:
+          description: This field has not had a description added.
+          type: string
+        walletId:
+          description: This field has not had a description added.
+          type: string
+        fundingWalletId:
+          description: This field has not had a description added.
+          type: string
+        email:
+          description: This field has not had a description added.
+          type: string
+        name:
+          description: This field has not had a description added.
+          type: string
+        rpcs:
+          description: This field has not had a description added.
+          type: object
+        publishedKey:
+          description: This field has not had a description added.
+          type: string
+        secretKey:
+          description: This field has not had a description added.
+          type: string
+        updatedAt:
+          description: This field has not had a description added.
+          type: string
+        createdAt:
+          description: This field has not had a description added.
+          type: string
+      type: object
+    PlayerModel:
+      example:
+        gameId: gameId
+        walletId: walletId
+        createdAt: createdAt
+        id: id
+        accessToken: accessToken
+        username: username
+        updatedAt: updatedAt
+      properties:
+        id:
+          description: This field has not had a description added.
+          type: string
+        gameId:
+          description: This field has not had a description added.
+          type: string
+        walletId:
+          description: This field has not had a description added.
+          type: string
+        username:
+          description: This field has not had a description added.
+          type: string
+        accessToken:
+          description: This field has not had a description added.
+          type: string
+        updatedAt:
+          description: This field has not had a description added.
+          type: string
+        createdAt:
+          description: This field has not had a description added.
+          type: string
+      type: object
+    WalletModel:
+      properties:
+        id:
+          description: This field has not had a description added.
+          type: string
+        address:
+          description: This field has not had a description added.
+          type: string
+      type: object
+    CurrencyModel:
+      properties:
+        id:
+          description: This field has not had a description added.
+          type: string
+        gameId:
+          description: This field has not had a description added.
+          type: string
+        contractId:
+          description: This field has not had a description added.
+          type: string
+        name:
+          description: This field has not had a description added.
+          type: string
+        symbol:
+          description: This field has not had a description added.
+          type: string
+        supplyCap:
+          description: This field has not had a description added.
+          type: integer
+        updatedAt:
+          description: This field has not had a description added.
+          type: string
+        createdAt:
+          description: This field has not had a description added.
+          type: string
+      type: object
+    ContractModel:
+      example:
+        gameId: gameId
+        createdAt: createdAt
+        chain: chain
+        address: address
+        abi: "{}"
+        id: id
+        type: type
+        updatedAt: updatedAt
+      properties:
+        id:
+          description: This field has not had a description added.
+          type: string
+        gameId:
+          description: This field has not had a description added.
+          type: string
+        chain:
+          description: This field has not had a description added.
+          type: string
+        abi:
+          description: This field has not had a description added.
+          type: object
+        type:
+          description: This field has not had a description added.
+          type: string
+        address:
+          description: This field has not had a description added.
+          type: string
+        updatedAt:
+          description: This field has not had a description added.
+          type: string
+        createdAt:
+          description: This field has not had a description added.
+          type: string
+      type: object
+    TransactionModel:
+      example:
+        args: "{}"
+        walletId: walletId
+        createdAt: createdAt
+        function: function
+        contractId: contractId
+        id: id
+        hash: hash
+        updatedAt: updatedAt
+      properties:
+        id:
+          description: This field has not had a description added.
+          type: string
+        contractId:
+          description: This field has not had a description added.
+          type: string
+        walletId:
+          description: This field has not had a description added.
+          type: string
+        function:
+          description: This field has not had a description added.
+          type: string
+        args:
+          description: This field has not had a description added.
+          type: object
+        hash:
+          description: This field has not had a description added.
+          type: string
+        updatedAt:
+          description: This field has not had a description added.
+          type: string
+        createdAt:
+          description: This field has not had a description added.
+          type: string
+      type: object
+    AnyValue:
+      description: "Can be anything. String, number, object, array, boolean, etc."
+    createContract_request:
+      properties:
+        address:
+          description: The address of the existing contract.
+          type: string
+        abi:
+          description: JSON of the abi.
+          type: string
+        chain:
+          description: The blockchain you want to deploy this currency on. Support
+            for new blockchains are added over time.
+          enum:
+          - ETHEREUM
+          - GOERLI
+          - MATIC
+          - MUMBAI
+          example: MATIC
+          type: string
+      required:
+      - abi
+      - address
+      - chain
+      type: object
+    writeContract_request:
+      properties:
+        func:
+          description: "A contract function name. This can be any valid function from\
+            \ the the ABI of the contract you are interacting with. For example, `mint`."
+          type: string
+        args:
+          description: "An array of args. This is optional and only necessary if the\
+            \ function being invoked requires arguments per the contract ABI. For\
+            \ example, `[123, \"Hello\", false]`."
+          type: string
+      required:
+      - func
+      type: object
+    getCurrencies_200_response_inner_allOf:
+      properties:
+        contract:
+          $ref: '#/components/schemas/ContractModel'
+      type: object
+    getCurrencies_200_response_inner:
+      allOf:
+      - $ref: '#/components/schemas/CurrencyModel'
+      - $ref: '#/components/schemas/getCurrencies_200_response_inner_allOf'
+    createCurrency_request:
+      properties:
+        name:
+          description: "The name of this currency. This can be anything, such as `Bright\
+            \ Gems`, `Gold`, etc."
+          example: Bright Gems
+          type: string
+        symbol:
+          description: "The shorthand symbol to represent this currency. This can\
+            \ be anything, such as `BGEM`, `GLD`, etc."
+          example: BGEM
+          type: string
+        supplyCap:
+          description: The maximum amount of this currency that can ever exist. Use
+            `0` if you do not want this currency to have a maximum supply.
+          example: 15000.5
+          type: number
+        chain:
+          description: The blockchain you want to deploy this currency on. Support
+            for new blockchains are added over time.
+          enum:
+          - ETHEREUM
+          - GOERLI
+          - MATIC
+          - MUMBAI
+          example: MATIC
+          type: string
+      required:
+      - chain
+      - name
+      - supplyCap
+      - symbol
+      type: object
+    createCurrency_200_response_allOf_contract_allOf:
+      properties:
+        transactions:
+          items:
+            $ref: '#/components/schemas/TransactionModel'
+          type: array
+      type: object
+    createCurrency_200_response_allOf_contract:
+      allOf:
+      - $ref: '#/components/schemas/ContractModel'
+      - $ref: '#/components/schemas/createCurrency_200_response_allOf_contract_allOf'
+    createCurrency_200_response_allOf:
+      properties:
+        contract:
+          $ref: '#/components/schemas/createCurrency_200_response_allOf_contract'
+      type: object
+    createCurrency_200_response:
+      allOf:
+      - $ref: '#/components/schemas/CurrencyModel'
+      - $ref: '#/components/schemas/createCurrency_200_response_allOf'
+    batchTransferCurrency_request:
+      properties:
+        addresses:
+          description: An array of valid EVM based addresses to transfer currency
+            to.
+          items:
+            type: string
+          type: array
+        walletIds:
+          description: An array of wallet ids within the MetaFab ecosystem to transfer
+            currency to.
+          items:
+            type: string
+          type: array
+        amounts:
+          description: "An array of currency amounts to transfer. Ordering corresponds\
+            \ to the ordering of provided `addresses` and/or `walletIds`. If both\
+            \ `addresses` and `walletIds` are provided, `addresses` are first in the\
+            \ order."
+          items:
+            example: 10
+            type: number
+          type: array
+        references:
+          description: "An optional array of uint256 numbers to reference each transfer\
+            \ in the batch. Ordering corresponds to the ordering of provided `addresses`\
+            \ or `walletIds`. If both `addresses` and `walletIds` are provided, `addresses`\
+            \ are first in the order."
+          items:
+            type: number
+          type: array
+      required:
+      - amounts
+      type: object
+    burnCurrency_request:
+      properties:
+        amount:
+          description: The amount of currency to remove (burn). The currency balance
+            of the authenticating game or player's wallet must be equal to or greater
+            than this amount.
+          example: 133.7
+          type: number
+      required:
+      - amount
+      type: object
+    getCurrencyFees_200_response:
+      example:
+        basisPoints: 0.8008281904610115
+        capAmount: 1.4658129805029452
+        fixedAmount: 6.027456183070403
+        recipientAddress: recipientAddress
+      properties:
+        recipientAddress:
+          description: The wallet address that fees from all applicable transactions
+            are automatically sent to.
+          type: string
+        basisPoints:
+          description: The number of fee basis points. 100 basisPoints = 1% fee of
+            the total transaction amount deducted from the total received by the recipient.
+          type: number
+        fixedAmount:
+          description: "The fixed number of currency as a fee regardless of the total\
+            \ transaction amount. 10 = 10 of the currency as a fee for any transaction,\
+            \ deducted from the total received by the recipient."
+          type: number
+        capAmount:
+          description: "The maximum combined fee between basisPoints and fixedAmount.\
+            \ If the total transaction fee is over this amount, the capAmount will\
+            \ be used as the transaction fee deducted from the total received by the\
+            \ recipient."
+          type: number
+      type: object
+    setCurrencyFees_request:
+      properties:
+        recipientAddress:
+          description: The recipient address of currency transaction fees.
+          type: string
+        basisPoints:
+          description: "A percentage fee for every transaction represented in basis\
+            \ points. To set a 1.5% fee, you would use a value of 150. This value\
+            \ can be 0, denoting no percentage fees."
+          type: number
+        fixedAmount:
+          description: "A fixed fee for every transaction. A value of 0.5 would mean\
+            \ 0.5 of the currency of a transaction is always taken as a fee. This\
+            \ value can be 0, denoting no fixed fees."
+          type: number
+        capAmount:
+          description: "The maximum fee amount for any single transaction. The total\
+            \ fee of a transaction is calculated as the sum of the basis points (percentage)\
+            \ fee, and fixed fee. If a calculated fee is greater than this maximum\
+            \ fee value, the maximum fee will be used instead."
+          type: number
+      required:
+      - basisPoints
+      - capAmount
+      - fixedAmount
+      - recipientAddress
+      type: object
+    mintCurrency_request:
+      properties:
+        amount:
+          description: The amount of currency to create (mint).
+          example: 133.7
+          type: number
+        address:
+          description: "A valid EVM based address to create (mint) currency for. For\
+            \ example, `0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D`."
+          type: string
+        walletId:
+          description: Any wallet id within the MetaFab ecosystem to create (mint)
+            currency for.
+          type: string
+      required:
+      - amount
+      type: object
+    transferCurrency_request:
+      properties:
+        address:
+          description: "A valid EVM based address to transfer currency to. For example,\
+            \ `0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D`."
+          type: string
+        walletId:
+          description: Any wallet id within the MetaFab ecosystem to transfer currency
+            to.
+          type: string
+        amount:
+          description: The amount of currency to transfer.
+          example: 133.7
+          type: number
+        reference:
+          description: An optional uint256 number to reference the transfer. Commonly
+            used to identify transfers intended to pay for game items or services.
+          example: 1242
+          type: number
+      required:
+      - amount
+      type: object
+    authGame_200_response_allOf:
+      properties:
+        wallet:
+          $ref: '#/components/schemas/WalletModel'
+      type: object
+    authGame_200_response_allOf_1:
+      properties:
+        fundingWallet:
+          $ref: '#/components/schemas/WalletModel'
+      type: object
+    authGame_200_response:
+      allOf:
+      - $ref: '#/components/schemas/GameModel'
+      - $ref: '#/components/schemas/authGame_200_response_allOf'
+      - $ref: '#/components/schemas/authGame_200_response_allOf_1'
+    createGame_request:
+      properties:
+        name:
+          description: The name of the game you're creating.
+          example: NFT Worlds
+          type: string
+        email:
+          description: The email address associated with this game and used to login/authenticate
+            as the game.
+          example: dev@nftworlds.com
+          format: email
+          type: string
+        password:
+          description: "The password to authenticate as the game. Additionally, this\
+            \ password is used to encrypt/decrypt your game's primary wallet and must\
+            \ be provided anytime this game makes blockchain interactions through\
+            \ various endpoints."
+          example: aReallyStrongPassword123!
+          format: password
+          type: string
+      required:
+      - email
+      - name
+      - password
+      type: object
+    updateGame_request:
+      properties:
+        name:
+          description: A new name. Replaces the game's current name.
+          type: string
+        email:
+          description: A new email address. The game's old email will no longer be
+            valid for account authentication. `currentPassword` must also be provided.
+          format: email
+          type: string
+        currentPassword:
+          description: The game's current password. Must be provided if setting `newPassword`
+            or `email`.
+          format: password
+          type: string
+        newPassword:
+          description: A new password. The game's old password will no longer be valid.
+          format: password
+          type: string
+        rpcs:
+          additionalProperties:
+            type: string
+          description: "Sets a custom RPC for your game to use instead of MetaFab's\
+            \ default RPCs for the chain(s) you specify.\n\nExpects a JSON object\
+            \ containing key value pairs of supported `chain` -> `rpc url`. Only the\
+            \ chain names provided as keys in the object will be explicitly overriden.\
+            \ To delete a custom RPC for your game, provide the chain name to delete\
+            \ as a key in the provided object and `null` as the value.\n\nSet RPC\
+            \ example, `{ MATIC: 'https://polygon-rpc.com' }`\nDelete RPC example,\
+            \ `{ MATIC: null }`"
+          example: https://polygon-rpc.com
+          type: object
+        resetPublishedKey:
+          description: Revokes the game's previous published key and returns a new
+            one if true.
+          type: boolean
+        resetSecretKey:
+          description: Revokes the game's previous secret key and returns a new on
+            if true.
+          type: boolean
+      type: object
+    authPlayer_200_response:
+      allOf:
+      - $ref: '#/components/schemas/PlayerModel'
+      - $ref: '#/components/schemas/authGame_200_response_allOf'
+    createPlayer_request:
+      properties:
+        username:
+          description: "The players username, used to authenticate the player and\
+            \ if desired represent them in game. Usernames are unique. There cannot\
+            \ be 2 users with the same username created for a game."
+          type: string
+        password:
+          description: "The password to authenticate as the player. Additionally,\
+            \ this password is used to encrypt/decrypt a player's primary wallet and\
+            \ must be provided anytime this player makes blockchain interactions through\
+            \ various endpoints."
+          example: aReallyStrongPassword123
+          format: password
+          type: string
+      required:
+      - password
+      - username
+      type: object
+    updatePlayer_request:
+      properties:
+        currentPassword:
+          description: The player's current password. Must be provided if setting
+            `newPassword`.
+          format: password
+          type: string
+        newPassword:
+          description: A new password. The player's old password will no longer be
+            valid.
+          format: password
+          type: string
+        resetAccessToken:
+          description: Revokes the player's previous access token and returns a new
+            one if true.
+          type: boolean
+      type: object
+  securitySchemes:
+    basicAuth:
+      scheme: basic
+      type: http
+

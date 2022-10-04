@@ -48,7 +48,7 @@ import org.metafab.client.JSON;
 /**
  * SetCurrencyFeesRequest
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-10-03T19:42:38.170633-07:00[America/Los_Angeles]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-10-03T19:44:22.531822-07:00[America/Los_Angeles]")
 public class SetCurrencyFeesRequest {
   public static final String SERIALIZED_NAME_RECIPIENT_ADDRESS = "recipientAddress";
   @SerializedName(SERIALIZED_NAME_RECIPIENT_ADDRESS)

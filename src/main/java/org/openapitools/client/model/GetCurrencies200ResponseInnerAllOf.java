@@ -48,7 +48,7 @@ import org.metafab.client.JSON;
 /**
  * GetCurrencies200ResponseInnerAllOf
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-10-03T19:42:38.170633-07:00[America/Los_Angeles]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-10-03T19:44:22.531822-07:00[America/Los_Angeles]")
 public class GetCurrencies200ResponseInnerAllOf {
   public static final String SERIALIZED_NAME_CONTRACT = "contract";
   @SerializedName(SERIALIZED_NAME_CONTRACT)

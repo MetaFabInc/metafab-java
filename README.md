@@ -2,7 +2,7 @@
 
 MetaFab API
 - API version: 1.0.0
-  - Build date: 2022-10-03T19:42:38.170633-07:00[America/Los_Angeles]
+  - Build date: 2022-10-03T19:44:22.531822-07:00[America/Los_Angeles]
 
  Complete MetaFab API references and guides can be found at: https://trymetafab.com
 

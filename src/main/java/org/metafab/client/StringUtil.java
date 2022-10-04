@@ -16,7 +16,7 @@ package org.metafab.client;
 import java.util.Collection;
 import java.util.Iterator;
 
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-10-03T19:35:29.877595-07:00[America/Los_Angeles]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-10-03T19:42:38.170633-07:00[America/Los_Angeles]")
 public class StringUtil {
   /**
    * Check if the given array contains the given value (with case-insensitive comparison).

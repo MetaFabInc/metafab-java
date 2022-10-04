@@ -47,7 +47,7 @@ import org.metafab.client.JSON;
 /**
  * CreateGameRequest
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-10-03T19:35:29.877595-07:00[America/Los_Angeles]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-10-03T19:42:38.170633-07:00[America/Los_Angeles]")
 public class CreateGameRequest {
   public static final String SERIALIZED_NAME_NAME = "name";
   @SerializedName(SERIALIZED_NAME_NAME)

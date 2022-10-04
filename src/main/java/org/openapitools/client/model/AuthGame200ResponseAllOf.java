@@ -48,7 +48,7 @@ import org.metafab.client.JSON;
 /**
  * AuthGame200ResponseAllOf
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-10-03T19:35:29.877595-07:00[America/Los_Angeles]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-10-03T19:42:38.170633-07:00[America/Los_Angeles]")
 public class AuthGame200ResponseAllOf {
   public static final String SERIALIZED_NAME_WALLET = "wallet";
   @SerializedName(SERIALIZED_NAME_WALLET)

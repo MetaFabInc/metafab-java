@@ -27,7 +27,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 
 
-import org.metafab.client.model.TransactionModel;
+import org.openapitools.client.model.TransactionModel;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;

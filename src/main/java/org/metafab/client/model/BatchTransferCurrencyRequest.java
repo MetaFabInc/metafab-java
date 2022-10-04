@@ -50,7 +50,7 @@ import org.metafab.client.JSON;
 /**
  * BatchTransferCurrencyRequest
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-10-03T19:20:44.101799-07:00[America/Los_Angeles]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-10-03T19:33:13.700778-07:00[America/Los_Angeles]")
 public class BatchTransferCurrencyRequest {
   public static final String SERIALIZED_NAME_ADDRESSES = "addresses";
   @SerializedName(SERIALIZED_NAME_ADDRESSES)

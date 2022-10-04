@@ -28,7 +28,7 @@ import java.io.IOException;
 
 
 import java.math.BigDecimal;
-import org.metafab.client.model.TransactionModel;
+import org.openapitools.client.model.TransactionModel;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;

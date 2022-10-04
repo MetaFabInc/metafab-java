@@ -13,7 +13,7 @@
 
 package org.metafab.client;
 
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-10-03T19:20:44.101799-07:00[America/Los_Angeles]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-10-03T19:35:29.877595-07:00[America/Los_Angeles]")
 public class Configuration {
     private static ApiClient defaultApiClient = new ApiClient();
 

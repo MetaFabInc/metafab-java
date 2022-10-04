@@ -27,10 +27,10 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 
 
-import org.metafab.client.model.ContractModel;
-import org.metafab.client.model.CreateContractRequest;
-import org.metafab.client.model.TransactionModel;
-import org.metafab.client.model.WriteContractRequest;
+import org.openapitools.client.model.ContractModel;
+import org.openapitools.client.model.CreateContractRequest;
+import org.openapitools.client.model.TransactionModel;
+import org.openapitools.client.model.WriteContractRequest;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;

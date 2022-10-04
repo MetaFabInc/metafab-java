@@ -27,17 +27,17 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 
 
-import org.metafab.client.model.BatchTransferCurrencyRequest;
+import org.openapitools.client.model.BatchTransferCurrencyRequest;
 import java.math.BigDecimal;
-import org.metafab.client.model.BurnCurrencyRequest;
-import org.metafab.client.model.CreateCurrency200Response;
-import org.metafab.client.model.CreateCurrencyRequest;
-import org.metafab.client.model.GetCurrencies200ResponseInner;
-import org.metafab.client.model.GetCurrencyFees200Response;
-import org.metafab.client.model.MintCurrencyRequest;
-import org.metafab.client.model.SetCurrencyFeesRequest;
-import org.metafab.client.model.TransactionModel;
-import org.metafab.client.model.TransferCurrencyRequest;
+import org.openapitools.client.model.BurnCurrencyRequest;
+import org.openapitools.client.model.CreateCurrency200Response;
+import org.openapitools.client.model.CreateCurrencyRequest;
+import org.openapitools.client.model.GetCurrencies200ResponseInner;
+import org.openapitools.client.model.GetCurrencyFees200Response;
+import org.openapitools.client.model.MintCurrencyRequest;
+import org.openapitools.client.model.SetCurrencyFeesRequest;
+import org.openapitools.client.model.TransactionModel;
+import org.openapitools.client.model.TransferCurrencyRequest;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;

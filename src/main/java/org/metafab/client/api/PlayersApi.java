@@ -27,10 +27,10 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 
 
-import org.metafab.client.model.AuthPlayer200Response;
-import org.metafab.client.model.CreatePlayerRequest;
-import org.metafab.client.model.PlayerModel;
-import org.metafab.client.model.UpdatePlayerRequest;
+import org.openapitools.client.model.AuthPlayer200Response;
+import org.openapitools.client.model.CreatePlayerRequest;
+import org.openapitools.client.model.PlayerModel;
+import org.openapitools.client.model.UpdatePlayerRequest;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;

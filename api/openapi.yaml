@@ -7,7 +7,7 @@ info:
   description: " Complete MetaFab API references and guides can be found at: https://trymetafab.com"
   termsOfService: https://trymetafab.com
   title: MetaFab API
-  version: 1.0.0
+  version: 1.1.0
 servers:
 - description: MetaFab API Server
   url: https://api.trymetafab.com
@@ -18,6 +18,8 @@ tags:
   name: Currencies
 - description: Game related operations
   name: Games
+- description: Item related operations
+  name: Items
 - description: Transaction related operations
   name: Transactions
 - description: Player related operations
@@ -25,6 +27,1102 @@ tags:
 - description: Wallet related operations
   name: Wallets
 paths:
+  /v1/collections:
+    get:
+      description: Returns an array of active item collections for the game associated
+        with the provided `X-Game-Key`.
+      operationId: getCollections
+      parameters:
+      - description: "The `publishedKey` of a specific game. This can be shared or\
+          \ included in game clients, websites, etc."
+        example: game_pk_4SOqpDi8pQdnQgfCOBW29qR8YmwOhxVPz5iHoMgUEJLDdPXgwLuHqZf8ewo2GajZ
+        explode: false
+        in: header
+        name: X-Game-Key
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/getCollections_200_response_inner'
+                type: array
+          description: Successfully retrieved an array of item collections for the
+            game associated with the provided `X-Game-Key`
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+      summary: Get collections
+      tags:
+      - Items
+      x-accepts: application/json
+    post:
+      description: "Creates a new game item collection and deploys an extended functionality\
+        \ ERC1155 contract on behalf of the authenticating game's primary wallet.\
+        \ The deployed ERC1155 contract is preconfigured to fully support creating\
+        \ unique item types, item transfer timelocks, custom metadata per item, gasless\
+        \ transactions from player managed wallets, and much more."
+      operationId: createCollection
+      parameters:
+      - description: The `secretKey` of the authenticating game.
+        example: game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The password of the authenticating game. Required to decrypt
+          and perform blockchain transactions with the game primary wallet.
+        example: mySecurePassword
+        explode: false
+        in: header
+        name: X-Password
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createCollection_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createCollection_200_response'
+          description: Successfully created a new item collection and deployed its
+            associated ERC1155 contract on the chain specified. Returns a collection
+            object containing a contract property with the deployment transaction.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Create collection
+      tags:
+      - Items
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/collections/{collectionId}/approvals:
+    get:
+      description: Returns a boolean (true/false) representing if the provided operatorAddress
+        has approval to transfer and burn items from the current collection owned
+        by the address or address associated with the provided walletId.
+      operationId: getCollectionApproval
+      parameters:
+      - description: Any collection id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: collectionId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: "A valid EVM based address. For example, `0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D`."
+        example: 0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D
+        explode: true
+        in: query
+        name: operatorAddress
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: "A valid EVM based address. For example, `0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D`."
+        example: 0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D
+        explode: true
+        in: query
+        name: address
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Any wallet id within the MetaFab ecosystem.
+        explode: true
+        in: query
+        name: walletId
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: number
+          description: Successfully retrieved the boolean value representing if the
+            provided operatorAddress can transfer and burn owned items by the provided
+            address or walletId.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+      summary: Get collection approval
+      tags:
+      - Items
+      x-accepts: application/json
+    post:
+      description: Sets approval for the provided address or wallet address associated
+        with the provided walletId to operate on behalf of the authenticating game
+        or player's owned items for this collection. Setting an approved value of
+        `true` allows the provided address or address associated with the provided
+        walletId to transfer and burn items from this collection on behalf of the
+        authenticated game or player's wallet address.
+      operationId: setCollectionApproval
+      parameters:
+      - description: Any collection id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: collectionId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The `secretKey` of a specific game or the `accessToken` of a
+          specific player.
+        example:
+        - game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        - player_at_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The password of the authenticating game or player. Required to
+          decrypt and perform blockchain transactions with the game or player primary
+          wallet.
+        example: mySecurePassword
+        explode: false
+        in: header
+        name: X-Password
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/setCollectionApproval_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionModel'
+          description: Successfully set approval for the provided address or address
+            associated with the provided walletId to transfer and burn items from
+            this collection on behalf of the authenticated game or player's wallet.
+            Returns a transaction object.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Set collection approval
+      tags:
+      - Items
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/collections/{collectionId}/balances:
+    get:
+      description: Returns the current collection item balances of all collection
+        items for the provided wallet address or the wallet address associated with
+        the provided walletId.
+      operationId: getCollectionItemBalances
+      parameters:
+      - description: Any collection id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: collectionId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: "A valid EVM based address. For example, `0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D`."
+        example: 0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D
+        explode: true
+        in: query
+        name: address
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Any wallet id within the MetaFab ecosystem.
+        explode: true
+        in: query
+        name: walletId
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                additionalProperties:
+                  type: number
+                description: Key value pairs represented as itemId -> balance for
+                  the provided wallet or address.
+                type: object
+          description: "Successfully retrieved currency balances of all collection\
+            \ items owned by the provided address or walletId. Balances are returned\
+            \ as a an object, mapping key value pairs as itemId -> balance (string\
+            \ to handle uint256 numbers)."
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+      summary: Get collection item balances
+      tags:
+      - Items
+      x-accepts: application/json
+  /v1/collections/{collectionId}/batchMints:
+    post:
+      description: Creates (mints) the provided itemIds of the specified quantities
+        to the provided wallet address or wallet address associated with the provided
+        walletId.
+      operationId: batchMintCollectionItems
+      parameters:
+      - description: Any collection id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: collectionId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The `secretKey` of the authenticating game.
+        example: game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The password of the authenticating game. Required to decrypt
+          and perform blockchain transactions with the game primary wallet.
+        example: mySecurePassword
+        explode: false
+        in: header
+        name: X-Password
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/batchMintCollectionItems_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionModel'
+          description: Successfully created (minted) the provided items of the provided
+            quantities to the provided wallet address or wallet address of the provided
+            walletId. Returns a transaction object.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Batch mint collection items
+      tags:
+      - Items
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/collections/{collectionId}/batchTransfers:
+    post:
+      description: Transfers one or multiple items of specified quantities to the
+        provided wallet addresses or wallet addresses associated with the provided
+        walletIds. You may also provide a combination of addresses and walletIds in
+        one request.
+      operationId: batchTransferCollectionItems
+      parameters:
+      - description: Any collection id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: collectionId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The `secretKey` of a specific game or the `accessToken` of a
+          specific player.
+        example:
+        - game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        - player_at_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The password of the authenticating game or player. Required to
+          decrypt and perform blockchain transactions with the game or player primary
+          wallet.
+        example: mySecurePassword
+        explode: false
+        in: header
+        name: X-Password
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/batchTransferCollectionItems_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionModel'
+          description: Successfully transferred the itemIds of the provided quantities
+            to each of the provided wallet addresses and/or wallet addresses of the
+            provided walletIds. Returns a transaction object.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Batch transfer collection items
+      tags:
+      - Items
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/collections/{collectionId}/items:
+    get:
+      description: Returns all collection items as an array of metadata objects.
+      operationId: getCollectionItems
+      parameters:
+      - description: Any collection id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: collectionId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  type: object
+                type: array
+          description: Successfully retrieved collection items metadata.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+      summary: Get collection items
+      tags:
+      - Items
+      x-accepts: application/json
+    post:
+      description: "Creates a new item type. Item type creation associates all of\
+        \ the relevant item data to a specific itemId. Such as item name, image, description,\
+        \ attributes, any arbitrary data such as 2D or 3D model resolver URLs, and\
+        \ more. It is recommended, but not required, that you create a new item type\
+        \ through this endpoint before minting any quantity of the related itemId.\n\
+        \nItem type data is uploaded to, and resolved through IPFS for decentralized\
+        \ persistence. Any itemId provided will have its existing item type overriden\
+        \ if it already exists."
+      operationId: createCollectionItem
+      parameters:
+      - description: Any collection id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: collectionId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The `secretKey` of the authenticating game.
+        example: game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The password of the authenticating game. Required to decrypt
+          and perform blockchain transactions with the game primary wallet.
+        example: mySecurePassword
+        explode: false
+        in: header
+        name: X-Password
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createCollectionItem_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionModel'
+          description: Successfully created a new item type and assigned it to the
+            provided item `id`. Returns a transaction object.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Create collection item
+      tags:
+      - Items
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/collections/{collectionId}/items/{collectionItemId}:
+    get:
+      description: Returns a metadata object for the provided collectionItemId.
+      operationId: getCollectionItem
+      parameters:
+      - description: Any collection id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: collectionId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: "Any item id for the collection. Zero, or a positive integer."
+        explode: false
+        in: path
+        name: collectionItemId
+        required: true
+        schema:
+          type: number
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  type: object
+                type: array
+          description: Successfully retrieved collection item metadata.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+      summary: Get collection item
+      tags:
+      - Items
+      x-accepts: application/json
+  /v1/collections/{collectionId}/items/{collectionItemId}/balances:
+    get:
+      description: Returns the current collection item balance of the provided collectionItemId
+        for the provided wallet address or the wallet address associated with the
+        provided walletId.
+      operationId: getCollectionItemBalance
+      parameters:
+      - description: Any collection id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: collectionId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: "Any item id for the collection. Zero, or a positive integer."
+        explode: false
+        in: path
+        name: collectionItemId
+        required: true
+        schema:
+          type: number
+        style: simple
+      - description: "A valid EVM based address. For example, `0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D`."
+        example: 0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D
+        explode: true
+        in: query
+        name: address
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Any wallet id within the MetaFab ecosystem.
+        explode: true
+        in: query
+        name: walletId
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: number
+          description: Successfully retrieved collection item balance of the provided
+            collectionItemId for address or walletId. Balance is returned as a string
+            to handle uint256 numbers.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+      summary: Get collection item balance
+      tags:
+      - Items
+      x-accepts: application/json
+  /v1/collections/{collectionId}/items/{collectionItemId}/burns:
+    post:
+      description: Removes (burns) the provided quantity of the collectionItemId from
+        the authenticating game or players wallet. The quantity is permanently removed
+        from the circulating supply of the item.
+      operationId: burnCollectionItem
+      parameters:
+      - description: Any collection id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: collectionId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: "Any item id for the collection. Zero, or a positive integer."
+        explode: false
+        in: path
+        name: collectionItemId
+        required: true
+        schema:
+          type: number
+        style: simple
+      - description: The `secretKey` of a specific game or the `accessToken` of a
+          specific player.
+        example:
+        - game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        - player_at_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The password of the authenticating game or player. Required to
+          decrypt and perform blockchain transactions with the game or player primary
+          wallet.
+        example: mySecurePassword
+        explode: false
+        in: header
+        name: X-Password
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/burnCollectionItem_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionModel'
+          description: Successfully removed (burned) the quantity of the collectionItemId
+            from the authenticating game or player's wallet. Returns a transaction
+            object.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Burn collection item
+      tags:
+      - Items
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/collections/{collectionId}/items/{collectionItemId}/mints:
+    post:
+      description: Creates (mints) the specified quantity of the provided collectionItemId
+        to the provided wallet address or wallet address associated with the provided
+        walletId.
+      operationId: mintCollectionItem
+      parameters:
+      - description: Any collection id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: collectionId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: "Any item id for the collection. Zero, or a positive integer."
+        explode: false
+        in: path
+        name: collectionItemId
+        required: true
+        schema:
+          type: number
+        style: simple
+      - description: The `secretKey` of the authenticating game.
+        example: game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The password of the authenticating game. Required to decrypt
+          and perform blockchain transactions with the game primary wallet.
+        example: mySecurePassword
+        explode: false
+        in: header
+        name: X-Password
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/mintCollectionItem_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionModel'
+          description: Successfully created (minted) the item(s) to the provided wallet
+            address or wallet address of the provided walletId. Returns a transaction
+            object.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Mint collection item
+      tags:
+      - Items
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/collections/{collectionId}/items/{collectionItemId}/supplies:
+    get:
+      description: Returns the current circulating supply of the provided collectionItemId.
+      operationId: getCollectionItemSupply
+      parameters:
+      - description: Any collection id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: collectionId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: "Any item id for the collection. Zero, or a positive integer."
+        explode: false
+        in: path
+        name: collectionItemId
+        required: true
+        schema:
+          type: number
+        style: simple
+      - description: "A valid EVM based address. For example, `0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D`."
+        example: 0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D
+        explode: true
+        in: query
+        name: address
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Any wallet id within the MetaFab ecosystem.
+        explode: true
+        in: query
+        name: walletId
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: number
+          description: Successfully retrieved collection item supply. Supply is returned
+            as a string to handle uint256 numbers.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+      summary: Get collection item supply
+      tags:
+      - Items
+      x-accepts: application/json
+  /v1/collections/{collectionId}/items/{collectionItemId}/timelocks:
+    get:
+      description: Returns a timestamp (in seconds) for when the provided collectionItemId's
+        transfer timelock expires. A value of 0 means the provided collectionItemId
+        does not have a timelock set. Timelocks prevent items of a specific collectionItemId
+        from being transferred until the set timelock timestamp has been surpassed.
+      operationId: getCollectionItemTimelock
+      parameters:
+      - description: Any collection id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: collectionId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: "Any item id for the collection. Zero, or a positive integer."
+        explode: false
+        in: path
+        name: collectionItemId
+        required: true
+        schema:
+          type: number
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: number
+          description: Successfully retrieved the collectionItemId's timelock. The
+            timelock is returned as a unix timestamp in seconds. A return value of
+            0 means the collectionItemId does not have a timelock set.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+      summary: Get collection item timelock
+      tags:
+      - Items
+      x-accepts: application/json
+    post:
+      description: "Sets the item timelock for the provided collection itemId. The\
+        \ timelock is a unix timestamp (in seconds) that defines a period in time\
+        \ of when an item may be transferred by players. Until the timelock timestamp\
+        \ has passed, the itemId for the given timelock may not be transferred, sold,\
+        \ traded, etc. A timelock of 0 (default) means that there is no timelock set\
+        \ on the itemId and it can be freely transferred, traded, etc."
+      operationId: setCollectionItemTimelock
+      parameters:
+      - description: Any collection id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: collectionId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: "Any item id for the collection. Zero, or a positive integer."
+        explode: false
+        in: path
+        name: collectionItemId
+        required: true
+        schema:
+          type: number
+        style: simple
+      - description: The `secretKey` of the authenticating game.
+        example: game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The password of the authenticating game. Required to decrypt
+          and perform blockchain transactions with the game primary wallet.
+        example: mySecurePassword
+        explode: false
+        in: header
+        name: X-Password
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/setCollectionItemTimelock_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionModel'
+          description: Successfully set the provided timelock for the provided itemId.
+            Returns a transaction object.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Set collection item timelock
+      tags:
+      - Items
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/collections/{collectionId}/items/{collectionItemId}/transfers:
+    post:
+      description: Transfers specified quantity of itemId to the provided wallet address
+        or wallet address associated with the provided walletId.
+      operationId: transferCollectionItem
+      parameters:
+      - description: Any collection id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: collectionId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: "Any item id for the collection. Zero, or a positive integer."
+        explode: false
+        in: path
+        name: collectionItemId
+        required: true
+        schema:
+          type: number
+        style: simple
+      - description: The `secretKey` of a specific game or the `accessToken` of a
+          specific player.
+        example:
+        - game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        - player_at_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The password of the authenticating game or player. Required to
+          decrypt and perform blockchain transactions with the game or player primary
+          wallet.
+        example: mySecurePassword
+        explode: false
+        in: header
+        name: X-Password
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/transferCollectionItem_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionModel'
+          description: Successfully transferred the provided quantity of the collectionItemId
+            to the provided wallet address or wallet address of the provided walletId.
+            Returns a transaction object.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Transfer collection item
+      tags:
+      - Items
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/collections/{collectionId}/supplies:
+    get:
+      description: Returns the currency circulating supply of all collection items.
+      operationId: getCollectionItemSupplies
+      parameters:
+      - description: Any collection id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: collectionId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                additionalProperties:
+                  type: number
+                description: Key value pairs represented as itemId -> circulating
+                  supply.
+                type: object
+          description: "Successfully retrieved the circulating supply of all collection\
+            \ items. Supplies are returned as a an object, mapping key value pairs\
+            \ as itemId -> balance (string to handle uint256 numbers)."
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+      summary: Get collection item supplies
+      tags:
+      - Items
+      x-accepts: application/json
   /v1/contracts:
     get:
       description: Returns an array of active contracts deployed by the game associated
@@ -352,7 +1450,7 @@ paths:
     get:
       description: Returns the current currency balance of the provided wallet address
         or or the wallet address associated with the provided walletId.
-      operationId: getCurrencyBalances
+      operationId: getCurrencyBalance
       parameters:
       - description: Any currency id within the MetaFab ecosystem.
         explode: false
@@ -404,7 +1502,7 @@ paths:
         \ addresses or wallet addresses associated with the provided walletIds. You\
         \ may also provide a combination of addresses and walletIds in one request,\
         \ the proper receipients will be automatically determined, with `addresses`\
-        \ getting `amounts` order priority first.\nOptional references may be included\
+        \ getting `amounts` order priority first.\n\nOptional references may be included\
         \ for the transfer. References are useful for identifying transfers intended\
         \ to pay for items, trades, services and more."
       operationId: batchTransferCurrency
@@ -649,7 +1747,7 @@ paths:
       x-accepts: application/json
   /v1/currencies/{currencyId}/mints:
     post:
-      description: Creates (mints) the provided amount of currency  to the provided
+      description: Creates (mints) the provided amount of currency to the provided
         wallet address or wallet address associated with the provided walletId.
       operationId: mintCurrency
       parameters:
@@ -1268,6 +2366,24 @@ components:
       schema:
         type: string
       style: simple
+    pathCollectionId:
+      description: Any collection id within the MetaFab ecosystem.
+      explode: false
+      in: path
+      name: collectionId
+      required: true
+      schema:
+        type: string
+      style: simple
+    pathCollectionItemId:
+      description: "Any item id for the collection. Zero, or a positive integer."
+      explode: false
+      in: path
+      name: collectionItemId
+      required: true
+      schema:
+        type: number
+      style: simple
     pathContractId:
       description: Any contract id within the MetaFab ecosystem.
       explode: false
@@ -1350,6 +2466,16 @@ components:
       explode: true
       in: query
       name: func
+      required: true
+      schema:
+        type: string
+      style: form
+    queryOperatorAddress:
+      description: "A valid EVM based address. For example, `0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D`."
+      example: 0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D
+      explode: true
+      in: query
+      name: operatorAddress
       required: true
       schema:
         type: string
@@ -1465,6 +2591,24 @@ components:
           description: This field has not had a description added.
           type: string
       type: object
+    CollectionModel:
+      properties:
+        id:
+          description: This field has not had a description added.
+          type: string
+        gameId:
+          description: This field has not had a description added.
+          type: string
+        contractId:
+          description: This field has not had a description added.
+          type: string
+        updatedAt:
+          description: This field has not had a description added.
+          type: string
+        createdAt:
+          description: This field has not had a description added.
+          type: string
+      type: object
     CurrencyModel:
       properties:
         id:
@@ -1566,6 +2710,247 @@ components:
       type: object
     AnyValue:
       description: "Can be anything. String, number, object, array, boolean, etc."
+    getCollections_200_response_inner_allOf:
+      properties:
+        contract:
+          $ref: '#/components/schemas/CollectionModel'
+      type: object
+    getCollections_200_response_inner:
+      allOf:
+      - $ref: '#/components/schemas/CollectionModel'
+      - $ref: '#/components/schemas/getCollections_200_response_inner_allOf'
+    createCollection_request:
+      properties:
+        chain:
+          description: The blockchain you want to deploy this item collection on.
+            Support for new blockchains are added over time.
+          enum:
+          - ETHEREUM
+          - GOERLI
+          - MATIC
+          - MUMBAI
+          example: MATIC
+          type: string
+      required:
+      - chain
+      type: object
+    createCollection_200_response_allOf_contract_allOf:
+      properties:
+        transactions:
+          items:
+            $ref: '#/components/schemas/TransactionModel'
+          type: array
+      type: object
+    createCollection_200_response_allOf_contract:
+      allOf:
+      - $ref: '#/components/schemas/ContractModel'
+      - $ref: '#/components/schemas/createCollection_200_response_allOf_contract_allOf'
+    createCollection_200_response_allOf:
+      properties:
+        contract:
+          $ref: '#/components/schemas/createCollection_200_response_allOf_contract'
+      type: object
+    createCollection_200_response:
+      allOf:
+      - $ref: '#/components/schemas/CollectionModel'
+      - $ref: '#/components/schemas/createCollection_200_response_allOf'
+    setCollectionApproval_request:
+      properties:
+        approved:
+          description: A true or false value approves or disapproves the provided
+            address or address associated with the provided walletId.
+          type: boolean
+        address:
+          description: A valid EVM based addresses to allow control over the authenticating
+            game or player's wallet items for this collection.
+          type: string
+        walletId:
+          description: A wallet id within the MetaFab ecosystem to allow control over
+            the authenticating game or player's wallet items for this collection.
+          items:
+            type: string
+          type: array
+      required:
+      - approved
+      type: object
+    batchMintCollectionItems_request:
+      properties:
+        address:
+          description: "A valid EVM based address to create (mint) the items for.\
+            \ For example, `0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D`."
+          type: string
+        itemIds:
+          description: An array of unique itemIds to create (mint).
+          items:
+            type: number
+          type: array
+        quantities:
+          description: "An array of the quantities of each of the unique itemIds provided\
+            \ to create (mint). The quantity of each itemId in itemIds should be at\
+            \ the same index as the specific itemId in the itemIds array. For example,\
+            \ quantities[2] defines the quantity to mint for itemIds[2], etc."
+          items:
+            type: number
+          type: array
+        walletId:
+          description: Any wallet id within the MetaFab ecosystem to create (mint)
+            the items for.
+          type: string
+      required:
+      - itemIds
+      - quantities
+      type: object
+    batchTransferCollectionItems_request:
+      properties:
+        addresses:
+          description: An array of valid EVM based addresses to transfer items to.
+          items:
+            type: string
+          type: array
+        walletIds:
+          description: An array of wallet ids within the MetaFab ecosystem to transfer
+            items to.
+          items:
+            type: string
+          type: array
+        itemIds:
+          description: An array of unique itemIds to transfer. Each recipient will
+            receive the same set of items provided.
+          items:
+            example: 12
+            type: number
+          type: array
+        quantities:
+          description: The quantities of each unique itemId to transfer. Each recipient
+            will receive the same quantities of items provided.
+          items:
+            example: 1
+            type: number
+          type: array
+      required:
+      - itemIds
+      - quantities
+      type: object
+    createCollectionItem_request_attributes_inner_value:
+      example: 100
+      oneOf:
+      - type: string
+      - type: number
+      - type: boolean
+    createCollectionItem_request_attributes_inner:
+      properties:
+        trait_type:
+          example: Attack Power
+          type: string
+        value:
+          $ref: '#/components/schemas/createCollectionItem_request_attributes_inner_value'
+      required:
+      - trait_type
+      - value
+      type: object
+    createCollectionItem_request:
+      properties:
+        id:
+          description: "A unique itemId to use for this item within the collection.\
+            \ If an existing itemId is used, the current metadata will be overriden.\
+            \ Any number may be used.\n\nThe terms `itemId` and `collectionItemId`\
+            \ are used interchangeably and equivalent to one another throughout MetaFab\
+            \ documentation."
+          example: 1337
+          type: number
+        name:
+          description: The name of this item.
+          example: Fire Dagger
+          type: string
+        description:
+          description: "A text description of this item. This is a great spot to include\
+            \ lore, game mechanics and more related to this item."
+          type: string
+        imageBase64:
+          description: "A base64 string of the image for this item. Either `imageBase64`\
+            \ or `imageUrl` must be provided. Supported image formats are `jpg`, `jpeg`,\
+            \ `png`, `gif`. Recommended size of 1:1 aspect ratio and no more than\
+            \ 1500x1500 pixels."
+          format: byte
+          type: string
+        imageUrl:
+          description: An external url that resolves to an image to use for this item.
+            This can also be set to an ipfs:// uri. Recommended size of 1:1 aspect
+            ratio and no more than 1500x1500 pixels.
+          example: https://mycdn.mygame.com/example/item1.gif
+          format: uri
+          type: string
+        externalUrl:
+          description: "An optional URL where players can go to learn more about this\
+            \ item specifically, or your game, or any other link."
+          format: uri
+          type: string
+        attributes:
+          description: An array of objects that conform with metadata standard.
+          items:
+            $ref: '#/components/schemas/createCollectionItem_request_attributes_inner'
+          type: array
+        data:
+          description: An arbitrary object of data attached to the top level metadata
+            object. This is useful for including data or resource URLs specific to
+            your game. Such as URLs that point to
+          type: object
+      required:
+      - description
+      - id
+      - name
+      type: object
+    burnCollectionItem_request:
+      properties:
+        quantity:
+          description: The quantity of the collectionItemId to burn.
+          type: number
+      required:
+      - quantity
+      type: object
+    mintCollectionItem_request:
+      properties:
+        address:
+          description: "A valid EVM based address to create (mint) the item(s) for.\
+            \ For example, `0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D`."
+          type: string
+        quantity:
+          description: The quantity of the specified item id to create (mint).
+          type: number
+        walletId:
+          description: Any wallet id within the MetaFab ecosystem to create (mint)
+            the item(s) for.
+          type: string
+      required:
+      - quantity
+      type: object
+    setCollectionItemTimelock_request:
+      properties:
+        timelock:
+          description: A unix timestamp (in seconds) defining when the set timelock
+            expires.
+          example: 1665786026
+          type: number
+      required:
+      - timelock
+      type: object
+    transferCollectionItem_request:
+      properties:
+        address:
+          description: A valid EVM based addresses to transfer items to.
+          type: string
+        walletId:
+          description: A wallet id within the MetaFab ecosystem to transfer items
+            to.
+          items:
+            type: string
+          type: array
+        quantity:
+          description: The quantity of the collectionItemId to transfer.
+          type: number
+      required:
+      - quantity
+      type: object
     createContract_request:
       properties:
         address:
@@ -1645,26 +3030,10 @@ components:
       - supplyCap
       - symbol
       type: object
-    createCurrency_200_response_allOf_contract_allOf:
-      properties:
-        transactions:
-          items:
-            $ref: '#/components/schemas/TransactionModel'
-          type: array
-      type: object
-    createCurrency_200_response_allOf_contract:
-      allOf:
-      - $ref: '#/components/schemas/ContractModel'
-      - $ref: '#/components/schemas/createCurrency_200_response_allOf_contract_allOf'
-    createCurrency_200_response_allOf:
-      properties:
-        contract:
-          $ref: '#/components/schemas/createCurrency_200_response_allOf_contract'
-      type: object
     createCurrency_200_response:
       allOf:
       - $ref: '#/components/schemas/CurrencyModel'
-      - $ref: '#/components/schemas/createCurrency_200_response_allOf'
+      - $ref: '#/components/schemas/createCollection_200_response_allOf'
     batchTransferCurrency_request:
       properties:
         addresses:

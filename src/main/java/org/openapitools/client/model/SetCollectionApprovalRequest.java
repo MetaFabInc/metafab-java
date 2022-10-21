@@ -49,7 +49,7 @@ import org.metafab.client.JSON;
 /**
  * SetCollectionApprovalRequest
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-10-20T22:12:42.272790-07:00[America/Los_Angeles]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-10-20T22:34:48.120078-07:00[America/Los_Angeles]")
 public class SetCollectionApprovalRequest {
   public static final String SERIALIZED_NAME_APPROVED = "approved";
   @SerializedName(SERIALIZED_NAME_APPROVED)

@@ -8,7 +8,7 @@
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
 |**traitType** | **String** |  |  |
-|**value** | [**CreateCollectionItemRequestAttributesInnerValue**](CreateCollectionItemRequestAttributesInnerValue.md) |  |  |
+|**value** | **Object** |  |  |
 
 
 

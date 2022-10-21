@@ -7,7 +7,7 @@ info:
   description: " Complete MetaFab API references and guides can be found at: https://trymetafab.com"
   termsOfService: https://trymetafab.com
   title: MetaFab API
-  version: 1.1.0
+  version: 1.1.3
 servers:
 - description: MetaFab API Server
   url: https://api.trymetafab.com
@@ -2831,19 +2831,13 @@ components:
       - itemIds
       - quantities
       type: object
-    createCollectionItem_request_attributes_inner_value:
-      example: 100
-      oneOf:
-      - type: string
-      - type: number
-      - type: boolean
     createCollectionItem_request_attributes_inner:
       properties:
         trait_type:
           example: Attack Power
           type: string
         value:
-          $ref: '#/components/schemas/createCollectionItem_request_attributes_inner_value'
+          example: 100
       required:
       - trait_type
       - value

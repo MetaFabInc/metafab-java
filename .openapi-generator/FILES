@@ -23,7 +23,6 @@ docs/CreateCollection200ResponseAllOfContract.md
 docs/CreateCollection200ResponseAllOfContractAllOf.md
 docs/CreateCollectionItemRequest.md
 docs/CreateCollectionItemRequestAttributesInner.md
-docs/CreateCollectionItemRequestAttributesInnerValue.md
 docs/CreateCollectionRequest.md
 docs/CreateContractRequest.md
 docs/CreateCurrency200Response.md
@@ -107,7 +106,6 @@ src/main/java/org/openapitools/client/model/CreateCollection200ResponseAllOfCont
 src/main/java/org/openapitools/client/model/CreateCollection200ResponseAllOfContractAllOf.java
 src/main/java/org/openapitools/client/model/CreateCollectionItemRequest.java
 src/main/java/org/openapitools/client/model/CreateCollectionItemRequestAttributesInner.java
-src/main/java/org/openapitools/client/model/CreateCollectionItemRequestAttributesInnerValue.java
 src/main/java/org/openapitools/client/model/CreateCollectionRequest.java
 src/main/java/org/openapitools/client/model/CreateContractRequest.java
 src/main/java/org/openapitools/client/model/CreateCurrency200Response.java

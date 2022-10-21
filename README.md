@@ -1,8 +1,8 @@
 # metafab-java
 
 MetaFab API
-- API version: 1.1.0
-  - Build date: 2022-10-20T16:29:18.271895-07:00[America/Los_Angeles]
+- API version: 1.1.3
+  - Build date: 2022-10-20T22:12:42.272790-07:00[America/Los_Angeles]
 
  Complete MetaFab API references and guides can be found at: https://trymetafab.com
 
@@ -41,7 +41,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>org.metafab</groupId>
   <artifactId>metafab-java</artifactId>
-  <version>1.1.0</version>
+  <version>1.1.3</version>
   <scope>compile</scope>
 </dependency>
 ```
@@ -57,7 +57,7 @@ Add this dependency to your project's build file:
   }
 
   dependencies {
-     implementation "org.metafab:metafab-java:1.1.0"
+     implementation "org.metafab:metafab-java:1.1.3"
   }
 ```
 
@@ -71,7 +71,7 @@ mvn clean package
 
 Then manually install the following JARs:
 
-* `target/metafab-java-1.1.0.jar`
+* `target/metafab-java-1.1.3.jar`
 * `target/lib/*.jar`
 
 ## Getting Started
@@ -177,7 +177,6 @@ Class | Method | HTTP request | Description
  - [CreateCollection200ResponseAllOfContractAllOf](docs/CreateCollection200ResponseAllOfContractAllOf.md)
  - [CreateCollectionItemRequest](docs/CreateCollectionItemRequest.md)
  - [CreateCollectionItemRequestAttributesInner](docs/CreateCollectionItemRequestAttributesInner.md)
- - [CreateCollectionItemRequestAttributesInnerValue](docs/CreateCollectionItemRequestAttributesInnerValue.md)
  - [CreateCollectionRequest](docs/CreateCollectionRequest.md)
  - [CreateContractRequest](docs/CreateContractRequest.md)
  - [CreateCurrency200Response](docs/CreateCurrency200Response.md)

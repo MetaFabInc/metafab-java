@@ -1,8 +1,8 @@
 # metafab-java
 
 MetaFab API
-- API version: 1.1.3
-  - Build date: 2022-10-20T22:34:48.120078-07:00[America/Los_Angeles]
+- API version: 1.1.4
+  - Build date: 2022-10-30T14:29:33.858390-07:00[America/Los_Angeles]
 
  Complete MetaFab API references and guides can be found at: https://trymetafab.com
 
@@ -41,7 +41,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>org.metafab</groupId>
   <artifactId>metafab-java</artifactId>
-  <version>1.1.3</version>
+  <version>1.1.4</version>
   <scope>compile</scope>
 </dependency>
 ```
@@ -57,7 +57,7 @@ Add this dependency to your project's build file:
   }
 
   dependencies {
-     implementation "org.metafab:metafab-java:1.1.3"
+     implementation "org.metafab:metafab-java:1.1.4"
   }
 ```
 
@@ -71,7 +71,7 @@ mvn clean package
 
 Then manually install the following JARs:
 
-* `target/metafab-java-1.1.3.jar`
+* `target/metafab-java-1.1.4.jar`
 * `target/lib/*.jar`
 
 ## Getting Started
@@ -126,9 +126,20 @@ Class | Method | HTTP request | Description
 *CurrenciesApi* | [**getCurrencies**](docs/CurrenciesApi.md#getCurrencies) | **GET** /v1/currencies | Get currencies
 *CurrenciesApi* | [**getCurrencyBalance**](docs/CurrenciesApi.md#getCurrencyBalance) | **GET** /v1/currencies/{currencyId}/balances | Get currency balance
 *CurrenciesApi* | [**getCurrencyFees**](docs/CurrenciesApi.md#getCurrencyFees) | **GET** /v1/currencies/{currencyId}/fees | Get currency fees
+*CurrenciesApi* | [**getCurrencyRole**](docs/CurrenciesApi.md#getCurrencyRole) | **GET** /v1/currencies/{currencyId}/roles | Get currency role
+*CurrenciesApi* | [**grantCurrencyRole**](docs/CurrenciesApi.md#grantCurrencyRole) | **POST** /v1/currencies/{currencyId}/roles | Grant currency role
 *CurrenciesApi* | [**mintCurrency**](docs/CurrenciesApi.md#mintCurrency) | **POST** /v1/currencies/{currencyId}/mints | Mint currency
+*CurrenciesApi* | [**revokeCurrencyRole**](docs/CurrenciesApi.md#revokeCurrencyRole) | **DELETE** /v1/currencies/{currencyId}/roles | Revoke currency role
 *CurrenciesApi* | [**setCurrencyFees**](docs/CurrenciesApi.md#setCurrencyFees) | **POST** /v1/currencies/{currencyId}/fees | Set currency fees
 *CurrenciesApi* | [**transferCurrency**](docs/CurrenciesApi.md#transferCurrency) | **POST** /v1/currencies/{currencyId}/transfers | Transfer currency
+*ExchangesApi* | [**createExchange**](docs/ExchangesApi.md#createExchange) | **POST** /v1/exchanges | Create exchange
+*ExchangesApi* | [**getExchangeOffer**](docs/ExchangesApi.md#getExchangeOffer) | **GET** /v1/exchanges/{exchangeId}/items/{exchangeOfferId} | Get exchange offer
+*ExchangesApi* | [**getExchangeOffers**](docs/ExchangesApi.md#getExchangeOffers) | **GET** /v1/exchanges/{exchangeId}/offers | Get exchange offers
+*ExchangesApi* | [**getExchanges**](docs/ExchangesApi.md#getExchanges) | **GET** /v1/exchanges | Get exchanges
+*ExchangesApi* | [**removeExchangeOffer**](docs/ExchangesApi.md#removeExchangeOffer) | **DELETE** /v1/exchanges/{exchangeId}/offers/{exchangeOfferId} | Remove exchange offer
+*ExchangesApi* | [**setExchangeOffer**](docs/ExchangesApi.md#setExchangeOffer) | **POST** /v1/exchanges/{exchangeId}/offers | Set exchange offer
+*ExchangesApi* | [**useExchangeOffer**](docs/ExchangesApi.md#useExchangeOffer) | **POST** /v1/exchanges/{exchangeId}/offers/{exchangeOfferId}/uses | Use exchange offer
+*ExchangesApi* | [**withdrawFromExchange**](docs/ExchangesApi.md#withdrawFromExchange) | **POST** /v1/exchanges/{exchangeId}/withdrawals | Withdraw from exchange
 *GamesApi* | [**authGame**](docs/GamesApi.md#authGame) | **GET** /v1/games | Authenticate game
 *GamesApi* | [**createGame**](docs/GamesApi.md#createGame) | **POST** /v1/games | Create game
 *GamesApi* | [**updateGame**](docs/GamesApi.md#updateGame) | **PATCH** /v1/games/{gameId} | Update game
@@ -145,8 +156,11 @@ Class | Method | HTTP request | Description
 *ItemsApi* | [**getCollectionItemSupply**](docs/ItemsApi.md#getCollectionItemSupply) | **GET** /v1/collections/{collectionId}/items/{collectionItemId}/supplies | Get collection item supply
 *ItemsApi* | [**getCollectionItemTimelock**](docs/ItemsApi.md#getCollectionItemTimelock) | **GET** /v1/collections/{collectionId}/items/{collectionItemId}/timelocks | Get collection item timelock
 *ItemsApi* | [**getCollectionItems**](docs/ItemsApi.md#getCollectionItems) | **GET** /v1/collections/{collectionId}/items | Get collection items
+*ItemsApi* | [**getCollectionRole**](docs/ItemsApi.md#getCollectionRole) | **GET** /v1/collections/{collectionId}/roles | Get collection role
 *ItemsApi* | [**getCollections**](docs/ItemsApi.md#getCollections) | **GET** /v1/collections | Get collections
+*ItemsApi* | [**grantCollectionRole**](docs/ItemsApi.md#grantCollectionRole) | **POST** /v1/collections/{collectionId}/roles | Grant collection role
 *ItemsApi* | [**mintCollectionItem**](docs/ItemsApi.md#mintCollectionItem) | **POST** /v1/collections/{collectionId}/items/{collectionItemId}/mints | Mint collection item
+*ItemsApi* | [**revokeCollectionRole**](docs/ItemsApi.md#revokeCollectionRole) | **DELETE** /v1/collections/{collectionId}/roles | Revoke collection role
 *ItemsApi* | [**setCollectionApproval**](docs/ItemsApi.md#setCollectionApproval) | **POST** /v1/collections/{collectionId}/approvals | Set collection approval
 *ItemsApi* | [**setCollectionItemTimelock**](docs/ItemsApi.md#setCollectionItemTimelock) | **POST** /v1/collections/{collectionId}/items/{collectionItemId}/timelocks | Set collection item timelock
 *ItemsApi* | [**transferCollectionItem**](docs/ItemsApi.md#transferCollectionItem) | **POST** /v1/collections/{collectionId}/items/{collectionItemId}/transfers | Transfer collection item
@@ -181,27 +195,37 @@ Class | Method | HTTP request | Description
  - [CreateContractRequest](docs/CreateContractRequest.md)
  - [CreateCurrency200Response](docs/CreateCurrency200Response.md)
  - [CreateCurrencyRequest](docs/CreateCurrencyRequest.md)
+ - [CreateExchange200Response](docs/CreateExchange200Response.md)
+ - [CreateExchangeRequest](docs/CreateExchangeRequest.md)
  - [CreateGameRequest](docs/CreateGameRequest.md)
  - [CreatePlayerRequest](docs/CreatePlayerRequest.md)
  - [CurrencyModel](docs/CurrencyModel.md)
+ - [ExchangeModel](docs/ExchangeModel.md)
+ - [ExchangeOffer](docs/ExchangeOffer.md)
  - [GameModel](docs/GameModel.md)
  - [GetCollections200ResponseInner](docs/GetCollections200ResponseInner.md)
  - [GetCollections200ResponseInnerAllOf](docs/GetCollections200ResponseInnerAllOf.md)
  - [GetCurrencies200ResponseInner](docs/GetCurrencies200ResponseInner.md)
  - [GetCurrencies200ResponseInnerAllOf](docs/GetCurrencies200ResponseInnerAllOf.md)
  - [GetCurrencyFees200Response](docs/GetCurrencyFees200Response.md)
+ - [GetExchanges200ResponseInner](docs/GetExchanges200ResponseInner.md)
+ - [GrantCollectionRoleRequest](docs/GrantCollectionRoleRequest.md)
+ - [GrantCurrencyRoleRequest](docs/GrantCurrencyRoleRequest.md)
  - [MintCollectionItemRequest](docs/MintCollectionItemRequest.md)
  - [MintCurrencyRequest](docs/MintCurrencyRequest.md)
  - [PlayerModel](docs/PlayerModel.md)
+ - [RevokeCollectionRoleRequest](docs/RevokeCollectionRoleRequest.md)
  - [SetCollectionApprovalRequest](docs/SetCollectionApprovalRequest.md)
  - [SetCollectionItemTimelockRequest](docs/SetCollectionItemTimelockRequest.md)
  - [SetCurrencyFeesRequest](docs/SetCurrencyFeesRequest.md)
+ - [SetExchangeOfferRequest](docs/SetExchangeOfferRequest.md)
  - [TransactionModel](docs/TransactionModel.md)
  - [TransferCollectionItemRequest](docs/TransferCollectionItemRequest.md)
  - [TransferCurrencyRequest](docs/TransferCurrencyRequest.md)
  - [UpdateGameRequest](docs/UpdateGameRequest.md)
  - [UpdatePlayerRequest](docs/UpdatePlayerRequest.md)
  - [WalletModel](docs/WalletModel.md)
+ - [WithdrawFromExchangeRequest](docs/WithdrawFromExchangeRequest.md)
  - [WriteContractRequest](docs/WriteContractRequest.md)
 
 

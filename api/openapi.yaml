@@ -7,7 +7,7 @@ info:
   description: " Complete MetaFab API references and guides can be found at: https://trymetafab.com"
   termsOfService: https://trymetafab.com
   title: MetaFab API
-  version: 1.1.3
+  version: 1.1.4
 servers:
 - description: MetaFab API Server
   url: https://api.trymetafab.com
@@ -16,6 +16,8 @@ tags:
   name: Contracts
 - description: Currency related operations
   name: Currencies
+- description: Exchange related operations
+  name: Exchanges
 - description: Game related operations
   name: Games
 - description: Item related operations
@@ -172,7 +174,7 @@ paths:
           content:
             application/json:
               schema:
-                type: number
+                type: boolean
           description: Successfully retrieved the boolean value representing if the
             provided operatorAddress can transfer and burn owned items by the provided
             address or walletId.
@@ -465,7 +467,10 @@ paths:
       x-accepts: application/json
   /v1/collections/{collectionId}/items:
     get:
-      description: Returns all collection items as an array of metadata objects.
+      description: "Returns all collection items as an array of metadata objects.\n\
+        \nPlease note that ONLY items that have had at least 1 quantity minted will\
+        \ be returned. If you've created an item that has not been minted yet, it\
+        \ will not be returned in the array response."
       operationId: getCollectionItems
       parameters:
       - description: Any collection id within the MetaFab ecosystem.
@@ -502,9 +507,9 @@ paths:
         \ attributes, any arbitrary data such as 2D or 3D model resolver URLs, and\
         \ more. It is recommended, but not required, that you create a new item type\
         \ through this endpoint before minting any quantity of the related itemId.\n\
-        \nItem type data is uploaded to, and resolved through IPFS for decentralized\
-        \ persistence. Any itemId provided will have its existing item type overriden\
-        \ if it already exists."
+        \nAny itemId provided will have its existing item type overriden if it already\
+        \ exists.\n\nItem type data is uploaded to, and resolved through IPFS for\
+        \ decentralized persistence."
       operationId: createCollectionItem
       parameters:
       - description: Any collection id within the MetaFab ecosystem.
@@ -1082,6 +1087,210 @@ paths:
             \ tokens or keys being provided, or accessing a resource that the provided\
             \ tokens or keys do not have access to."
       summary: Transfer collection item
+      tags:
+      - Items
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/collections/{collectionId}/roles:
+    delete:
+      description: Revokes the provided role for the collection to the provided address
+        or address associated with the provided walletId.
+      operationId: revokeCollectionRole
+      parameters:
+      - description: Any collection id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: collectionId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The `secretKey` of a specific game or the `accessToken` of a
+          specific player.
+        example:
+        - game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        - player_at_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The password of the authenticating game or player. Required to
+          decrypt and perform blockchain transactions with the game or player primary
+          wallet.
+        example: mySecurePassword
+        explode: false
+        in: header
+        name: X-Password
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/revokeCollectionRole_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionModel'
+          description: Successfully revoked the provided role from the provided address
+            or address associated with the provided walletId. Returns a transaction
+            object.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Revoke collection role
+      tags:
+      - Items
+      x-content-type: application/json
+      x-accepts: application/json
+    get:
+      description: Returns a boolean (true/false) representing if the provided role
+        for this collection has been granted to the provided address or address associated
+        with the provided walletId.
+      operationId: getCollectionRole
+      parameters:
+      - description: Any collection id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: collectionId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: "A valid MetaFab role or bytes string representing a role, such\
+          \ as `0xc9eb32e43bf5ecbceacf00b32281dfc5d6d700a0db676ea26ccf938a385ac3b7`"
+        example: minter
+        explode: true
+        in: query
+        name: role
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: "A valid EVM based address. For example, `0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D`."
+        example: 0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D
+        explode: true
+        in: query
+        name: address
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Any wallet id within the MetaFab ecosystem.
+        explode: true
+        in: query
+        name: walletId
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: boolean
+          description: Successfully retrieved the boolean value representing if the
+            provided role has been granted to the provided address or walletId.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+      summary: Get collection role
+      tags:
+      - Items
+      x-accepts: application/json
+    post:
+      description: "Grants the provided role for the collection to the provided address\
+        \ or address associated with the provided walletId. Granted roles give different\
+        \ types of authority on behalf of the collection for specific players, addresses,\
+        \ or contracts to perform different types of permissioned collection operations."
+      operationId: grantCollectionRole
+      parameters:
+      - description: Any collection id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: collectionId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The `secretKey` of a specific game or the `accessToken` of a
+          specific player.
+        example:
+        - game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        - player_at_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The password of the authenticating game or player. Required to
+          decrypt and perform blockchain transactions with the game or player primary
+          wallet.
+        example: mySecurePassword
+        explode: false
+        in: header
+        name: X-Password
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/grantCollectionRole_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionModel'
+          description: Successfully granted the provided role to the provided address
+            or address associated with the provided walletId.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Grant collection role
       tags:
       - Items
       x-content-type: application/json
@@ -1813,6 +2022,210 @@ paths:
       - Currencies
       x-content-type: application/json
       x-accepts: application/json
+  /v1/currencies/{currencyId}/roles:
+    delete:
+      description: Revokes the provided role for the currency to the provided address
+        or address associated with the provided walletId.
+      operationId: revokeCurrencyRole
+      parameters:
+      - description: Any currency id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: currencyId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The `secretKey` of a specific game or the `accessToken` of a
+          specific player.
+        example:
+        - game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        - player_at_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The password of the authenticating game or player. Required to
+          decrypt and perform blockchain transactions with the game or player primary
+          wallet.
+        example: mySecurePassword
+        explode: false
+        in: header
+        name: X-Password
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/revokeCollectionRole_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionModel'
+          description: Successfully revoked the provided role from the provided address
+            or address associated with the provided walletId. Returns a transaction
+            object.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Revoke currency role
+      tags:
+      - Currencies
+      x-content-type: application/json
+      x-accepts: application/json
+    get:
+      description: Returns a boolean (true/false) representing if the provided role
+        for this currency has been granted to the provided address or address associated
+        with the provided walletId.
+      operationId: getCurrencyRole
+      parameters:
+      - description: Any currency id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: currencyId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: "A valid MetaFab role or bytes string representing a role, such\
+          \ as `0xc9eb32e43bf5ecbceacf00b32281dfc5d6d700a0db676ea26ccf938a385ac3b7`"
+        example: minter
+        explode: true
+        in: query
+        name: role
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: "A valid EVM based address. For example, `0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D`."
+        example: 0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D
+        explode: true
+        in: query
+        name: address
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Any wallet id within the MetaFab ecosystem.
+        explode: true
+        in: query
+        name: walletId
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: boolean
+          description: Successfully retrieved the boolean value representing if the
+            provided role has been granted to the provided address or walletId.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+      summary: Get currency role
+      tags:
+      - Currencies
+      x-accepts: application/json
+    post:
+      description: "Grants the provided role for the currency to the provided address\
+        \ or address associated with the provided walletId. Granted roles give different\
+        \ types of authority on behalf of the currency for specific players, addresses,\
+        \ or contracts to perform different types of permissioned currency operations."
+      operationId: grantCurrencyRole
+      parameters:
+      - description: Any currency id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: currencyId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The `secretKey` of a specific game or the `accessToken` of a
+          specific player.
+        example:
+        - game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        - player_at_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The password of the authenticating game or player. Required to
+          decrypt and perform blockchain transactions with the game or player primary
+          wallet.
+        example: mySecurePassword
+        explode: false
+        in: header
+        name: X-Password
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/grantCurrencyRole_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionModel'
+          description: Successfully granted the provided role to the provided address
+            or address associated with the provided walletId.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Grant currency role
+      tags:
+      - Currencies
+      x-content-type: application/json
+      x-accepts: application/json
   /v1/currencies/{currencyId}/transfers:
     post:
       description: "Transfers an amount of currency to the provided wallet address\
@@ -1888,6 +2301,465 @@ paths:
       summary: Transfer currency
       tags:
       - Currencies
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/exchanges:
+    get:
+      description: Returns an array of active exchanges for the game associated with
+        the provided `X-Game-Key`.
+      operationId: getExchanges
+      parameters:
+      - description: "The `publishedKey` of a specific game. This can be shared or\
+          \ included in game clients, websites, etc."
+        example: game_pk_4SOqpDi8pQdnQgfCOBW29qR8YmwOhxVPz5iHoMgUEJLDdPXgwLuHqZf8ewo2GajZ
+        explode: false
+        in: header
+        name: X-Game-Key
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/getExchanges_200_response_inner'
+                type: array
+          description: Successfully retrieved an array of exchanges for the game associated
+            with the provided `X-Game-Key`
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+      summary: Get exchanges
+      tags:
+      - Exchanges
+      x-accepts: application/json
+    post:
+      description: "Creates a new game exchange and deploys a exchange contract on\
+        \ behalf of the authenticating game's primary wallet. The deployed exchange\
+        \ contract allows you to create fixed price rates for players to buy specific\
+        \ items from any item collection or ERC1155 contract. Additionally, an exchange\
+        \ allows you to create exchange offers for some set of item(s) to another\
+        \ set of item(s) or any mix of currency. Exchanges completely supports gasless\
+        \ player transactions."
+      operationId: createExchange
+      parameters:
+      - description: The `secretKey` of the authenticating game.
+        example: game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The password of the authenticating game. Required to decrypt
+          and perform blockchain transactions with the game primary wallet.
+        example: mySecurePassword
+        explode: false
+        in: header
+        name: X-Password
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createExchange_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createExchange_200_response'
+          description: Successfully created a new exchange and deployed its contract
+            on the chain specified. Returns a exchange object containing a contract
+            property with the deployment transaction.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Create exchange
+      tags:
+      - Exchanges
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/exchanges/{exchangeId}/offers:
+    get:
+      description: Returns all exchange offers as an array of exchange offer objects.
+      operationId: getExchangeOffers
+      parameters:
+      - description: Any exchange id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: exchangeId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/ExchangeOffer'
+                type: array
+          description: Successfully retrieved exchange offers.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+      summary: Get exchange offers
+      tags:
+      - Exchanges
+      x-accepts: application/json
+    post:
+      description: "Sets a new exchange offer or updates an existing one for the provided\
+        \ id. Exchange offers allow currency to item, item to currency or item to\
+        \ item exchanges.\n\nAll request fields besides `id` are optional. Any optional\
+        \ fields omitted will not be used for the offer. This allows you to create\
+        \ many different combinations of offers. For example, you can create an offer\
+        \ that may require 3 unique item ids of specified quantities from a given\
+        \ item collection and gives the user 1 new unique item id in exchange.\n\n\
+        Another example, you may want to make an exchange offer from one ERC20 token\
+        \ to another. This is also possible - simple set the input and output currency\
+        \ fields and leave the others blank."
+      operationId: setExchangeOffer
+      parameters:
+      - description: Any exchange id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: exchangeId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The `secretKey` of the authenticating game.
+        example: game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The password of the authenticating game. Required to decrypt
+          and perform blockchain transactions with the game primary wallet.
+        example: mySecurePassword
+        explode: false
+        in: header
+        name: X-Password
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/setExchangeOffer_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionModel'
+          description: Successfully created or updated an exchange offer for the provided
+            offer id. Returns a transaction object.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Set exchange offer
+      tags:
+      - Exchanges
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/exchanges/{exchangeId}/items/{exchangeOfferId}:
+    get:
+      description: Returns a exchange offer object for the provided exchangeOfferId.
+      operationId: getExchangeOffer
+      parameters:
+      - description: Any exchange id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: exchangeId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: "Any offer id for the exchange. Zero, or a positive integer."
+        explode: false
+        in: path
+        name: exchangeOfferId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExchangeOffer'
+          description: Successfully retrieved exchange offer.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+      summary: Get exchange offer
+      tags:
+      - Exchanges
+      x-accepts: application/json
+  /v1/exchanges/{exchangeId}/offers/{exchangeOfferId}:
+    delete:
+      description: Removes the provided offerId from the provided exchange. Removed
+        offers can no longer be used.
+      operationId: removeExchangeOffer
+      parameters:
+      - description: Any exchange id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: exchangeId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: "Any offer id for the exchange. Zero, or a positive integer."
+        explode: false
+        in: path
+        name: exchangeOfferId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The `secretKey` of the authenticating game.
+        example: game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The password of the authenticating game. Required to decrypt
+          and perform blockchain transactions with the game primary wallet.
+        example: mySecurePassword
+        explode: false
+        in: header
+        name: X-Password
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionModel'
+          description: Successfully removed the provided offer from the provided exchange.
+            Returns a transaction object.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Remove exchange offer
+      tags:
+      - Exchanges
+      x-accepts: application/json
+  /v1/exchanges/{exchangeId}/offers/{exchangeOfferId}/uses:
+    post:
+      description: Uses an exchange offer. The required (input) item(s) and/or currency
+        are removed from the wallet or player wallet using the offer. The given (output)
+        item(s) and/or currency are given to the wallet or player wallet using the
+        offer.
+      operationId: useExchangeOffer
+      parameters:
+      - description: Any exchange id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: exchangeId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: "Any offer id for the exchange. Zero, or a positive integer."
+        explode: false
+        in: path
+        name: exchangeOfferId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The `secretKey` of a specific game or the `accessToken` of a
+          specific player.
+        example:
+        - game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        - player_at_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The password of the authenticating game or player. Required to
+          decrypt and perform blockchain transactions with the game or player primary
+          wallet.
+        example: mySecurePassword
+        explode: false
+        in: header
+        name: X-Password
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionModel'
+          description: Successfully used provided exchange offer. Returns a transaction
+            object.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Use exchange offer
+      tags:
+      - Exchanges
+      x-accepts: application/json
+  /v1/exchanges/{exchangeId}/withdrawals:
+    post:
+      description: "Withdraws native token, currency or items from a exchange. Whenever\
+        \ an exchange offer has input requirements, the native tokens, currencies\
+        \ or items for the requirements of that offer are deposited into the exchange\
+        \ contract when the offer is used. These can be withdrawn to any other address."
+      operationId: withdrawFromExchange
+      parameters:
+      - description: Any exchange id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: exchangeId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The `secretKey` of the authenticating game.
+        example: game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The password of the authenticating game. Required to decrypt
+          and perform blockchain transactions with the game primary wallet.
+        example: mySecurePassword
+        explode: false
+        in: header
+        name: X-Password
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/withdrawFromExchange_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionModel'
+          description: Successfully performed a withdrawal to the provided wallet
+            address or wallet address of the provided walletId. Returns a transaction
+            object.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Withdraw from exchange
+      tags:
+      - Exchanges
       x-content-type: application/json
       x-accepts: application/json
   /v1/games:
@@ -2411,6 +3283,24 @@ components:
       schema:
         type: string
       style: simple
+    pathExchangeId:
+      description: Any exchange id within the MetaFab ecosystem.
+      explode: false
+      in: path
+      name: exchangeId
+      required: true
+      schema:
+        type: string
+      style: simple
+    pathExchangeOfferId:
+      description: "Any offer id for the exchange. Zero, or a positive integer."
+      explode: false
+      in: path
+      name: exchangeOfferId
+      required: true
+      schema:
+        type: string
+      style: simple
     pathTransactionId:
       description: Any transaction id within the MetaFab ecosystem.
       explode: false
@@ -2476,6 +3366,17 @@ components:
       explode: true
       in: query
       name: operatorAddress
+      required: true
+      schema:
+        type: string
+      style: form
+    queryRole:
+      description: "A valid MetaFab role or bytes string representing a role, such\
+        \ as `0xc9eb32e43bf5ecbceacf00b32281dfc5d6d700a0db676ea26ccf938a385ac3b7`"
+      example: minter
+      explode: true
+      in: query
+      name: role
       required: true
       schema:
         type: string
@@ -2672,6 +3573,24 @@ components:
           description: This field has not had a description added.
           type: string
       type: object
+    ExchangeModel:
+      properties:
+        id:
+          description: This field has not had a description added.
+          type: string
+        gameId:
+          description: This field has not had a description added.
+          type: string
+        contractId:
+          description: This field has not had a description added.
+          type: string
+        updatedAt:
+          description: This field has not had a description added.
+          type: string
+        createdAt:
+          description: This field has not had a description added.
+          type: string
+      type: object
     TransactionModel:
       example:
         args: "{}"
@@ -2707,6 +3626,92 @@ components:
         createdAt:
           description: This field has not had a description added.
           type: string
+      type: object
+    ExchangeOffer:
+      example:
+        inputCollectionItemIds:
+        - 6.027456183070403
+        - 6.027456183070403
+        outputCurrency: outputCurrency
+        maxUses: 3.616076749251911
+        inputCurrency: inputCurrency
+        outputCollectionItemAmounts:
+        - 2.3021358869347655
+        - 2.3021358869347655
+        lastUpdatedAt: 2.027123023002322
+        outputCollection: outputCollection
+        inputCollectionItemAmounts:
+        - 1.4658129805029452
+        - 1.4658129805029452
+        inputCurrencyAmount: 5.962133916683182
+        uses: 9.301444243932576
+        id: 0.8008281904610115
+        outputCurrencyAmount: 7.061401241503109
+        inputCollection: inputCollection
+        outputCollectionItemIds:
+        - 5.637376656633329
+        - 5.637376656633329
+      properties:
+        id:
+          description: The id of this offer.
+          type: number
+        inputCollection:
+          description: The address of the ERC1155 of MetaFab game items contract for
+            input items required by this offer.
+          type: string
+        inputCollectionItemIds:
+          description: An array of item ids from the input collection that are required
+            for this offer.
+          items:
+            type: number
+          type: array
+        inputCollectionItemAmounts:
+          description: An array of amounts for each item id for the input collection
+            that are required to use this offer.
+          items:
+            type: number
+          type: array
+        inputCurrency:
+          description: The address of the ERC20 or MetaFab game currency for the currency
+            required by this offer.
+          type: string
+        inputCurrencyAmount:
+          description: The amount of currency required by this offer.
+          type: number
+        outputCollection:
+          description: The address of the ERC1155 of MetaFab game items contract for
+            output items given by this offer.
+          type: string
+        outputCollectionItemIds:
+          description: An array of item ids from the output collection that are given
+            for this offer.
+          items:
+            type: number
+          type: array
+        outputCollectionItemAmounts:
+          description: An array of amounts for each item id for the output collection
+            that are given by this offer.
+          items:
+            type: number
+          type: array
+        outputCurrency:
+          description: The address of the ERC20 or MetaFab game currency for the output
+            currency given by this offer.
+          type: string
+        outputCurrencyAmount:
+          description: The amount of currency given by this offer.
+          type: number
+        uses:
+          description: The number of times this offer has been used.
+          type: number
+        maxUses:
+          description: The maximum number of times this offer can be used. A value
+            of `0` means there is no limit on how many times this offer can be used.
+          type: number
+        lastUpdatedAt:
+          description: A unix timestamp in seconds that represents the last time this
+            offer was set or updated.
+          type: number
       type: object
     AnyValue:
       description: "Can be anything. String, number, object, array, boolean, etc."
@@ -2761,7 +3766,7 @@ components:
             address or address associated with the provided walletId.
           type: boolean
         address:
-          description: A valid EVM based addresses to allow control over the authenticating
+          description: A valid EVM based address to allow control over the authenticating
             game or player's wallet items for this collection.
           type: string
         walletId:
@@ -2880,14 +3885,16 @@ components:
           format: uri
           type: string
         attributes:
-          description: An array of objects that conform with metadata standard.
+          description: "An array of objects that conform with the [metadata attributes\
+            \ standard that can be found here](https://docs.opensea.io/docs/metadata-standards#attributes)"
           items:
             $ref: '#/components/schemas/createCollectionItem_request_attributes_inner'
           type: array
         data:
-          description: An arbitrary object of data attached to the top level metadata
-            object. This is useful for including data or resource URLs specific to
-            your game. Such as URLs that point to
+          description: "An arbitrary object of data attached to the top level metadata\
+            \ object. This is useful for including data or resource URLs specific\
+            \ to your game. Such as URLs that point to 3D models, music files, bitmaps,\
+            \ or anything else you need to reference."
           type: object
       required:
       - description
@@ -2944,6 +3951,42 @@ components:
           type: number
       required:
       - quantity
+      type: object
+    grantCollectionRole_request:
+      properties:
+        role:
+          description: "A valid MetaFab role or bytes string representing a role,\
+            \ such as `minter` or `0xc9eb32e43bf5ecbceacf00b32281dfc5d6d700a0db676ea26ccf938a385ac3b7`"
+          type: string
+        address:
+          description: A valid EVM based address grant the role to.
+          type: string
+        walletId:
+          description: A wallet id within the MetaFab ecosystem to grant the role
+            to.
+          items:
+            type: string
+          type: array
+      required:
+      - role
+      type: object
+    revokeCollectionRole_request:
+      properties:
+        role:
+          description: "A valid MetaFab role or bytes string representing a role,\
+            \ such as `minter` or `0xc9eb32e43bf5ecbceacf00b32281dfc5d6d700a0db676ea26ccf938a385ac3b7`"
+          type: string
+        address:
+          description: A valid EVM based address to revoke the role from.
+          type: string
+        walletId:
+          description: A wallet id within the MetaFab ecosystem to revoke the role
+            from.
+          items:
+            type: string
+          type: array
+      required:
+      - role
       type: object
     createContract_request:
       properties:
@@ -3144,6 +4187,24 @@ components:
       required:
       - amount
       type: object
+    grantCurrencyRole_request:
+      properties:
+        role:
+          description: "A valid MetaFab role or bytes string representing a role,\
+            \ such as `minter` or `0xc9eb32e43bf5ecbceacf00b32281dfc5d6d700a0db676ea26ccf938a385ac3b7`"
+          type: string
+        address:
+          description: A valid EVM based address to grant the role to.
+          type: string
+        walletId:
+          description: A wallet id within the MetaFab ecosystem to grant the role
+            to.
+          items:
+            type: string
+          type: array
+      required:
+      - role
+      type: object
     transferCurrency_request:
       properties:
         address:
@@ -3165,6 +4226,164 @@ components:
           type: number
       required:
       - amount
+      type: object
+    getExchanges_200_response_inner:
+      allOf:
+      - $ref: '#/components/schemas/ExchangeModel'
+      - $ref: '#/components/schemas/getCurrencies_200_response_inner_allOf'
+    createExchange_request:
+      properties:
+        chain:
+          description: The blockchain you want to deploy this exchange on. Support
+            for new blockchains are added over time.
+          enum:
+          - ETHEREUM
+          - GOERLI
+          - MATIC
+          - MUMBAI
+          example: MATIC
+          type: string
+      required:
+      - chain
+      type: object
+    createExchange_200_response:
+      allOf:
+      - $ref: '#/components/schemas/ExchangeModel'
+      - $ref: '#/components/schemas/createCollection_200_response_allOf'
+    setExchangeOffer_request:
+      properties:
+        id:
+          description: "A unique offer id to use for this offer for the exchange.\
+            \ If an existing offer id is used, the current offer will be updated but\
+            \ the existing number of uses will be kept. If you want to reset the number\
+            \ of uses for an existing offer, first remove it using the remove offer\
+            \ endpoint, then set it."
+          example: 1337
+          type: number
+        inputCollectionAddress:
+          description: A valid EVM based ERC1155 or MetaFab game items contract address
+            that represents the collection for input items required by this offer.
+            `inputCollectionAddress` or `inputCollectionId` can optionally be provided.
+          type: string
+        inputCollectionId:
+          description: A valid MetaFab collection id that represents the collection
+            for input items required by this offer. `inputCollectionAddress` or `inputCollectionId`
+            can optionally be provided.
+          type: string
+        inputCollectionItemIds:
+          description: An array of item ids from the provided input collection that
+            are required to use this offer. Input items are transferred from the wallet
+            to the exchange contract upon using an offer.
+          items:
+            type: number
+          type: array
+        inputCollectionItemAmounts:
+          description: An array of amounts for each item id from the provided input
+            collection that are required to use this offer. Item amounts array indices
+            are reflective of the amount required for a given item id at the same
+            index.
+          items:
+            type: number
+          type: array
+        inputCurrencyAddress:
+          description: A valid EVM based ERC20 or MetaFab game currency contract address
+            that for the currency required by this offer.
+          type: string
+        inputCurrencyId:
+          description: A valid MetaFab currency id that represents the currency required
+            by this offer.
+          type: string
+        inputCurrencyAmount:
+          description: "The amount of currency required by this offer. If an inputCurrencyAmount\
+            \ is provided without in input currency address or id, the native chain\
+            \ currency is used as the required currency."
+          type: number
+        outputCollectionAddress:
+          description: A valid EVM based ERC1155 or MetaFab game items contract address
+            that represents the collection for output items given by this offer. `outputCollectionAddress`
+            or `outputCollectionId` can optionally be provided.
+          type: string
+        outputCollectionId:
+          description: A valid MetaFab collection id that represents the collection
+            for output items given by this offer. `outputCollectionAddress` or `outputCollectionId`
+            can optionally be provided.
+          type: string
+        outputCollectionItemIds:
+          description: "An array of item ids from the provided output collection that\
+            \ are given by this offer. Output items are automatically minted if the\
+            \ exchange contract has the `minter` role for the output collection contract.\
+            \ Otherwise, they are transferred from the item balance held by the exchange\
+            \ contract."
+          items:
+            type: number
+          type: array
+        outputCollectionItemAmounts:
+          description: An array of amounts for each item id from the provided output
+            collection that are given by this offer. Item amounts array indices are
+            reflective of the amount required for a given item id at the same index.
+          items:
+            type: number
+          type: array
+        outputCurrencyAddress:
+          description: "A valid EVM based ERC20 or MetaFab game currency contract\
+            \ address that for the currency given by this offer. The output currency\
+            \ amount is automatically minted if the exchange contract has the `minter`\
+            \ role for the output currency contract. Otherwise, they are transferred\
+            \ from the currency balance held by the exchange contract."
+          type: string
+        outputCurrencyId:
+          description: A valid MetaFab currency id for the currency given by this
+            offer.
+          type: string
+        outputCurrencyAmount:
+          description: "The amount of currency given by this offer. If an outputCurrencyAmount\
+            \ is provided without an output currency address or id, the native chain\
+            \ currency is used as the given currency."
+          type: number
+        maxUses:
+          description: "The maximum number of times this offer can be used in total.\
+            \ maxUses is collective across all uses of the offer. If 5 unique players\
+            \ use an offer, that counts as 5 offer uses. Exclude this or use 0 to\
+            \ allow unlimited uses."
+          type: number
+      required:
+      - id
+      type: object
+    withdrawFromExchange_request:
+      properties:
+        address:
+          description: "A valid EVM based address to withdraw to. For example, `0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D`."
+          type: string
+        walletId:
+          description: Any wallet id within the MetaFab ecosystem to withdraw to.
+          type: string
+        currencyAddress:
+          description: "The address of the currency (ERC20) token to withdraw from\
+            \ the exchange. If no currencyAddress or currencyId, and no collectionAddress\
+            \ or collectionId are provided, the native token held by the exchange\
+            \ will be withdrawn."
+          type: string
+        currencyId:
+          description: A valid MetaFab currency id that represents the currency token
+            to withdraw from the exchange. `currencyAddress` or `currencyId` can be
+            provided when withdrawing currency.
+          type: string
+        collectionAddress:
+          description: "The address of the collection (ERC1155) for the items to withdraw\
+            \ from the exchange. If no currencyAddress and no collectionAddress is\
+            \ provided, the native token held by the exchange will be withdrawn."
+          type: string
+        collectionId:
+          description: A valid MetaFab collection id that represents the collection
+            for the items to withdraw from the exchange. `collectionAddress` or `collectionId`
+            can be provided when withdrawing items.
+          type: string
+        itemIds:
+          description: The specific itemIds of the provided collection to withdraw
+            from the exchange.
+          items:
+            type: number
+          type: array
       type: object
     authGame_200_response_allOf:
       properties:

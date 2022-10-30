@@ -10,7 +10,10 @@ All URIs are relative to *https://api.trymetafab.com*
 | [**getCurrencies**](CurrenciesApi.md#getCurrencies) | **GET** /v1/currencies | Get currencies |
 | [**getCurrencyBalance**](CurrenciesApi.md#getCurrencyBalance) | **GET** /v1/currencies/{currencyId}/balances | Get currency balance |
 | [**getCurrencyFees**](CurrenciesApi.md#getCurrencyFees) | **GET** /v1/currencies/{currencyId}/fees | Get currency fees |
+| [**getCurrencyRole**](CurrenciesApi.md#getCurrencyRole) | **GET** /v1/currencies/{currencyId}/roles | Get currency role |
+| [**grantCurrencyRole**](CurrenciesApi.md#grantCurrencyRole) | **POST** /v1/currencies/{currencyId}/roles | Grant currency role |
 | [**mintCurrency**](CurrenciesApi.md#mintCurrency) | **POST** /v1/currencies/{currencyId}/mints | Mint currency |
+| [**revokeCurrencyRole**](CurrenciesApi.md#revokeCurrencyRole) | **DELETE** /v1/currencies/{currencyId}/roles | Revoke currency role |
 | [**setCurrencyFees**](CurrenciesApi.md#setCurrencyFees) | **POST** /v1/currencies/{currencyId}/fees | Set currency fees |
 | [**transferCurrency**](CurrenciesApi.md#transferCurrency) | **POST** /v1/currencies/{currencyId}/transfers | Transfer currency |
 
@@ -416,6 +419,145 @@ No authorization required
 | **200** | Successfully retrieved currency fees for the currency of the provided currencyId. |  -  |
 | **400** | An API level error occurred. This is often due to problematic data being provided by you. |  -  |
 
+<a name="getCurrencyRole"></a>
+# **getCurrencyRole**
+> Boolean getCurrencyRole(currencyId, role, address, walletId)
+
+Get currency role
+
+Returns a boolean (true/false) representing if the provided role for this currency has been granted to the provided address or address associated with the provided walletId.
+
+### Example
+```java
+// Import classes:
+import org.metafab.client.ApiClient;
+import org.metafab.client.ApiException;
+import org.metafab.client.Configuration;
+import org.metafab.client.models.*;
+import org.metafab.client.api.CurrenciesApi;
+
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://api.trymetafab.com");
+
+    CurrenciesApi apiInstance = new CurrenciesApi(defaultClient);
+    String currencyId = "currencyId_example"; // String | Any currency id within the MetaFab ecosystem.
+    String role = "minter"; // String | A valid MetaFab role or bytes string representing a role, such as `0xc9eb32e43bf5ecbceacf00b32281dfc5d6d700a0db676ea26ccf938a385ac3b7`
+    String address = "0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D"; // String | A valid EVM based address. For example, `0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D`.
+    String walletId = "walletId_example"; // String | Any wallet id within the MetaFab ecosystem.
+    try {
+      Boolean result = apiInstance.getCurrencyRole(currencyId, role, address, walletId);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling CurrenciesApi#getCurrencyRole");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **currencyId** | **String**| Any currency id within the MetaFab ecosystem. | |
+| **role** | **String**| A valid MetaFab role or bytes string representing a role, such as &#x60;0xc9eb32e43bf5ecbceacf00b32281dfc5d6d700a0db676ea26ccf938a385ac3b7&#x60; | |
+| **address** | **String**| A valid EVM based address. For example, &#x60;0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D&#x60;. | [optional] |
+| **walletId** | **String**| Any wallet id within the MetaFab ecosystem. | [optional] |
+
+### Return type
+
+**Boolean**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Successfully retrieved the boolean value representing if the provided role has been granted to the provided address or walletId. |  -  |
+| **400** | An API level error occurred. This is often due to problematic data being provided by you. |  -  |
+
+<a name="grantCurrencyRole"></a>
+# **grantCurrencyRole**
+> TransactionModel grantCurrencyRole(currencyId, xAuthorization, xPassword, grantCurrencyRoleRequest)
+
+Grant currency role
+
+Grants the provided role for the currency to the provided address or address associated with the provided walletId. Granted roles give different types of authority on behalf of the currency for specific players, addresses, or contracts to perform different types of permissioned currency operations.
+
+### Example
+```java
+// Import classes:
+import org.metafab.client.ApiClient;
+import org.metafab.client.ApiException;
+import org.metafab.client.Configuration;
+import org.metafab.client.models.*;
+import org.metafab.client.api.CurrenciesApi;
+
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://api.trymetafab.com");
+
+    CurrenciesApi apiInstance = new CurrenciesApi(defaultClient);
+    String currencyId = "currencyId_example"; // String | Any currency id within the MetaFab ecosystem.
+    String xAuthorization = "[\"game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP\",\"player_at_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP\"]"; // String | The `secretKey` of a specific game or the `accessToken` of a specific player.
+    String xPassword = "mySecurePassword"; // String | The password of the authenticating game or player. Required to decrypt and perform blockchain transactions with the game or player primary wallet.
+    GrantCurrencyRoleRequest grantCurrencyRoleRequest = new GrantCurrencyRoleRequest(); // GrantCurrencyRoleRequest | 
+    try {
+      TransactionModel result = apiInstance.grantCurrencyRole(currencyId, xAuthorization, xPassword, grantCurrencyRoleRequest);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling CurrenciesApi#grantCurrencyRole");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **currencyId** | **String**| Any currency id within the MetaFab ecosystem. | |
+| **xAuthorization** | **String**| The &#x60;secretKey&#x60; of a specific game or the &#x60;accessToken&#x60; of a specific player. | |
+| **xPassword** | **String**| The password of the authenticating game or player. Required to decrypt and perform blockchain transactions with the game or player primary wallet. | |
+| **grantCurrencyRoleRequest** | [**GrantCurrencyRoleRequest**](GrantCurrencyRoleRequest.md)|  | |
+
+### Return type
+
+[**TransactionModel**](TransactionModel.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Successfully granted the provided role to the provided address or address associated with the provided walletId. |  -  |
+| **400** | An API level error occurred. This is often due to problematic data being provided by you. |  -  |
+| **401** | An authorization error occured. This is often due to incorrect tokens or keys being provided, or accessing a resource that the provided tokens or keys do not have access to. |  -  |
+
 <a name="mintCurrency"></a>
 # **mintCurrency**
 > TransactionModel mintCurrency(currencyId, xAuthorization, xPassword, mintCurrencyRequest)
@@ -483,6 +625,76 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Successfully created (minted) the currency amount to the provided wallet address or wallet address of the provided walletId. Returns a transaction object. |  -  |
+| **400** | An API level error occurred. This is often due to problematic data being provided by you. |  -  |
+| **401** | An authorization error occured. This is often due to incorrect tokens or keys being provided, or accessing a resource that the provided tokens or keys do not have access to. |  -  |
+
+<a name="revokeCurrencyRole"></a>
+# **revokeCurrencyRole**
+> TransactionModel revokeCurrencyRole(currencyId, xAuthorization, xPassword, revokeCollectionRoleRequest)
+
+Revoke currency role
+
+Revokes the provided role for the currency to the provided address or address associated with the provided walletId.
+
+### Example
+```java
+// Import classes:
+import org.metafab.client.ApiClient;
+import org.metafab.client.ApiException;
+import org.metafab.client.Configuration;
+import org.metafab.client.models.*;
+import org.metafab.client.api.CurrenciesApi;
+
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://api.trymetafab.com");
+
+    CurrenciesApi apiInstance = new CurrenciesApi(defaultClient);
+    String currencyId = "currencyId_example"; // String | Any currency id within the MetaFab ecosystem.
+    String xAuthorization = "[\"game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP\",\"player_at_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP\"]"; // String | The `secretKey` of a specific game or the `accessToken` of a specific player.
+    String xPassword = "mySecurePassword"; // String | The password of the authenticating game or player. Required to decrypt and perform blockchain transactions with the game or player primary wallet.
+    RevokeCollectionRoleRequest revokeCollectionRoleRequest = new RevokeCollectionRoleRequest(); // RevokeCollectionRoleRequest | 
+    try {
+      TransactionModel result = apiInstance.revokeCurrencyRole(currencyId, xAuthorization, xPassword, revokeCollectionRoleRequest);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling CurrenciesApi#revokeCurrencyRole");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **currencyId** | **String**| Any currency id within the MetaFab ecosystem. | |
+| **xAuthorization** | **String**| The &#x60;secretKey&#x60; of a specific game or the &#x60;accessToken&#x60; of a specific player. | |
+| **xPassword** | **String**| The password of the authenticating game or player. Required to decrypt and perform blockchain transactions with the game or player primary wallet. | |
+| **revokeCollectionRoleRequest** | [**RevokeCollectionRoleRequest**](RevokeCollectionRoleRequest.md)|  | |
+
+### Return type
+
+[**TransactionModel**](TransactionModel.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Successfully revoked the provided role from the provided address or address associated with the provided walletId. Returns a transaction object. |  -  |
 | **400** | An API level error occurred. This is often due to problematic data being provided by you. |  -  |
 | **401** | An authorization error occured. This is often due to incorrect tokens or keys being provided, or accessing a resource that the provided tokens or keys do not have access to. |  -  |
 

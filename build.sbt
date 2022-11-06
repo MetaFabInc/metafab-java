@@ -2,7 +2,7 @@ lazy val root = (project in file(".")).
   settings(
     organization := "org.metafab",
     name := "metafab-java",
-    version := "1.1.4",
+    version := "1.1.43",
     scalaVersion := "2.11.4",
     scalacOptions ++= Seq("-feature"),
     javacOptions in compile ++= Seq("-Xlint:deprecation"),

@@ -1,8 +1,8 @@
 # metafab-java
 
 MetaFab API
-- API version: 1.1.4
-  - Build date: 2022-10-30T14:29:33.858390-07:00[America/Los_Angeles]
+- API version: 1.1.43
+  - Build date: 2022-11-05T17:09:52.575349-07:00[America/Los_Angeles]
 
  Complete MetaFab API references and guides can be found at: https://trymetafab.com
 
@@ -41,7 +41,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>org.metafab</groupId>
   <artifactId>metafab-java</artifactId>
-  <version>1.1.4</version>
+  <version>1.1.43</version>
   <scope>compile</scope>
 </dependency>
 ```
@@ -57,7 +57,7 @@ Add this dependency to your project's build file:
   }
 
   dependencies {
-     implementation "org.metafab:metafab-java:1.1.4"
+     implementation "org.metafab:metafab-java:1.1.43"
   }
 ```
 
@@ -71,7 +71,7 @@ mvn clean package
 
 Then manually install the following JARs:
 
-* `target/metafab-java-1.1.4.jar`
+* `target/metafab-java-1.1.43.jar`
 * `target/lib/*.jar`
 
 ## Getting Started

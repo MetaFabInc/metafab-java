@@ -7,7 +7,7 @@ info:
   description: " Complete MetaFab API references and guides can be found at: https://trymetafab.com"
   termsOfService: https://trymetafab.com
   title: MetaFab API
-  version: 1.1.4
+  version: 1.1.43
 servers:
 - description: MetaFab API Server
   url: https://api.trymetafab.com
@@ -599,9 +599,7 @@ paths:
           content:
             application/json:
               schema:
-                items:
-                  type: object
-                type: array
+                type: object
           description: Successfully retrieved collection item metadata.
         "400":
           content:
@@ -3734,6 +3732,8 @@ components:
           - GOERLI
           - MATIC
           - MUMBAI
+          - ARBITRUM
+          - ARBITRUMGOERLI
           example: MATIC
           type: string
       required:
@@ -4004,6 +4004,8 @@ components:
           - GOERLI
           - MATIC
           - MUMBAI
+          - ARBITRUM
+          - ARBITRUMGOERLI
           example: MATIC
           type: string
       required:
@@ -4059,6 +4061,8 @@ components:
           - GOERLI
           - MATIC
           - MUMBAI
+          - ARBITRUM
+          - ARBITRUMGOERLI
           example: MATIC
           type: string
       required:
@@ -4241,6 +4245,8 @@ components:
           - GOERLI
           - MATIC
           - MUMBAI
+          - ARBITRUM
+          - ARBITRUMGOERLI
           example: MATIC
           type: string
       required:

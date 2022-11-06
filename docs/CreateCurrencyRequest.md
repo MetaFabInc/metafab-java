@@ -22,6 +22,8 @@
 | GOERLI | &quot;GOERLI&quot; |
 | MATIC | &quot;MATIC&quot; |
 | MUMBAI | &quot;MUMBAI&quot; |
+| ARBITRUM | &quot;ARBITRUM&quot; |
+| ARBITRUMGOERLI | &quot;ARBITRUMGOERLI&quot; |
 
 
 

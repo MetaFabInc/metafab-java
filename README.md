@@ -1,8 +1,8 @@
 # metafab-java
 
 MetaFab API
-- API version: 1.1.43
-  - Build date: 2022-11-05T17:09:52.575349-07:00[America/Los_Angeles]
+- API version: 1.2.0
+  - Build date: 2022-11-07T16:37:22.578727-08:00[America/Los_Angeles]
 
  Complete MetaFab API references and guides can be found at: https://trymetafab.com
 
@@ -41,7 +41,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>org.metafab</groupId>
   <artifactId>metafab-java</artifactId>
-  <version>1.1.43</version>
+  <version>1.2.0</version>
   <scope>compile</scope>
 </dependency>
 ```
@@ -57,7 +57,7 @@ Add this dependency to your project's build file:
   }
 
   dependencies {
-     implementation "org.metafab:metafab-java:1.1.43"
+     implementation "org.metafab:metafab-java:1.2.0"
   }
 ```
 
@@ -71,7 +71,7 @@ mvn clean package
 
 Then manually install the following JARs:
 
-* `target/metafab-java-1.1.43.jar`
+* `target/metafab-java-1.2.0.jar`
 * `target/lib/*.jar`
 
 ## Getting Started
@@ -140,8 +140,9 @@ Class | Method | HTTP request | Description
 *ExchangesApi* | [**setExchangeOffer**](docs/ExchangesApi.md#setExchangeOffer) | **POST** /v1/exchanges/{exchangeId}/offers | Set exchange offer
 *ExchangesApi* | [**useExchangeOffer**](docs/ExchangesApi.md#useExchangeOffer) | **POST** /v1/exchanges/{exchangeId}/offers/{exchangeOfferId}/uses | Use exchange offer
 *ExchangesApi* | [**withdrawFromExchange**](docs/ExchangesApi.md#withdrawFromExchange) | **POST** /v1/exchanges/{exchangeId}/withdrawals | Withdraw from exchange
-*GamesApi* | [**authGame**](docs/GamesApi.md#authGame) | **GET** /v1/games | Authenticate game
+*GamesApi* | [**authGame**](docs/GamesApi.md#authGame) | **GET** /v1/games/auth | Authenticate game
 *GamesApi* | [**createGame**](docs/GamesApi.md#createGame) | **POST** /v1/games | Create game
+*GamesApi* | [**getGame**](docs/GamesApi.md#getGame) | **GET** /v1/games/{gameId} | Get game
 *GamesApi* | [**updateGame**](docs/GamesApi.md#updateGame) | **PATCH** /v1/games/{gameId} | Update game
 *ItemsApi* | [**batchMintCollectionItems**](docs/ItemsApi.md#batchMintCollectionItems) | **POST** /v1/collections/{collectionId}/batchMints | Batch mint collection items
 *ItemsApi* | [**batchTransferCollectionItems**](docs/ItemsApi.md#batchTransferCollectionItems) | **POST** /v1/collections/{collectionId}/batchTransfers | Batch transfer collection items
@@ -164,8 +165,10 @@ Class | Method | HTTP request | Description
 *ItemsApi* | [**setCollectionApproval**](docs/ItemsApi.md#setCollectionApproval) | **POST** /v1/collections/{collectionId}/approvals | Set collection approval
 *ItemsApi* | [**setCollectionItemTimelock**](docs/ItemsApi.md#setCollectionItemTimelock) | **POST** /v1/collections/{collectionId}/items/{collectionItemId}/timelocks | Set collection item timelock
 *ItemsApi* | [**transferCollectionItem**](docs/ItemsApi.md#transferCollectionItem) | **POST** /v1/collections/{collectionId}/items/{collectionItemId}/transfers | Transfer collection item
-*PlayersApi* | [**authPlayer**](docs/PlayersApi.md#authPlayer) | **GET** /v1/players | Authenticate player
+*PlayersApi* | [**authPlayer**](docs/PlayersApi.md#authPlayer) | **GET** /v1/players/auth | Authenticate player
 *PlayersApi* | [**createPlayer**](docs/PlayersApi.md#createPlayer) | **POST** /v1/players | Create player
+*PlayersApi* | [**getPlayer**](docs/PlayersApi.md#getPlayer) | **GET** /v1/players/{playerId} | Get player
+*PlayersApi* | [**getPlayers**](docs/PlayersApi.md#getPlayers) | **GET** /v1/players | Get players
 *PlayersApi* | [**updatePlayer**](docs/PlayersApi.md#updatePlayer) | **PATCH** /v1/players/{playerId} | Update player
 *TransactionsApi* | [**getTransaction**](docs/TransactionsApi.md#getTransaction) | **GET** /v1/transactions/{transactionId} | Get transaction
 *WalletsApi* | [**getWalletBalances**](docs/WalletsApi.md#getWalletBalances) | **GET** /v1/wallets/{walletId}/balances | Get wallet balances
@@ -214,6 +217,9 @@ Class | Method | HTTP request | Description
  - [MintCollectionItemRequest](docs/MintCollectionItemRequest.md)
  - [MintCurrencyRequest](docs/MintCurrencyRequest.md)
  - [PlayerModel](docs/PlayerModel.md)
+ - [PublicGame](docs/PublicGame.md)
+ - [PublicPlayer](docs/PublicPlayer.md)
+ - [PublicPlayerWallet](docs/PublicPlayerWallet.md)
  - [RevokeCollectionRoleRequest](docs/RevokeCollectionRoleRequest.md)
  - [SetCollectionApprovalRequest](docs/SetCollectionApprovalRequest.md)
  - [SetCollectionItemTimelockRequest](docs/SetCollectionItemTimelockRequest.md)

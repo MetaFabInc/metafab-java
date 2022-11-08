@@ -21,7 +21,7 @@
 | ETHEREUM | &quot;ETHEREUM&quot; |
 | GOERLI | &quot;GOERLI&quot; |
 | MATIC | &quot;MATIC&quot; |
-| MUMBAI | &quot;MUMBAI&quot; |
+| MATICMUMBAI | &quot;MATICMUMBAI&quot; |
 | ARBITRUM | &quot;ARBITRUM&quot; |
 | ARBITRUMGOERLI | &quot;ARBITRUMGOERLI&quot; |
 

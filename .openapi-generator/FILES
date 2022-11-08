@@ -51,6 +51,9 @@ docs/MintCollectionItemRequest.md
 docs/MintCurrencyRequest.md
 docs/PlayerModel.md
 docs/PlayersApi.md
+docs/PublicGame.md
+docs/PublicPlayer.md
+docs/PublicPlayerWallet.md
 docs/RevokeCollectionRoleRequest.md
 docs/SetCollectionApprovalRequest.md
 docs/SetCollectionItemTimelockRequest.md
@@ -141,6 +144,9 @@ src/main/java/org/openapitools/client/model/GrantCurrencyRoleRequest.java
 src/main/java/org/openapitools/client/model/MintCollectionItemRequest.java
 src/main/java/org/openapitools/client/model/MintCurrencyRequest.java
 src/main/java/org/openapitools/client/model/PlayerModel.java
+src/main/java/org/openapitools/client/model/PublicGame.java
+src/main/java/org/openapitools/client/model/PublicPlayer.java
+src/main/java/org/openapitools/client/model/PublicPlayerWallet.java
 src/main/java/org/openapitools/client/model/RevokeCollectionRoleRequest.java
 src/main/java/org/openapitools/client/model/SetCollectionApprovalRequest.java
 src/main/java/org/openapitools/client/model/SetCollectionItemTimelockRequest.java

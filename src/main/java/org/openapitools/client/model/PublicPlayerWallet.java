@@ -23,7 +23,6 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
-import java.math.BigDecimal;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -46,37 +45,64 @@ import java.util.Set;
 import org.metafab.client.JSON;
 
 /**
- * BurnCollectionItemRequest
+ * PublicPlayerWallet
  */
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-11-07T16:37:22.578727-08:00[America/Los_Angeles]")
-public class BurnCollectionItemRequest {
-  public static final String SERIALIZED_NAME_QUANTITY = "quantity";
-  @SerializedName(SERIALIZED_NAME_QUANTITY)
-  private BigDecimal quantity;
+public class PublicPlayerWallet {
+  public static final String SERIALIZED_NAME_ID = "id";
+  @SerializedName(SERIALIZED_NAME_ID)
+  private String id;
 
-  public BurnCollectionItemRequest() {
+  public static final String SERIALIZED_NAME_ADDRESS = "address";
+  @SerializedName(SERIALIZED_NAME_ADDRESS)
+  private String address;
+
+  public PublicPlayerWallet() {
   }
 
-  public BurnCollectionItemRequest quantity(BigDecimal quantity) {
+  public PublicPlayerWallet id(String id) {
     
-    this.quantity = quantity;
+    this.id = id;
     return this;
   }
 
    /**
-   * The quantity of the collectionItemId to burn.
-   * @return quantity
+   * This field has not had a description added.
+   * @return id
   **/
-  @javax.annotation.Nonnull
-  @ApiModelProperty(required = true, value = "The quantity of the collectionItemId to burn.")
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "This field has not had a description added.")
 
-  public BigDecimal getQuantity() {
-    return quantity;
+  public String getId() {
+    return id;
   }
 
 
-  public void setQuantity(BigDecimal quantity) {
-    this.quantity = quantity;
+  public void setId(String id) {
+    this.id = id;
+  }
+
+
+  public PublicPlayerWallet address(String address) {
+    
+    this.address = address;
+    return this;
+  }
+
+   /**
+   * This field has not had a description added.
+   * @return address
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "This field has not had a description added.")
+
+  public String getAddress() {
+    return address;
+  }
+
+
+  public void setAddress(String address) {
+    this.address = address;
   }
 
 
@@ -89,20 +115,22 @@ public class BurnCollectionItemRequest {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    BurnCollectionItemRequest burnCollectionItemRequest = (BurnCollectionItemRequest) o;
-    return Objects.equals(this.quantity, burnCollectionItemRequest.quantity);
+    PublicPlayerWallet publicPlayerWallet = (PublicPlayerWallet) o;
+    return Objects.equals(this.id, publicPlayerWallet.id) &&
+        Objects.equals(this.address, publicPlayerWallet.address);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(quantity);
+    return Objects.hash(id, address);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class BurnCollectionItemRequest {\n");
-    sb.append("    quantity: ").append(toIndentedString(quantity)).append("\n");
+    sb.append("class PublicPlayerWallet {\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    address: ").append(toIndentedString(address)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -125,41 +153,40 @@ public class BurnCollectionItemRequest {
   static {
     // a set of all properties/fields (JSON key names)
     openapiFields = new HashSet<String>();
-    openapiFields.add("quantity");
+    openapiFields.add("id");
+    openapiFields.add("address");
 
     // a set of required properties/fields (JSON key names)
     openapiRequiredFields = new HashSet<String>();
-    openapiRequiredFields.add("quantity");
   }
 
  /**
   * Validates the JSON Object and throws an exception if issues found
   *
   * @param jsonObj JSON Object
-  * @throws IOException if the JSON Object is invalid with respect to BurnCollectionItemRequest
+  * @throws IOException if the JSON Object is invalid with respect to PublicPlayerWallet
   */
   public static void validateJsonObject(JsonObject jsonObj) throws IOException {
       if (jsonObj == null) {
-        if (BurnCollectionItemRequest.openapiRequiredFields.isEmpty()) {
+        if (PublicPlayerWallet.openapiRequiredFields.isEmpty()) {
           return;
         } else { // has required fields
-          throw new IllegalArgumentException(String.format("The required field(s) %s in BurnCollectionItemRequest is not found in the empty JSON string", BurnCollectionItemRequest.openapiRequiredFields.toString()));
+          throw new IllegalArgumentException(String.format("The required field(s) %s in PublicPlayerWallet is not found in the empty JSON string", PublicPlayerWallet.openapiRequiredFields.toString()));
         }
       }
 
       Set<Entry<String, JsonElement>> entries = jsonObj.entrySet();
       // check to see if the JSON string contains additional fields
       for (Entry<String, JsonElement> entry : entries) {
-        if (!BurnCollectionItemRequest.openapiFields.contains(entry.getKey())) {
-          throw new IllegalArgumentException(String.format("The field `%s` in the JSON string is not defined in the `BurnCollectionItemRequest` properties. JSON: %s", entry.getKey(), jsonObj.toString()));
+        if (!PublicPlayerWallet.openapiFields.contains(entry.getKey())) {
+          throw new IllegalArgumentException(String.format("The field `%s` in the JSON string is not defined in the `PublicPlayerWallet` properties. JSON: %s", entry.getKey(), jsonObj.toString()));
         }
       }
-
-      // check to make sure all required properties/fields are present in the JSON string
-      for (String requiredField : BurnCollectionItemRequest.openapiRequiredFields) {
-        if (jsonObj.get(requiredField) == null) {
-          throw new IllegalArgumentException(String.format("The required field `%s` is not found in the JSON string: %s", requiredField, jsonObj.toString()));
-        }
+      if ((jsonObj.get("id") != null && !jsonObj.get("id").isJsonNull()) && !jsonObj.get("id").isJsonPrimitive()) {
+        throw new IllegalArgumentException(String.format("Expected the field `id` to be a primitive type in the JSON string but got `%s`", jsonObj.get("id").toString()));
+      }
+      if ((jsonObj.get("address") != null && !jsonObj.get("address").isJsonNull()) && !jsonObj.get("address").isJsonPrimitive()) {
+        throw new IllegalArgumentException(String.format("Expected the field `address` to be a primitive type in the JSON string but got `%s`", jsonObj.get("address").toString()));
       }
   }
 
@@ -167,22 +194,22 @@ public class BurnCollectionItemRequest {
     @SuppressWarnings("unchecked")
     @Override
     public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
-       if (!BurnCollectionItemRequest.class.isAssignableFrom(type.getRawType())) {
-         return null; // this class only serializes 'BurnCollectionItemRequest' and its subtypes
+       if (!PublicPlayerWallet.class.isAssignableFrom(type.getRawType())) {
+         return null; // this class only serializes 'PublicPlayerWallet' and its subtypes
        }
        final TypeAdapter<JsonElement> elementAdapter = gson.getAdapter(JsonElement.class);
-       final TypeAdapter<BurnCollectionItemRequest> thisAdapter
-                        = gson.getDelegateAdapter(this, TypeToken.get(BurnCollectionItemRequest.class));
+       final TypeAdapter<PublicPlayerWallet> thisAdapter
+                        = gson.getDelegateAdapter(this, TypeToken.get(PublicPlayerWallet.class));
 
-       return (TypeAdapter<T>) new TypeAdapter<BurnCollectionItemRequest>() {
+       return (TypeAdapter<T>) new TypeAdapter<PublicPlayerWallet>() {
            @Override
-           public void write(JsonWriter out, BurnCollectionItemRequest value) throws IOException {
+           public void write(JsonWriter out, PublicPlayerWallet value) throws IOException {
              JsonObject obj = thisAdapter.toJsonTree(value).getAsJsonObject();
              elementAdapter.write(out, obj);
            }
 
            @Override
-           public BurnCollectionItemRequest read(JsonReader in) throws IOException {
+           public PublicPlayerWallet read(JsonReader in) throws IOException {
              JsonObject jsonObj = elementAdapter.read(in).getAsJsonObject();
              validateJsonObject(jsonObj);
              return thisAdapter.fromJsonTree(jsonObj);
@@ -193,18 +220,18 @@ public class BurnCollectionItemRequest {
   }
 
  /**
-  * Create an instance of BurnCollectionItemRequest given an JSON string
+  * Create an instance of PublicPlayerWallet given an JSON string
   *
   * @param jsonString JSON string
-  * @return An instance of BurnCollectionItemRequest
-  * @throws IOException if the JSON string is invalid with respect to BurnCollectionItemRequest
+  * @return An instance of PublicPlayerWallet
+  * @throws IOException if the JSON string is invalid with respect to PublicPlayerWallet
   */
-  public static BurnCollectionItemRequest fromJson(String jsonString) throws IOException {
-    return JSON.getGson().fromJson(jsonString, BurnCollectionItemRequest.class);
+  public static PublicPlayerWallet fromJson(String jsonString) throws IOException {
+    return JSON.getGson().fromJson(jsonString, PublicPlayerWallet.class);
   }
 
  /**
-  * Convert an instance of BurnCollectionItemRequest to an JSON string
+  * Convert an instance of PublicPlayerWallet to an JSON string
   *
   * @return JSON string
   */

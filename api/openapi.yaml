@@ -7,7 +7,7 @@ info:
   description: " Complete MetaFab API references and guides can be found at: https://trymetafab.com"
   termsOfService: https://trymetafab.com
   title: MetaFab API
-  version: 1.1.43
+  version: 1.2.0
 servers:
 - description: MetaFab API Server
   url: https://api.trymetafab.com
@@ -2760,7 +2760,7 @@ paths:
       - Exchanges
       x-content-type: application/json
       x-accepts: application/json
-  /v1/games:
+  /v1/games/auth:
     get:
       description: Returns an existing game object containing authorization keys and
         credentials when provided a valid email (in place of username) and password
@@ -2795,30 +2795,26 @@ paths:
       tags:
       - Games
       x-accepts: application/json
-    post:
-      description: "Create a new game. A game is the root entity required for all\
-        \ API interactions. Contracts, currencies, items and more are deployed by\
-        \ games, player accounts are created and registered to games, etc.\n\nTo use\
-        \ any of MetaFab's services, you must first create a game through this endpoint.\n\
-        \n**Game creation is limited during our closed beta. Please contact ArkDev#4501\
-        \ on Discord to be a part of our beta.**"
-      operationId: createGame
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/createGame_request'
+  /v1/games/{gameId}:
+    get:
+      description: Returns a game object for the provided game id.
+      operationId: getGame
+      parameters:
+      - description: Any game id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: gameId
         required: true
+        schema:
+          type: string
+        style: simple
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/authGame_200_response'
-          description: "Successfully created a new game. Returns a game object containing\
-            \ a wallet and fundingWallet property, respectively representing the games\
-            \ primary wallet address (used to deploy & interact with contract) and\
-            \ funding wallet address (used to cover gasless transaction fees)."
+                $ref: '#/components/schemas/PublicGame'
+          description: Successfully retrieved game.
         "400":
           content:
             application/json:
@@ -2826,20 +2822,10 @@ paths:
                 type: string
           description: An API level error occurred. This is often due to problematic
             data being provided by you.
-        "401":
-          content:
-            application/json:
-              schema:
-                type: string
-          description: "An authorization error occured. This is often due to incorrect\
-            \ tokens or keys being provided, or accessing a resource that the provided\
-            \ tokens or keys do not have access to."
-      summary: Create game
+      summary: Get game
       tags:
       - Games
-      x-content-type: application/json
       x-accepts: application/json
-  /v1/games/{gameId}:
     patch:
       description: "Update various fields specific to a game. Such as changing its\
         \ password, resetting its published or secret key, or updating its RPCs."
@@ -2895,7 +2881,52 @@ paths:
       - Games
       x-content-type: application/json
       x-accepts: application/json
-  /v1/players:
+  /v1/games:
+    post:
+      description: "Create a new game. A game is the root entity required for all\
+        \ API interactions. Contracts, currencies, items and more are deployed by\
+        \ games, player accounts are created and registered to games, etc.\n\nTo use\
+        \ any of MetaFab's services, you must first create a game through this endpoint.\n\
+        \n**Game creation is limited during our closed beta. Please contact ArkDev#4501\
+        \ on Discord to be a part of our beta.**"
+      operationId: createGame
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createGame_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/authGame_200_response'
+          description: "Successfully created a new game. Returns a game object containing\
+            \ a wallet and fundingWallet property, respectively representing the games\
+            \ primary wallet address (used to deploy & interact with contract) and\
+            \ funding wallet address (used to cover gasless transaction fees)."
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Create game
+      tags:
+      - Games
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/players/auth:
     get:
       description: "Returns an existing player object containing access token, wallet,\
         \ and other details for a game when provided a valid username and password\
@@ -2938,6 +2969,42 @@ paths:
       security:
       - basicAuth: []
       summary: Authenticate player
+      tags:
+      - Players
+      x-accepts: application/json
+  /v1/players:
+    get:
+      description: Returns all players for the authenticated game as an array of player
+        objects.
+      operationId: getPlayers
+      parameters:
+      - description: The `secretKey` of the authenticating game.
+        example: game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/PublicPlayer'
+                type: array
+          description: Successfully retrieved players.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Get players
       tags:
       - Players
       x-accepts: application/json
@@ -2995,6 +3062,36 @@ paths:
       x-content-type: application/json
       x-accepts: application/json
   /v1/players/{playerId}:
+    get:
+      description: Returns a player object for the provided player id.
+      operationId: getPlayer
+      parameters:
+      - description: Any player id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: playerId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicPlayer'
+          description: Successfully retrieved player.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+      summary: Get player
+      tags:
+      - Players
+      x-accepts: application/json
     patch:
       description: Update various fields specific to a player. Such as changing its
         password and resetting its access token.
@@ -3711,6 +3808,63 @@ components:
             offer was set or updated.
           type: number
       type: object
+    PublicGame:
+      example:
+        createdAt: createdAt
+        name: name
+        publishedKey: publishedKey
+        id: id
+        updatedAt: updatedAt
+      properties:
+        id:
+          description: This field has not had a description added.
+          type: string
+        name:
+          description: This field has not had a description added.
+          type: string
+        publishedKey:
+          description: This field has not had a description added.
+          type: string
+        updatedAt:
+          description: This field has not had a description added.
+          type: string
+        createdAt:
+          description: This field has not had a description added.
+          type: string
+      type: object
+    PublicPlayer:
+      example:
+        gameId: gameId
+        walletId: walletId
+        createdAt: createdAt
+        wallet:
+          address: address
+          id: id
+        id: id
+        username: username
+        updatedAt: updatedAt
+      properties:
+        id:
+          description: This field has not had a description added.
+          type: string
+        gameId:
+          description: This field has not had a description added.
+          type: string
+        walletId:
+          description: This field has not had a description added.
+          type: string
+        username:
+          description: This field has not had a description added.
+          type: string
+        updatedAt:
+          description: This field has not had a description added.
+          type: string
+        createdAt:
+          description: This field has not had a description added.
+          type: string
+        wallet:
+          $ref: '#/components/schemas/PublicPlayer_wallet'
+      type: object
     AnyValue:
       description: "Can be anything. String, number, object, array, boolean, etc."
     getCollections_200_response_inner_allOf:
@@ -3731,7 +3885,7 @@ components:
           - ETHEREUM
           - GOERLI
           - MATIC
-          - MUMBAI
+          - MATICMUMBAI
           - ARBITRUM
           - ARBITRUMGOERLI
           example: MATIC
@@ -4003,7 +4157,7 @@ components:
           - ETHEREUM
           - GOERLI
           - MATIC
-          - MUMBAI
+          - MATICMUMBAI
           - ARBITRUM
           - ARBITRUMGOERLI
           example: MATIC
@@ -4060,7 +4214,7 @@ components:
           - ETHEREUM
           - GOERLI
           - MATIC
-          - MUMBAI
+          - MATICMUMBAI
           - ARBITRUM
           - ARBITRUMGOERLI
           example: MATIC
@@ -4244,7 +4398,7 @@ components:
           - ETHEREUM
           - GOERLI
           - MATIC
-          - MUMBAI
+          - MATICMUMBAI
           - ARBITRUM
           - ARBITRUMGOERLI
           example: MATIC
@@ -4406,31 +4560,6 @@ components:
       - $ref: '#/components/schemas/GameModel'
       - $ref: '#/components/schemas/authGame_200_response_allOf'
       - $ref: '#/components/schemas/authGame_200_response_allOf_1'
-    createGame_request:
-      properties:
-        name:
-          description: The name of the game you're creating.
-          example: NFT Worlds
-          type: string
-        email:
-          description: The email address associated with this game and used to login/authenticate
-            as the game.
-          example: dev@nftworlds.com
-          format: email
-          type: string
-        password:
-          description: "The password to authenticate as the game. Additionally, this\
-            \ password is used to encrypt/decrypt your game's primary wallet and must\
-            \ be provided anytime this game makes blockchain interactions through\
-            \ various endpoints."
-          example: aReallyStrongPassword123!
-          format: password
-          type: string
-      required:
-      - email
-      - name
-      - password
-      type: object
     updateGame_request:
       properties:
         name:
@@ -4472,6 +4601,31 @@ components:
             if true.
           type: boolean
       type: object
+    createGame_request:
+      properties:
+        name:
+          description: The name of the game you're creating.
+          example: NFT Worlds
+          type: string
+        email:
+          description: The email address associated with this game and used to login/authenticate
+            as the game.
+          example: dev@nftworlds.com
+          format: email
+          type: string
+        password:
+          description: "The password to authenticate as the game. Additionally, this\
+            \ password is used to encrypt/decrypt your game's primary wallet and must\
+            \ be provided anytime this game makes blockchain interactions through\
+            \ various endpoints."
+          example: aReallyStrongPassword123!
+          format: password
+          type: string
+      required:
+      - email
+      - name
+      - password
+      type: object
     authPlayer_200_response:
       allOf:
       - $ref: '#/components/schemas/PlayerModel'
@@ -4511,6 +4665,18 @@ components:
           description: Revokes the player's previous access token and returns a new
             one if true.
           type: boolean
+      type: object
+    PublicPlayer_wallet:
+      example:
+        address: address
+        id: id
+      properties:
+        id:
+          description: This field has not had a description added.
+          type: string
+        address:
+          description: This field has not had a description added.
+          type: string
       type: object
   securitySchemes:
     basicAuth:

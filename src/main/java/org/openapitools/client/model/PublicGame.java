@@ -45,33 +45,21 @@ import java.util.Set;
 import org.metafab.client.JSON;
 
 /**
- * CurrencyModel
+ * PublicGame
  */
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-11-07T16:37:22.578727-08:00[America/Los_Angeles]")
-public class CurrencyModel {
+public class PublicGame {
   public static final String SERIALIZED_NAME_ID = "id";
   @SerializedName(SERIALIZED_NAME_ID)
   private String id;
-
-  public static final String SERIALIZED_NAME_GAME_ID = "gameId";
-  @SerializedName(SERIALIZED_NAME_GAME_ID)
-  private String gameId;
-
-  public static final String SERIALIZED_NAME_CONTRACT_ID = "contractId";
-  @SerializedName(SERIALIZED_NAME_CONTRACT_ID)
-  private String contractId;
 
   public static final String SERIALIZED_NAME_NAME = "name";
   @SerializedName(SERIALIZED_NAME_NAME)
   private String name;
 
-  public static final String SERIALIZED_NAME_SYMBOL = "symbol";
-  @SerializedName(SERIALIZED_NAME_SYMBOL)
-  private String symbol;
-
-  public static final String SERIALIZED_NAME_SUPPLY_CAP = "supplyCap";
-  @SerializedName(SERIALIZED_NAME_SUPPLY_CAP)
-  private Integer supplyCap;
+  public static final String SERIALIZED_NAME_PUBLISHED_KEY = "publishedKey";
+  @SerializedName(SERIALIZED_NAME_PUBLISHED_KEY)
+  private String publishedKey;
 
   public static final String SERIALIZED_NAME_UPDATED_AT = "updatedAt";
   @SerializedName(SERIALIZED_NAME_UPDATED_AT)
@@ -81,10 +69,10 @@ public class CurrencyModel {
   @SerializedName(SERIALIZED_NAME_CREATED_AT)
   private String createdAt;
 
-  public CurrencyModel() {
+  public PublicGame() {
   }
 
-  public CurrencyModel id(String id) {
+  public PublicGame id(String id) {
     
     this.id = id;
     return this;
@@ -107,53 +95,7 @@ public class CurrencyModel {
   }
 
 
-  public CurrencyModel gameId(String gameId) {
-    
-    this.gameId = gameId;
-    return this;
-  }
-
-   /**
-   * This field has not had a description added.
-   * @return gameId
-  **/
-  @javax.annotation.Nullable
-  @ApiModelProperty(value = "This field has not had a description added.")
-
-  public String getGameId() {
-    return gameId;
-  }
-
-
-  public void setGameId(String gameId) {
-    this.gameId = gameId;
-  }
-
-
-  public CurrencyModel contractId(String contractId) {
-    
-    this.contractId = contractId;
-    return this;
-  }
-
-   /**
-   * This field has not had a description added.
-   * @return contractId
-  **/
-  @javax.annotation.Nullable
-  @ApiModelProperty(value = "This field has not had a description added.")
-
-  public String getContractId() {
-    return contractId;
-  }
-
-
-  public void setContractId(String contractId) {
-    this.contractId = contractId;
-  }
-
-
-  public CurrencyModel name(String name) {
+  public PublicGame name(String name) {
     
     this.name = name;
     return this;
@@ -176,53 +118,30 @@ public class CurrencyModel {
   }
 
 
-  public CurrencyModel symbol(String symbol) {
+  public PublicGame publishedKey(String publishedKey) {
     
-    this.symbol = symbol;
+    this.publishedKey = publishedKey;
     return this;
   }
 
    /**
    * This field has not had a description added.
-   * @return symbol
+   * @return publishedKey
   **/
   @javax.annotation.Nullable
   @ApiModelProperty(value = "This field has not had a description added.")
 
-  public String getSymbol() {
-    return symbol;
+  public String getPublishedKey() {
+    return publishedKey;
   }
 
 
-  public void setSymbol(String symbol) {
-    this.symbol = symbol;
+  public void setPublishedKey(String publishedKey) {
+    this.publishedKey = publishedKey;
   }
 
 
-  public CurrencyModel supplyCap(Integer supplyCap) {
-    
-    this.supplyCap = supplyCap;
-    return this;
-  }
-
-   /**
-   * This field has not had a description added.
-   * @return supplyCap
-  **/
-  @javax.annotation.Nullable
-  @ApiModelProperty(value = "This field has not had a description added.")
-
-  public Integer getSupplyCap() {
-    return supplyCap;
-  }
-
-
-  public void setSupplyCap(Integer supplyCap) {
-    this.supplyCap = supplyCap;
-  }
-
-
-  public CurrencyModel updatedAt(String updatedAt) {
+  public PublicGame updatedAt(String updatedAt) {
     
     this.updatedAt = updatedAt;
     return this;
@@ -245,7 +164,7 @@ public class CurrencyModel {
   }
 
 
-  public CurrencyModel createdAt(String createdAt) {
+  public PublicGame createdAt(String createdAt) {
     
     this.createdAt = createdAt;
     return this;
@@ -277,32 +196,26 @@ public class CurrencyModel {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    CurrencyModel currencyModel = (CurrencyModel) o;
-    return Objects.equals(this.id, currencyModel.id) &&
-        Objects.equals(this.gameId, currencyModel.gameId) &&
-        Objects.equals(this.contractId, currencyModel.contractId) &&
-        Objects.equals(this.name, currencyModel.name) &&
-        Objects.equals(this.symbol, currencyModel.symbol) &&
-        Objects.equals(this.supplyCap, currencyModel.supplyCap) &&
-        Objects.equals(this.updatedAt, currencyModel.updatedAt) &&
-        Objects.equals(this.createdAt, currencyModel.createdAt);
+    PublicGame publicGame = (PublicGame) o;
+    return Objects.equals(this.id, publicGame.id) &&
+        Objects.equals(this.name, publicGame.name) &&
+        Objects.equals(this.publishedKey, publicGame.publishedKey) &&
+        Objects.equals(this.updatedAt, publicGame.updatedAt) &&
+        Objects.equals(this.createdAt, publicGame.createdAt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, gameId, contractId, name, symbol, supplyCap, updatedAt, createdAt);
+    return Objects.hash(id, name, publishedKey, updatedAt, createdAt);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class CurrencyModel {\n");
+    sb.append("class PublicGame {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    gameId: ").append(toIndentedString(gameId)).append("\n");
-    sb.append("    contractId: ").append(toIndentedString(contractId)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    symbol: ").append(toIndentedString(symbol)).append("\n");
-    sb.append("    supplyCap: ").append(toIndentedString(supplyCap)).append("\n");
+    sb.append("    publishedKey: ").append(toIndentedString(publishedKey)).append("\n");
     sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("}");
@@ -328,11 +241,8 @@ public class CurrencyModel {
     // a set of all properties/fields (JSON key names)
     openapiFields = new HashSet<String>();
     openapiFields.add("id");
-    openapiFields.add("gameId");
-    openapiFields.add("contractId");
     openapiFields.add("name");
-    openapiFields.add("symbol");
-    openapiFields.add("supplyCap");
+    openapiFields.add("publishedKey");
     openapiFields.add("updatedAt");
     openapiFields.add("createdAt");
 
@@ -344,38 +254,32 @@ public class CurrencyModel {
   * Validates the JSON Object and throws an exception if issues found
   *
   * @param jsonObj JSON Object
-  * @throws IOException if the JSON Object is invalid with respect to CurrencyModel
+  * @throws IOException if the JSON Object is invalid with respect to PublicGame
   */
   public static void validateJsonObject(JsonObject jsonObj) throws IOException {
       if (jsonObj == null) {
-        if (CurrencyModel.openapiRequiredFields.isEmpty()) {
+        if (PublicGame.openapiRequiredFields.isEmpty()) {
           return;
         } else { // has required fields
-          throw new IllegalArgumentException(String.format("The required field(s) %s in CurrencyModel is not found in the empty JSON string", CurrencyModel.openapiRequiredFields.toString()));
+          throw new IllegalArgumentException(String.format("The required field(s) %s in PublicGame is not found in the empty JSON string", PublicGame.openapiRequiredFields.toString()));
         }
       }
 
       Set<Entry<String, JsonElement>> entries = jsonObj.entrySet();
       // check to see if the JSON string contains additional fields
       for (Entry<String, JsonElement> entry : entries) {
-        if (!CurrencyModel.openapiFields.contains(entry.getKey())) {
-          throw new IllegalArgumentException(String.format("The field `%s` in the JSON string is not defined in the `CurrencyModel` properties. JSON: %s", entry.getKey(), jsonObj.toString()));
+        if (!PublicGame.openapiFields.contains(entry.getKey())) {
+          throw new IllegalArgumentException(String.format("The field `%s` in the JSON string is not defined in the `PublicGame` properties. JSON: %s", entry.getKey(), jsonObj.toString()));
         }
       }
       if ((jsonObj.get("id") != null && !jsonObj.get("id").isJsonNull()) && !jsonObj.get("id").isJsonPrimitive()) {
         throw new IllegalArgumentException(String.format("Expected the field `id` to be a primitive type in the JSON string but got `%s`", jsonObj.get("id").toString()));
       }
-      if ((jsonObj.get("gameId") != null && !jsonObj.get("gameId").isJsonNull()) && !jsonObj.get("gameId").isJsonPrimitive()) {
-        throw new IllegalArgumentException(String.format("Expected the field `gameId` to be a primitive type in the JSON string but got `%s`", jsonObj.get("gameId").toString()));
-      }
-      if ((jsonObj.get("contractId") != null && !jsonObj.get("contractId").isJsonNull()) && !jsonObj.get("contractId").isJsonPrimitive()) {
-        throw new IllegalArgumentException(String.format("Expected the field `contractId` to be a primitive type in the JSON string but got `%s`", jsonObj.get("contractId").toString()));
-      }
       if ((jsonObj.get("name") != null && !jsonObj.get("name").isJsonNull()) && !jsonObj.get("name").isJsonPrimitive()) {
         throw new IllegalArgumentException(String.format("Expected the field `name` to be a primitive type in the JSON string but got `%s`", jsonObj.get("name").toString()));
       }
-      if ((jsonObj.get("symbol") != null && !jsonObj.get("symbol").isJsonNull()) && !jsonObj.get("symbol").isJsonPrimitive()) {
-        throw new IllegalArgumentException(String.format("Expected the field `symbol` to be a primitive type in the JSON string but got `%s`", jsonObj.get("symbol").toString()));
+      if ((jsonObj.get("publishedKey") != null && !jsonObj.get("publishedKey").isJsonNull()) && !jsonObj.get("publishedKey").isJsonPrimitive()) {
+        throw new IllegalArgumentException(String.format("Expected the field `publishedKey` to be a primitive type in the JSON string but got `%s`", jsonObj.get("publishedKey").toString()));
       }
       if ((jsonObj.get("updatedAt") != null && !jsonObj.get("updatedAt").isJsonNull()) && !jsonObj.get("updatedAt").isJsonPrimitive()) {
         throw new IllegalArgumentException(String.format("Expected the field `updatedAt` to be a primitive type in the JSON string but got `%s`", jsonObj.get("updatedAt").toString()));
@@ -389,22 +293,22 @@ public class CurrencyModel {
     @SuppressWarnings("unchecked")
     @Override
     public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
-       if (!CurrencyModel.class.isAssignableFrom(type.getRawType())) {
-         return null; // this class only serializes 'CurrencyModel' and its subtypes
+       if (!PublicGame.class.isAssignableFrom(type.getRawType())) {
+         return null; // this class only serializes 'PublicGame' and its subtypes
        }
        final TypeAdapter<JsonElement> elementAdapter = gson.getAdapter(JsonElement.class);
-       final TypeAdapter<CurrencyModel> thisAdapter
-                        = gson.getDelegateAdapter(this, TypeToken.get(CurrencyModel.class));
+       final TypeAdapter<PublicGame> thisAdapter
+                        = gson.getDelegateAdapter(this, TypeToken.get(PublicGame.class));
 
-       return (TypeAdapter<T>) new TypeAdapter<CurrencyModel>() {
+       return (TypeAdapter<T>) new TypeAdapter<PublicGame>() {
            @Override
-           public void write(JsonWriter out, CurrencyModel value) throws IOException {
+           public void write(JsonWriter out, PublicGame value) throws IOException {
              JsonObject obj = thisAdapter.toJsonTree(value).getAsJsonObject();
              elementAdapter.write(out, obj);
            }
 
            @Override
-           public CurrencyModel read(JsonReader in) throws IOException {
+           public PublicGame read(JsonReader in) throws IOException {
              JsonObject jsonObj = elementAdapter.read(in).getAsJsonObject();
              validateJsonObject(jsonObj);
              return thisAdapter.fromJsonTree(jsonObj);
@@ -415,18 +319,18 @@ public class CurrencyModel {
   }
 
  /**
-  * Create an instance of CurrencyModel given an JSON string
+  * Create an instance of PublicGame given an JSON string
   *
   * @param jsonString JSON string
-  * @return An instance of CurrencyModel
-  * @throws IOException if the JSON string is invalid with respect to CurrencyModel
+  * @return An instance of PublicGame
+  * @throws IOException if the JSON string is invalid with respect to PublicGame
   */
-  public static CurrencyModel fromJson(String jsonString) throws IOException {
-    return JSON.getGson().fromJson(jsonString, CurrencyModel.class);
+  public static PublicGame fromJson(String jsonString) throws IOException {
+    return JSON.getGson().fromJson(jsonString, PublicGame.class);
   }
 
  /**
-  * Convert an instance of CurrencyModel to an JSON string
+  * Convert an instance of PublicGame to an JSON string
   *
   * @return JSON string
   */

@@ -4,8 +4,9 @@ All URIs are relative to *https://api.trymetafab.com*
 
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
-| [**authGame**](GamesApi.md#authGame) | **GET** /v1/games | Authenticate game |
+| [**authGame**](GamesApi.md#authGame) | **GET** /v1/games/auth | Authenticate game |
 | [**createGame**](GamesApi.md#createGame) | **POST** /v1/games | Create game |
+| [**getGame**](GamesApi.md#getGame) | **GET** /v1/games/{gameId} | Get game |
 | [**updateGame**](GamesApi.md#updateGame) | **PATCH** /v1/games/{gameId} | Update game |
 
 
@@ -138,6 +139,69 @@ No authorization required
 | **200** | Successfully created a new game. Returns a game object containing a wallet and fundingWallet property, respectively representing the games primary wallet address (used to deploy &amp; interact with contract) and funding wallet address (used to cover gasless transaction fees). |  -  |
 | **400** | An API level error occurred. This is often due to problematic data being provided by you. |  -  |
 | **401** | An authorization error occured. This is often due to incorrect tokens or keys being provided, or accessing a resource that the provided tokens or keys do not have access to. |  -  |
+
+<a name="getGame"></a>
+# **getGame**
+> PublicGame getGame(gameId)
+
+Get game
+
+Returns a game object for the provided game id.
+
+### Example
+```java
+// Import classes:
+import org.metafab.client.ApiClient;
+import org.metafab.client.ApiException;
+import org.metafab.client.Configuration;
+import org.metafab.client.models.*;
+import org.metafab.client.api.GamesApi;
+
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://api.trymetafab.com");
+
+    GamesApi apiInstance = new GamesApi(defaultClient);
+    String gameId = "gameId_example"; // String | Any game id within the MetaFab ecosystem.
+    try {
+      PublicGame result = apiInstance.getGame(gameId);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling GamesApi#getGame");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **gameId** | **String**| Any game id within the MetaFab ecosystem. | |
+
+### Return type
+
+[**PublicGame**](PublicGame.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Successfully retrieved game. |  -  |
+| **400** | An API level error occurred. This is often due to problematic data being provided by you. |  -  |
 
 <a name="updateGame"></a>
 # **updateGame**

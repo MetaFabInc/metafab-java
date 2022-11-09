@@ -1,8 +1,8 @@
 # metafab-java
 
 MetaFab API
-- API version: 1.2.0
-  - Build date: 2022-11-07T16:37:22.578727-08:00[America/Los_Angeles]
+- API version: 1.2.1
+  - Build date: 2022-11-09T15:25:12.758221-08:00[America/Los_Angeles]
 
  Complete MetaFab API references and guides can be found at: https://trymetafab.com
 
@@ -41,7 +41,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>org.metafab</groupId>
   <artifactId>metafab-java</artifactId>
-  <version>1.2.0</version>
+  <version>1.2.1</version>
   <scope>compile</scope>
 </dependency>
 ```
@@ -57,7 +57,7 @@ Add this dependency to your project's build file:
   }
 
   dependencies {
-     implementation "org.metafab:metafab-java:1.2.0"
+     implementation "org.metafab:metafab-java:1.2.1"
   }
 ```
 
@@ -71,7 +71,7 @@ mvn clean package
 
 Then manually install the following JARs:
 
-* `target/metafab-java-1.2.0.jar`
+* `target/metafab-java-1.2.1.jar`
 * `target/lib/*.jar`
 
 ## Getting Started
@@ -168,7 +168,9 @@ Class | Method | HTTP request | Description
 *PlayersApi* | [**authPlayer**](docs/PlayersApi.md#authPlayer) | **GET** /v1/players/auth | Authenticate player
 *PlayersApi* | [**createPlayer**](docs/PlayersApi.md#createPlayer) | **POST** /v1/players | Create player
 *PlayersApi* | [**getPlayer**](docs/PlayersApi.md#getPlayer) | **GET** /v1/players/{playerId} | Get player
+*PlayersApi* | [**getPlayerData**](docs/PlayersApi.md#getPlayerData) | **GET** /v1/players/{playerId}/data | Get player data
 *PlayersApi* | [**getPlayers**](docs/PlayersApi.md#getPlayers) | **GET** /v1/players | Get players
+*PlayersApi* | [**setPlayerData**](docs/PlayersApi.md#setPlayerData) | **POST** /v1/players/{playerId}/data | Set player data
 *PlayersApi* | [**updatePlayer**](docs/PlayersApi.md#updatePlayer) | **PATCH** /v1/players/{playerId} | Update player
 *TransactionsApi* | [**getTransaction**](docs/TransactionsApi.md#getTransaction) | **GET** /v1/transactions/{transactionId} | Get transaction
 *WalletsApi* | [**getWalletBalances**](docs/WalletsApi.md#getWalletBalances) | **GET** /v1/wallets/{walletId}/balances | Get wallet balances
@@ -212,6 +214,7 @@ Class | Method | HTTP request | Description
  - [GetCurrencies200ResponseInnerAllOf](docs/GetCurrencies200ResponseInnerAllOf.md)
  - [GetCurrencyFees200Response](docs/GetCurrencyFees200Response.md)
  - [GetExchanges200ResponseInner](docs/GetExchanges200ResponseInner.md)
+ - [GetPlayerData200Response](docs/GetPlayerData200Response.md)
  - [GrantCollectionRoleRequest](docs/GrantCollectionRoleRequest.md)
  - [GrantCurrencyRoleRequest](docs/GrantCurrencyRoleRequest.md)
  - [MintCollectionItemRequest](docs/MintCollectionItemRequest.md)
@@ -225,6 +228,7 @@ Class | Method | HTTP request | Description
  - [SetCollectionItemTimelockRequest](docs/SetCollectionItemTimelockRequest.md)
  - [SetCurrencyFeesRequest](docs/SetCurrencyFeesRequest.md)
  - [SetExchangeOfferRequest](docs/SetExchangeOfferRequest.md)
+ - [SetPlayerDataRequest](docs/SetPlayerDataRequest.md)
  - [TransactionModel](docs/TransactionModel.md)
  - [TransferCollectionItemRequest](docs/TransferCollectionItemRequest.md)
  - [TransferCurrencyRequest](docs/TransferCurrencyRequest.md)

@@ -7,7 +7,7 @@ info:
   description: " Complete MetaFab API references and guides can be found at: https://trymetafab.com"
   termsOfService: https://trymetafab.com
   title: MetaFab API
-  version: 1.2.0
+  version: 1.2.1
 servers:
 - description: MetaFab API Server
   url: https://api.trymetafab.com
@@ -3147,6 +3147,98 @@ paths:
       - Players
       x-content-type: application/json
       x-accepts: application/json
+  /v1/players/{playerId}/data:
+    get:
+      description: Returns the latest public and protected data as an object for the
+        provided playerId.
+      operationId: getPlayerData
+      parameters:
+      - description: Any player id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: playerId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getPlayerData_200_response'
+          description: Successfully retrieved player data. Returns latest player data
+            object.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+      summary: Get player data
+      tags:
+      - Players
+      x-accepts: application/json
+    post:
+      description: "Creates or updates public and/or protected data for the provided\
+        \ playerId. Data updates are performed using deep merging. This means that\
+        \ when you update any top level or nested properties specific to player public\
+        \ or protected data, you only need to include the properties you are making\
+        \ changes to. Any existing properties not included in request body arguments\
+        \ will be retained on the player data object.\n\nPlease note, When writing\
+        \ an array type for a player, arrays do not follow the deep merge approach.\
+        \ If you add or remove an item from an array, the entire array must be passed\
+        \ as an argument when updating the related property for player public or protected\
+        \ data."
+      operationId: setPlayerData
+      parameters:
+      - description: Any player id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: playerId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The `secretKey` of a specific game or the `accessToken` of a
+          specific player.
+        example:
+        - game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        - player_at_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/setPlayerData_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getPlayerData_200_response'
+          description: Successfully set player data. Returns latest player data object.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Set player data
+      tags:
+      - Players
+      x-content-type: application/json
+      x-accepts: application/json
   /v1/transactions/{transactionId}:
     get:
       description: "Returns an executed transaction object for the provided transactionId.\
@@ -3888,7 +3980,7 @@ components:
           - MATICMUMBAI
           - ARBITRUM
           - ARBITRUMGOERLI
-          example: MATIC
+          example: SELECT ONE
           type: string
       required:
       - chain
@@ -4160,7 +4252,7 @@ components:
           - MATICMUMBAI
           - ARBITRUM
           - ARBITRUMGOERLI
-          example: MATIC
+          example: SELECT ONE
           type: string
       required:
       - abi
@@ -4217,7 +4309,7 @@ components:
           - MATICMUMBAI
           - ARBITRUM
           - ARBITRUMGOERLI
-          example: MATIC
+          example: SELECT ONE
           type: string
       required:
       - chain
@@ -4401,7 +4493,7 @@ components:
           - MATICMUMBAI
           - ARBITRUM
           - ARBITRUMGOERLI
-          example: MATIC
+          example: SELECT ONE
           type: string
       required:
       - chain
@@ -4665,6 +4757,31 @@ components:
           description: Revokes the player's previous access token and returns a new
             one if true.
           type: boolean
+      type: object
+    getPlayerData_200_response:
+      example:
+        protectedData: "{}"
+        publicData: "{}"
+      properties:
+        protectedData:
+          type: object
+        publicData:
+          type: object
+      type: object
+    setPlayerData_request:
+      properties:
+        protectedData:
+          description: "protectedData can only be set if `X-Authorization` includes\
+            \ credentials for the game the target player is a part of. Expects an\
+            \ arbitrary object allowed to contain any set of properties and nested\
+            \ data within those properties, including arrays."
+          type: object
+        publicData:
+          description: "publicData can be set if `X-Authorization` includes credentials\
+            \ for the target player or game the player is a part of. Expects an arbitrary\
+            \ object allowed to contain any set of properties and nested data within\
+            \ those properties, including arrays."
+          type: object
       type: object
     PublicPlayer_wallet:
       example:

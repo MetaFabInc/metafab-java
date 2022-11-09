@@ -7,7 +7,9 @@ All URIs are relative to *https://api.trymetafab.com*
 | [**authPlayer**](PlayersApi.md#authPlayer) | **GET** /v1/players/auth | Authenticate player |
 | [**createPlayer**](PlayersApi.md#createPlayer) | **POST** /v1/players | Create player |
 | [**getPlayer**](PlayersApi.md#getPlayer) | **GET** /v1/players/{playerId} | Get player |
+| [**getPlayerData**](PlayersApi.md#getPlayerData) | **GET** /v1/players/{playerId}/data | Get player data |
 | [**getPlayers**](PlayersApi.md#getPlayers) | **GET** /v1/players | Get players |
+| [**setPlayerData**](PlayersApi.md#setPlayerData) | **POST** /v1/players/{playerId}/data | Set player data |
 | [**updatePlayer**](PlayersApi.md#updatePlayer) | **PATCH** /v1/players/{playerId} | Update player |
 
 
@@ -210,6 +212,69 @@ No authorization required
 | **200** | Successfully retrieved player. |  -  |
 | **400** | An API level error occurred. This is often due to problematic data being provided by you. |  -  |
 
+<a name="getPlayerData"></a>
+# **getPlayerData**
+> GetPlayerData200Response getPlayerData(playerId)
+
+Get player data
+
+Returns the latest public and protected data as an object for the provided playerId.
+
+### Example
+```java
+// Import classes:
+import org.metafab.client.ApiClient;
+import org.metafab.client.ApiException;
+import org.metafab.client.Configuration;
+import org.metafab.client.models.*;
+import org.metafab.client.api.PlayersApi;
+
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://api.trymetafab.com");
+
+    PlayersApi apiInstance = new PlayersApi(defaultClient);
+    String playerId = "playerId_example"; // String | Any player id within the MetaFab ecosystem.
+    try {
+      GetPlayerData200Response result = apiInstance.getPlayerData(playerId);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling PlayersApi#getPlayerData");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **playerId** | **String**| Any player id within the MetaFab ecosystem. | |
+
+### Return type
+
+[**GetPlayerData200Response**](GetPlayerData200Response.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Successfully retrieved player data. Returns latest player data object. |  -  |
+| **400** | An API level error occurred. This is often due to problematic data being provided by you. |  -  |
+
 <a name="getPlayers"></a>
 # **getPlayers**
 > List&lt;PublicPlayer&gt; getPlayers(xAuthorization)
@@ -271,6 +336,73 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Successfully retrieved players. |  -  |
+| **401** | An authorization error occured. This is often due to incorrect tokens or keys being provided, or accessing a resource that the provided tokens or keys do not have access to. |  -  |
+
+<a name="setPlayerData"></a>
+# **setPlayerData**
+> GetPlayerData200Response setPlayerData(playerId, xAuthorization, setPlayerDataRequest)
+
+Set player data
+
+Creates or updates public and/or protected data for the provided playerId. Data updates are performed using deep merging. This means that when you update any top level or nested properties specific to player public or protected data, you only need to include the properties you are making changes to. Any existing properties not included in request body arguments will be retained on the player data object.  Please note, When writing an array type for a player, arrays do not follow the deep merge approach. If you add or remove an item from an array, the entire array must be passed as an argument when updating the related property for player public or protected data.
+
+### Example
+```java
+// Import classes:
+import org.metafab.client.ApiClient;
+import org.metafab.client.ApiException;
+import org.metafab.client.Configuration;
+import org.metafab.client.models.*;
+import org.metafab.client.api.PlayersApi;
+
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://api.trymetafab.com");
+
+    PlayersApi apiInstance = new PlayersApi(defaultClient);
+    String playerId = "playerId_example"; // String | Any player id within the MetaFab ecosystem.
+    String xAuthorization = "[\"game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP\",\"player_at_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP\"]"; // String | The `secretKey` of a specific game or the `accessToken` of a specific player.
+    SetPlayerDataRequest setPlayerDataRequest = new SetPlayerDataRequest(); // SetPlayerDataRequest | 
+    try {
+      GetPlayerData200Response result = apiInstance.setPlayerData(playerId, xAuthorization, setPlayerDataRequest);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling PlayersApi#setPlayerData");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **playerId** | **String**| Any player id within the MetaFab ecosystem. | |
+| **xAuthorization** | **String**| The &#x60;secretKey&#x60; of a specific game or the &#x60;accessToken&#x60; of a specific player. | |
+| **setPlayerDataRequest** | [**SetPlayerDataRequest**](SetPlayerDataRequest.md)|  | |
+
+### Return type
+
+[**GetPlayerData200Response**](GetPlayerData200Response.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Successfully set player data. Returns latest player data object. |  -  |
 | **401** | An authorization error occured. This is often due to incorrect tokens or keys being provided, or accessing a resource that the provided tokens or keys do not have access to. |  -  |
 
 <a name="updatePlayer"></a>

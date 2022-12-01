@@ -7,7 +7,7 @@
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
-|**contract** | [**CollectionModel**](CollectionModel.md) |  |  [optional] |
+|**contract** | [**ContractModel**](ContractModel.md) |  |  [optional] |
 
 
 

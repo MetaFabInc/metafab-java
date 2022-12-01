@@ -513,7 +513,7 @@ No authorization required
 
 <a name="getCollectionItemBalance"></a>
 # **getCollectionItemBalance**
-> BigDecimal getCollectionItemBalance(collectionId, collectionItemId, address, walletId)
+> Integer getCollectionItemBalance(collectionId, collectionItemId, address, walletId)
 
 Get collection item balance
 
@@ -539,7 +539,7 @@ public class Example {
     String address = "0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D"; // String | A valid EVM based address. For example, `0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D`.
     String walletId = "walletId_example"; // String | Any wallet id within the MetaFab ecosystem.
     try {
-      BigDecimal result = apiInstance.getCollectionItemBalance(collectionId, collectionItemId, address, walletId);
+      Integer result = apiInstance.getCollectionItemBalance(collectionId, collectionItemId, address, walletId);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling ItemsApi#getCollectionItemBalance");
@@ -563,7 +563,7 @@ public class Example {
 
 ### Return type
 
-[**BigDecimal**](BigDecimal.md)
+**Integer**
 
 ### Authorization
 
@@ -582,7 +582,7 @@ No authorization required
 
 <a name="getCollectionItemBalances"></a>
 # **getCollectionItemBalances**
-> Map&lt;String, BigDecimal&gt; getCollectionItemBalances(collectionId, address, walletId)
+> Map&lt;String, Integer&gt; getCollectionItemBalances(collectionId, address, walletId)
 
 Get collection item balances
 
@@ -607,7 +607,7 @@ public class Example {
     String address = "0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D"; // String | A valid EVM based address. For example, `0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D`.
     String walletId = "walletId_example"; // String | Any wallet id within the MetaFab ecosystem.
     try {
-      Map<String, BigDecimal> result = apiInstance.getCollectionItemBalances(collectionId, address, walletId);
+      Map<String, Integer> result = apiInstance.getCollectionItemBalances(collectionId, address, walletId);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling ItemsApi#getCollectionItemBalances");
@@ -630,7 +630,7 @@ public class Example {
 
 ### Return type
 
-[**Map&lt;String, BigDecimal&gt;**](BigDecimal.md)
+**Map&lt;String, Integer&gt;**
 
 ### Authorization
 
@@ -649,7 +649,7 @@ No authorization required
 
 <a name="getCollectionItemSupplies"></a>
 # **getCollectionItemSupplies**
-> Map&lt;String, BigDecimal&gt; getCollectionItemSupplies(collectionId)
+> Map&lt;String, Integer&gt; getCollectionItemSupplies(collectionId)
 
 Get collection item supplies
 
@@ -672,7 +672,7 @@ public class Example {
     ItemsApi apiInstance = new ItemsApi(defaultClient);
     String collectionId = "collectionId_example"; // String | Any collection id within the MetaFab ecosystem.
     try {
-      Map<String, BigDecimal> result = apiInstance.getCollectionItemSupplies(collectionId);
+      Map<String, Integer> result = apiInstance.getCollectionItemSupplies(collectionId);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling ItemsApi#getCollectionItemSupplies");
@@ -693,7 +693,7 @@ public class Example {
 
 ### Return type
 
-[**Map&lt;String, BigDecimal&gt;**](BigDecimal.md)
+**Map&lt;String, Integer&gt;**
 
 ### Authorization
 
@@ -712,7 +712,7 @@ No authorization required
 
 <a name="getCollectionItemSupply"></a>
 # **getCollectionItemSupply**
-> BigDecimal getCollectionItemSupply(collectionId, collectionItemId, address, walletId)
+> Integer getCollectionItemSupply(collectionId, collectionItemId, address, walletId)
 
 Get collection item supply
 
@@ -738,7 +738,7 @@ public class Example {
     String address = "0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D"; // String | A valid EVM based address. For example, `0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D`.
     String walletId = "walletId_example"; // String | Any wallet id within the MetaFab ecosystem.
     try {
-      BigDecimal result = apiInstance.getCollectionItemSupply(collectionId, collectionItemId, address, walletId);
+      Integer result = apiInstance.getCollectionItemSupply(collectionId, collectionItemId, address, walletId);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling ItemsApi#getCollectionItemSupply");
@@ -762,7 +762,7 @@ public class Example {
 
 ### Return type
 
-[**BigDecimal**](BigDecimal.md)
+**Integer**
 
 ### Authorization
 
@@ -781,7 +781,7 @@ No authorization required
 
 <a name="getCollectionItemTimelock"></a>
 # **getCollectionItemTimelock**
-> BigDecimal getCollectionItemTimelock(collectionId, collectionItemId)
+> Integer getCollectionItemTimelock(collectionId, collectionItemId)
 
 Get collection item timelock
 
@@ -805,7 +805,7 @@ public class Example {
     String collectionId = "collectionId_example"; // String | Any collection id within the MetaFab ecosystem.
     BigDecimal collectionItemId = new BigDecimal(78); // BigDecimal | Any item id for the collection. Zero, or a positive integer.
     try {
-      BigDecimal result = apiInstance.getCollectionItemTimelock(collectionId, collectionItemId);
+      Integer result = apiInstance.getCollectionItemTimelock(collectionId, collectionItemId);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling ItemsApi#getCollectionItemTimelock");
@@ -827,7 +827,7 @@ public class Example {
 
 ### Return type
 
-[**BigDecimal**](BigDecimal.md)
+**Integer**
 
 ### Authorization
 

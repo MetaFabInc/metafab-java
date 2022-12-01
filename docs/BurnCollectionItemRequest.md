@@ -7,7 +7,7 @@
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
-|**quantity** | **BigDecimal** | The quantity of the collectionItemId to burn. |  |
+|**quantity** | **Integer** | The quantity of the collectionItemId to burn. |  |
 
 
 

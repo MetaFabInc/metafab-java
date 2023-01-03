@@ -1,8 +1,8 @@
 # metafab-java
 
 MetaFab API
-- API version: 1.3.0
-  - Build date: 2022-12-01T15:10:52.708628-08:00[America/Los_Angeles]
+- API version: 1.4.1
+  - Build date: 2023-01-02T19:20:23.322985-08:00[America/Los_Angeles]
 
  Complete MetaFab API references and guides can be found at: https://trymetafab.com
 
@@ -41,7 +41,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>org.metafab</groupId>
   <artifactId>metafab-java</artifactId>
-  <version>1.3.0</version>
+  <version>1.4.1</version>
   <scope>compile</scope>
 </dependency>
 ```
@@ -57,7 +57,7 @@ Add this dependency to your project's build file:
   }
 
   dependencies {
-     implementation "org.metafab:metafab-java:1.3.0"
+     implementation "org.metafab:metafab-java:1.4.1"
   }
 ```
 
@@ -71,7 +71,7 @@ mvn clean package
 
 Then manually install the following JARs:
 
-* `target/metafab-java-1.3.0.jar`
+* `target/metafab-java-1.4.1.jar`
 * `target/lib/*.jar`
 
 ## Getting Started
@@ -119,6 +119,8 @@ Class | Method | HTTP request | Description
 *ContractsApi* | [**createContract**](docs/ContractsApi.md#createContract) | **POST** /v1/contracts | Create custom contract
 *ContractsApi* | [**getContracts**](docs/ContractsApi.md#getContracts) | **GET** /v1/contracts | Get contracts
 *ContractsApi* | [**readContract**](docs/ContractsApi.md#readContract) | **GET** /v1/contracts/{contractId}/reads | Read contract data
+*ContractsApi* | [**transferContractOwnership**](docs/ContractsApi.md#transferContractOwnership) | **POST** /v1/contracts/{contractId}/owners | Transfer contract ownership
+*ContractsApi* | [**upgradeContractTrustedForwarder**](docs/ContractsApi.md#upgradeContractTrustedForwarder) | **POST** /v1/contracts/{contractId}/forwarders | Upgrade contract trusted forwarder
 *ContractsApi* | [**writeContract**](docs/ContractsApi.md#writeContract) | **POST** /v1/contracts/{contractId}/writes | Write contract data
 *CurrenciesApi* | [**batchTransferCurrency**](docs/CurrenciesApi.md#batchTransferCurrency) | **POST** /v1/currencies/{currencyId}/batchTransfers | Batch transfer currency
 *CurrenciesApi* | [**burnCurrency**](docs/CurrenciesApi.md#burnCurrency) | **POST** /v1/currencies/{currencyId}/burns | Burn currency
@@ -169,6 +171,8 @@ Class | Method | HTTP request | Description
 *PlayersApi* | [**getPlayer**](docs/PlayersApi.md#getPlayer) | **GET** /v1/players/{playerId} | Get player
 *PlayersApi* | [**getPlayerData**](docs/PlayersApi.md#getPlayerData) | **GET** /v1/players/{playerId}/data | Get player data
 *PlayersApi* | [**getPlayers**](docs/PlayersApi.md#getPlayers) | **GET** /v1/players | Get players
+*PlayersApi* | [**removePlayerConnectedWallet**](docs/PlayersApi.md#removePlayerConnectedWallet) | **DELETE** /v1/players/{playerId}/wallets/{playerWalletId} | Remove player connected wallet
+*PlayersApi* | [**setPlayerConnectedWallet**](docs/PlayersApi.md#setPlayerConnectedWallet) | **POST** /v1/players/{playerId}/wallets | Set player connected wallet
 *PlayersApi* | [**setPlayerData**](docs/PlayersApi.md#setPlayerData) | **POST** /v1/players/{playerId}/data | Set player data
 *PlayersApi* | [**updatePlayer**](docs/PlayersApi.md#updatePlayer) | **PATCH** /v1/players/{playerId} | Update player
 *ShopsApi* | [**createShop**](docs/ShopsApi.md#createShop) | **POST** /v1/shops | Create shop
@@ -232,20 +236,25 @@ Class | Method | HTTP request | Description
  - [PublicGame](docs/PublicGame.md)
  - [PublicPlayer](docs/PublicPlayer.md)
  - [PublicPlayerWallet](docs/PublicPlayerWallet.md)
+ - [RemovePlayerConnectedWalletRequest](docs/RemovePlayerConnectedWalletRequest.md)
  - [RevokeCollectionRoleRequest](docs/RevokeCollectionRoleRequest.md)
  - [SetCollectionApprovalRequest](docs/SetCollectionApprovalRequest.md)
  - [SetCollectionItemTimelockRequest](docs/SetCollectionItemTimelockRequest.md)
  - [SetCurrencyFeesRequest](docs/SetCurrencyFeesRequest.md)
  - [SetLootboxManagerLootboxRequest](docs/SetLootboxManagerLootboxRequest.md)
+ - [SetPlayerConnectedWallet200Response](docs/SetPlayerConnectedWallet200Response.md)
+ - [SetPlayerConnectedWalletRequest](docs/SetPlayerConnectedWalletRequest.md)
  - [SetPlayerDataRequest](docs/SetPlayerDataRequest.md)
  - [SetShopOfferRequest](docs/SetShopOfferRequest.md)
  - [ShopModel](docs/ShopModel.md)
  - [ShopOffer](docs/ShopOffer.md)
  - [TransactionModel](docs/TransactionModel.md)
  - [TransferCollectionItemRequest](docs/TransferCollectionItemRequest.md)
+ - [TransferContractOwnershipRequest](docs/TransferContractOwnershipRequest.md)
  - [TransferCurrencyRequest](docs/TransferCurrencyRequest.md)
  - [UpdateGameRequest](docs/UpdateGameRequest.md)
  - [UpdatePlayerRequest](docs/UpdatePlayerRequest.md)
+ - [UpgradeContractTrustedForwarderRequest](docs/UpgradeContractTrustedForwarderRequest.md)
  - [WalletModel](docs/WalletModel.md)
  - [WithdrawFromShopRequest](docs/WithdrawFromShopRequest.md)
  - [WriteContractRequest](docs/WriteContractRequest.md)

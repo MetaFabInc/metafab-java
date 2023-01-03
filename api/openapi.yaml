@@ -7,7 +7,7 @@ info:
   description: " Complete MetaFab API references and guides can be found at: https://trymetafab.com"
   termsOfService: https://trymetafab.com
   title: MetaFab API
-  version: 1.3.0
+  version: 1.4.1
 servers:
 - description: MetaFab API Server
   url: https://api.trymetafab.com
@@ -467,10 +467,7 @@ paths:
       x-accepts: application/json
   /v1/collections/{collectionId}/items:
     get:
-      description: "Returns all collection items as an array of metadata objects.\n\
-        \nPlease note that ONLY items that have had at least 1 quantity minted will\
-        \ be returned. If you've created an item that has not been minted yet, it\
-        \ will not be returned in the array response."
+      description: Returns all collection items as an array of metadata objects.
       operationId: getCollectionItems
       parameters:
       - description: Any collection id within the MetaFab ecosystem.
@@ -1413,6 +1410,157 @@ paths:
             \ tokens or keys being provided, or accessing a resource that the provided\
             \ tokens or keys do not have access to."
       summary: Create custom contract
+      tags:
+      - Contracts
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/contracts/{contractId}/forwarders:
+    post:
+      description: "In rare circumstances, you may need to upgrade the underlying\
+        \ trusted forwarder contract address attached to your game's contracts. Using\
+        \ this endpoint, you can provide a new trusted forwarder contract address\
+        \ to assign to any of your contracts that implement the `upgradeTrustedForwarder`\
+        \ function."
+      operationId: upgradeContractTrustedForwarder
+      parameters:
+      - description: Any contract id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: contractId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The `secretKey` of the authenticating game.
+        example: game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The password of the authenticating game. Required to decrypt
+          and perform blockchain transactions with the game primary wallet.
+        example: mySecurePassword
+        explode: false
+        in: header
+        name: X-Password
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/upgradeContractTrustedForwarder_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionModel'
+          description: Successfully upgraded the trusted forwarder for the target
+            contract. Returns a transaction object.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Upgrade contract trusted forwarder
+      tags:
+      - Contracts
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/contracts/{contractId}/owners:
+    post:
+      description: "Transfer ownership and control of a MetaFab deployed smart contract\
+        \ to another wallet you control. Transferring control does not disrupt your\
+        \ usage of MetaFab APIs and can be done so without causing any service outages\
+        \ for your game. The new owner wallet will have full control over any relevant\
+        \ item collections and marketplace related pages this contract may be associated\
+        \ with, such as for MetaFab item or NFT contracts.\n\nYour game's custodial\
+        \ wallet will retain a `MANAGER_ROLE` on your contracts, allowing you to still\
+        \ use MetaFab APIs without issue while you retain full contract ownership\
+        \ and the contract's administrator role. If ever you want eject from using\
+        \ the MetaFab APIs but still retain your deployed smart contracts, you can\
+        \ revoke the `MANAGER_ROLE` from your game's custodial wallet address for\
+        \ your contract. We do not lock you into our systems.\n\nPlease be certain\
+        \ that the wallet address you transfer ownership to is one you control. Once\
+        \ ownership and admin permissions are transferred, your game's custodial wallet\
+        \ no longer has permission to reassign ownership or administrative priveleges\
+        \ for your contract."
+      operationId: transferContractOwnership
+      parameters:
+      - description: Any contract id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: contractId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The `secretKey` of the authenticating game.
+        example: game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The password of the authenticating game. Required to decrypt
+          and perform blockchain transactions with the game primary wallet.
+        example: mySecurePassword
+        explode: false
+        in: header
+        name: X-Password
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/transferContractOwnership_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionModel'
+          description: Successfully transferred ownership of the target contract.
+            Returns a transaction object.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Transfer contract ownership
       tags:
       - Contracts
       x-content-type: application/json
@@ -3169,6 +3317,130 @@ paths:
       - Players
       x-content-type: application/json
       x-accepts: application/json
+  /v1/players/{playerId}/wallets:
+    post:
+      description: "Sets an external wallet as the wallet for a player account. The\
+        \ set wallet can transact gaslessly with all MetaFab related systems through\
+        \ the same MetaFab API calls as custodial wallets without requiring transaction\
+        \ signing or private keys.\n\nThis is done through an internal system MetaFab\
+        \ has created that allows an external connected wallet to delegate transaction\
+        \ signing for a specific game's set of contracts to a player's password protected\
+        \ custodial wallet. This allow the custodial wallet to sign and submit transactions\
+        \ to a specific game's related contracts as if they were signed and submitted\
+        \ by the connected external wallet. This also means that all earned tokens,\
+        \ purchased items and any interactions happen and are recorded on chain as\
+        \ the external connected wallet. No additional logic needs to be writted by\
+        \ developers to support both custodial and external wallets, everything just\
+        \ works.\n\nFinally, this endpoint is meant for advanced users. The majority\
+        \ of developers who want to implement external wallet support for their game\
+        \ can do so without any extra work through our whitelabeled wallet connection\
+        \ feature that implements this endpoint underneath the hood without any required\
+        \ work."
+      operationId: setPlayerConnectedWallet
+      parameters:
+      - description: Any player id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: playerId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The `accessToken` of the authenticating player.
+        example: player_at_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/setPlayerConnectedWallet_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/setPlayerConnectedWallet_200_response'
+          description: "Successfully set the player's external wallet. Returns the\
+            \ connected wallet id and address, as well as connection transaction object."
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Set player connected wallet
+      tags:
+      - Players
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/players/{playerId}/wallets/{playerWalletId}:
+    delete:
+      description: Removes an external wallet from a player account. The player's
+        wallet is reverted to their custodial wallet.
+      operationId: removePlayerConnectedWallet
+      parameters:
+      - description: Any player id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: playerId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Any player wallet id within the MetaFab ecosystem.
+        explode: false
+        in: path
+        name: playerWalletId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/removePlayerConnectedWallet_request'
+        required: true
+      responses:
+        "200":
+          description: Successfully removed the player's external wallet. Returns
+            an empty 200 response.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Remove player connected wallet
+      tags:
+      - Players
+      x-content-type: application/json
+      x-accepts: application/json
   /v1/shops:
     get:
       description: Returns an array of active shops for the game associated with the
@@ -3921,6 +4193,15 @@ components:
       schema:
         type: string
       style: simple
+    pathPlayerWalletId:
+      description: Any player wallet id within the MetaFab ecosystem.
+      explode: false
+      in: path
+      name: playerWalletId
+      required: true
+      schema:
+        type: string
+      style: simple
     queryAddress:
       description: "A valid EVM based address. For example, `0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D`."
       example: 0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D
@@ -4003,11 +4284,15 @@ components:
     GameModel:
       example:
         walletId: walletId
-        createdAt: createdAt
         secretKey: secretKey
-        name: name
+        iconImageUrl: iconImageUrl
+        coverImageUrl: coverImageUrl
         verified: true
         publishedKey: publishedKey
+        primaryColorHex: primaryColorHex
+        redirectUris: "{}"
+        createdAt: createdAt
+        name: name
         id: id
         rpcs: "{}"
         fundingWalletId: fundingWalletId
@@ -4032,6 +4317,18 @@ components:
         rpcs:
           description: This field has not had a description added.
           type: object
+        redirectUris:
+          description: This field has not had a description added.
+          type: object
+        iconImageUrl:
+          description: This field has not had a description added.
+          type: string
+        coverImageUrl:
+          description: This field has not had a description added.
+          type: string
+        primaryColorHex:
+          description: This field has not had a description added.
+          type: string
         publishedKey:
           description: This field has not had a description added.
           type: string
@@ -4053,6 +4350,7 @@ components:
         gameId: gameId
         walletId: walletId
         createdAt: createdAt
+        connectedWalletId: connectedWalletId
         id: id
         accessToken: accessToken
         username: username
@@ -4065,6 +4363,9 @@ components:
           description: This field has not had a description added.
           type: string
         walletId:
+          description: This field has not had a description added.
+          type: string
+        connectedWalletId:
           description: This field has not had a description added.
           type: string
         username:
@@ -4140,6 +4441,7 @@ components:
         createdAt: createdAt
         chain: chain
         address: address
+        forwarderAddress: forwarderAddress
         abi: "{}"
         id: id
         type: type
@@ -4161,6 +4463,9 @@ components:
           description: This field has not had a description added.
           type: string
         address:
+          description: This field has not had a description added.
+          type: string
+        forwarderAddress:
           description: This field has not had a description added.
           type: string
         updatedAt:
@@ -4318,9 +4623,15 @@ components:
     PublicGame:
       example:
         createdAt: createdAt
+        iconImageUrl: iconImageUrl
+        coverImageUrl: coverImageUrl
         name: name
         publishedKey: publishedKey
         id: id
+        primaryColorHex: primaryColorHex
+        redirectUris:
+        - redirectUris
+        - redirectUris
         updatedAt: updatedAt
       properties:
         id:
@@ -4330,6 +4641,20 @@ components:
           description: This field has not had a description added.
           type: string
         publishedKey:
+          description: This field has not had a description added.
+          type: string
+        redirectUris:
+          description: This field has not had a description added.
+          items:
+            type: string
+          type: array
+        iconImageUrl:
+          description: This field has not had a description added.
+          type: string
+        coverImageUrl:
+          description: This field has not had a description added.
+          type: string
+        primaryColorHex:
           description: This field has not had a description added.
           type: string
         updatedAt:
@@ -4740,6 +5065,10 @@ components:
         address:
           description: The address of the existing contract.
           type: string
+        forwarderAddress:
+          description: The address of the ERC2771 forwarding contract trusted by the
+            contract.
+          type: string
         abi:
           description: JSON of the abi.
           type: string
@@ -4759,6 +5088,24 @@ components:
       - abi
       - address
       - chain
+      type: object
+    upgradeContractTrustedForwarder_request:
+      properties:
+        forwarderAddress:
+          description: A ERC2771 forwarder smart contract address to assign as the
+            new trusted forwarder of the target smart contract.
+          type: string
+      required:
+      - forwarderAddress
+      type: object
+    transferContractOwnership_request:
+      properties:
+        ownerAddress:
+          description: A wallet address to assign as the new owner and administrator
+            of the target smart contract.
+          type: string
+      required:
+      - ownerAddress
       type: object
     writeContract_request_args_inner:
       anyOf:
@@ -5025,6 +5372,35 @@ components:
             \ `{ MATIC: null }`"
           example: https://polygon-rpc.com
           type: object
+        redirectUris:
+          description: "An array of valid base redirect uris or exact uris that can\
+            \ be used for the redirect uri of various MetaFab features such as player\
+            \ login/registration and wallet connection.\n\nExpects base or exact uris.\
+            \ For example, you could use include a uri of `https://trymetafab.com`\
+            \ and it would allow redirection to any valid uri on the domain, such\
+            \ as `https://trymetafab.com/play/game`."
+          items:
+            example: http://localhost
+            type: string
+          type: array
+        iconImageBase64:
+          description: "A base64 string of the icon image for this game. Supported\
+            \ image formats are `jpg`, `jpeg`, `png`, `gif` Recommended size is 512x512\
+            \ pixels, or 1:1 aspect ratio. This image is used for your auth/connect\
+            \ wallet flow and other MetaFab features for your game."
+          type: string
+        coverImageBase64:
+          description: "A base64 string of the cover image for this game. Supported\
+            \ image formats are `jpg`, `jpeg`, `png`, `gif`. Recommended size is 1600x1000\
+            \ pixels, or 16:10 aspect ratio.  This image is used as the background\
+            \ image for your auth/connect wallet flow and other MetaFab features for\
+            \ your game."
+          type: string
+        primaryColorHex:
+          description: A valid hex color code. This color is used for your auth/connect
+            wallet flow to control the color of buttons and other brandable MetaFab
+            features for your game.
+          type: string
         resetPublishedKey:
           description: Revokes the game's previous published key and returns a new
             one if true.
@@ -5237,6 +5613,101 @@ components:
             \ Anything that a player should have the ability to directly change themselves\
             \ without client or server verification can be stored in publicData."
           type: object
+      type: object
+    setPlayerConnectedWallet_request:
+      properties:
+        address:
+          description: The address of the external wallet to connect to the player.
+          type: string
+        nonce:
+          description: Any positive integer that hasn't been used previously to connect
+            or disconnect this external wallet. Must be the same nonce used to generate
+            the `signature`.
+          type: integer
+        signature:
+          description: "A signature string generated by signing a keccak256 hash generated\
+            \ with abiCoder encode arguments of `[ 'bytes32', 'address', 'bool', 'address',\
+            \ 'uint256' ]` and `[ keccak256(gameId), delegate wallet approved (player's\
+            \ custodial wallet address), true, external wallet address, any unused\
+            \ nonce number ]`."
+          type: string
+        chain:
+          description: "The blockchain you want to support this wallet connection\
+            \ on. If you need to support multiple blockchains, make multiple requests\
+            \ using different `chain` arguments. Support for new blockchains are added\
+            \ over time."
+          enum:
+          - ETHEREUM
+          - GOERLI
+          - MATIC
+          - MATICMUMBAI
+          - ARBITRUM
+          - ARBITRUMGOERLI
+          example: SELECT ONE
+          type: string
+      required:
+      - address
+      - chain
+      - nonce
+      - signature
+      type: object
+    setPlayerConnectedWallet_200_response:
+      example:
+        address: address
+        id: id
+        transaction:
+          args: "{}"
+          walletId: walletId
+          createdAt: createdAt
+          function: function
+          contractId: contractId
+          id: id
+          hash: hash
+          updatedAt: updatedAt
+      properties:
+        id:
+          type: string
+        address:
+          type: string
+        transaction:
+          $ref: '#/components/schemas/TransactionModel'
+      type: object
+    removePlayerConnectedWallet_request:
+      properties:
+        address:
+          description: The address of the external wallet to remove from a player.
+          type: string
+        nonce:
+          description: Any positive integer that hasn't been used previously to connect
+            or disconnect this external wallet. Must be the same nonce used to generate
+            the `signature`.
+          type: integer
+        signature:
+          description: "A signature string generated by signing a keccak256 hash generated\
+            \ with abiCoder encode arguments of `[ 'bytes32', 'address', 'bool', 'address',\
+            \ 'uint256' ]` and `[ keccak256(gameId), delegate wallet unapproved (player's\
+            \ custodial wallet address), false, external wallet address, any unused\
+            \ nonce number ]`."
+          type: string
+        chain:
+          description: "The blockchain you want to remove this wallet connection on.\
+            \ If you need to remove it on multiple blockchains, make multiple requests\
+            \ using different `chain` arguments. Support for new blockchains are added\
+            \ over time."
+          enum:
+          - ETHEREUM
+          - GOERLI
+          - MATIC
+          - MATICMUMBAI
+          - ARBITRUM
+          - ARBITRUMGOERLI
+          example: SELECT ONE
+          type: string
+      required:
+      - address
+      - chain
+      - nonce
+      - signature
       type: object
     getShops_200_response_inner:
       allOf:

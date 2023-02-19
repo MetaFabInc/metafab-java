@@ -20,7 +20,7 @@ All URIs are relative to *https://api.trymetafab.com*
 
 <a name="batchTransferCurrency"></a>
 # **batchTransferCurrency**
-> TransactionModel batchTransferCurrency(currencyId, xAuthorization, xPassword, batchTransferCurrencyRequest)
+> TransactionModel batchTransferCurrency(currencyId, xAuthorization, xWalletDecryptKey, batchTransferCurrencyRequest)
 
 Batch transfer currency
 
@@ -41,12 +41,12 @@ public class Example {
     defaultClient.setBasePath("https://api.trymetafab.com");
 
     CurrenciesApi apiInstance = new CurrenciesApi(defaultClient);
-    String currencyId = "currencyId_example"; // String | Any currency id within the MetaFab ecosystem.
+    String currencyId = "currencyId_example"; // String | Any currency id within the MetaFab platform.
     String xAuthorization = "[\"game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP\",\"player_at_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP\"]"; // String | The `secretKey` of a specific game or the `accessToken` of a specific player.
-    String xPassword = "mySecurePassword"; // String | The password of the authenticating game or player. Required to decrypt and perform blockchain transactions with the game or player primary wallet.
+    String xWalletDecryptKey = "AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4="; // String | The `walletDecryptKey` of the authenticating game or player. Required to decrypt and perform blockchain transactions with the game or player primary wallet.
     BatchTransferCurrencyRequest batchTransferCurrencyRequest = new BatchTransferCurrencyRequest(); // BatchTransferCurrencyRequest | 
     try {
-      TransactionModel result = apiInstance.batchTransferCurrency(currencyId, xAuthorization, xPassword, batchTransferCurrencyRequest);
+      TransactionModel result = apiInstance.batchTransferCurrency(currencyId, xAuthorization, xWalletDecryptKey, batchTransferCurrencyRequest);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling CurrenciesApi#batchTransferCurrency");
@@ -63,9 +63,9 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **currencyId** | **String**| Any currency id within the MetaFab ecosystem. | |
+| **currencyId** | **String**| Any currency id within the MetaFab platform. | |
 | **xAuthorization** | **String**| The &#x60;secretKey&#x60; of a specific game or the &#x60;accessToken&#x60; of a specific player. | |
-| **xPassword** | **String**| The password of the authenticating game or player. Required to decrypt and perform blockchain transactions with the game or player primary wallet. | |
+| **xWalletDecryptKey** | **String**| The &#x60;walletDecryptKey&#x60; of the authenticating game or player. Required to decrypt and perform blockchain transactions with the game or player primary wallet. | |
 | **batchTransferCurrencyRequest** | [**BatchTransferCurrencyRequest**](BatchTransferCurrencyRequest.md)|  | |
 
 ### Return type
@@ -90,7 +90,7 @@ No authorization required
 
 <a name="burnCurrency"></a>
 # **burnCurrency**
-> TransactionModel burnCurrency(currencyId, xAuthorization, xPassword, burnCurrencyRequest)
+> TransactionModel burnCurrency(currencyId, xAuthorization, xWalletDecryptKey, burnCurrencyRequest)
 
 Burn currency
 
@@ -111,12 +111,12 @@ public class Example {
     defaultClient.setBasePath("https://api.trymetafab.com");
 
     CurrenciesApi apiInstance = new CurrenciesApi(defaultClient);
-    String currencyId = "currencyId_example"; // String | Any currency id within the MetaFab ecosystem.
+    String currencyId = "currencyId_example"; // String | Any currency id within the MetaFab platform.
     String xAuthorization = "[\"game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP\",\"player_at_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP\"]"; // String | The `secretKey` of a specific game or the `accessToken` of a specific player.
-    String xPassword = "mySecurePassword"; // String | The password of the authenticating game or player. Required to decrypt and perform blockchain transactions with the game or player primary wallet.
+    String xWalletDecryptKey = "AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4="; // String | The `walletDecryptKey` of the authenticating game or player. Required to decrypt and perform blockchain transactions with the game or player primary wallet.
     BurnCurrencyRequest burnCurrencyRequest = new BurnCurrencyRequest(); // BurnCurrencyRequest | 
     try {
-      TransactionModel result = apiInstance.burnCurrency(currencyId, xAuthorization, xPassword, burnCurrencyRequest);
+      TransactionModel result = apiInstance.burnCurrency(currencyId, xAuthorization, xWalletDecryptKey, burnCurrencyRequest);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling CurrenciesApi#burnCurrency");
@@ -133,9 +133,9 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **currencyId** | **String**| Any currency id within the MetaFab ecosystem. | |
+| **currencyId** | **String**| Any currency id within the MetaFab platform. | |
 | **xAuthorization** | **String**| The &#x60;secretKey&#x60; of a specific game or the &#x60;accessToken&#x60; of a specific player. | |
-| **xPassword** | **String**| The password of the authenticating game or player. Required to decrypt and perform blockchain transactions with the game or player primary wallet. | |
+| **xWalletDecryptKey** | **String**| The &#x60;walletDecryptKey&#x60; of the authenticating game or player. Required to decrypt and perform blockchain transactions with the game or player primary wallet. | |
 | **burnCurrencyRequest** | [**BurnCurrencyRequest**](BurnCurrencyRequest.md)|  | |
 
 ### Return type
@@ -160,7 +160,7 @@ No authorization required
 
 <a name="createCurrency"></a>
 # **createCurrency**
-> CreateCurrency200Response createCurrency(xAuthorization, xPassword, createCurrencyRequest)
+> CreateCurrency200Response createCurrency(xAuthorization, xWalletDecryptKey, createCurrencyRequest)
 
 Create currency
 
@@ -182,10 +182,10 @@ public class Example {
 
     CurrenciesApi apiInstance = new CurrenciesApi(defaultClient);
     String xAuthorization = "game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP"; // String | The `secretKey` of the authenticating game.
-    String xPassword = "mySecurePassword"; // String | The password of the authenticating game. Required to decrypt and perform blockchain transactions with the game primary wallet.
+    String xWalletDecryptKey = "AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4="; // String | The `walletDecryptKey` of the authenticating game. Required to decrypt and perform blockchain transactions with the game primary wallet.
     CreateCurrencyRequest createCurrencyRequest = new CreateCurrencyRequest(); // CreateCurrencyRequest | 
     try {
-      CreateCurrency200Response result = apiInstance.createCurrency(xAuthorization, xPassword, createCurrencyRequest);
+      CreateCurrency200Response result = apiInstance.createCurrency(xAuthorization, xWalletDecryptKey, createCurrencyRequest);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling CurrenciesApi#createCurrency");
@@ -203,7 +203,7 @@ public class Example {
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
 | **xAuthorization** | **String**| The &#x60;secretKey&#x60; of the authenticating game. | |
-| **xPassword** | **String**| The password of the authenticating game. Required to decrypt and perform blockchain transactions with the game primary wallet. | |
+| **xWalletDecryptKey** | **String**| The &#x60;walletDecryptKey&#x60; of the authenticating game. Required to decrypt and perform blockchain transactions with the game primary wallet. | |
 | **createCurrencyRequest** | [**CreateCurrencyRequest**](CreateCurrencyRequest.md)|  | |
 
 ### Return type
@@ -312,9 +312,9 @@ public class Example {
     defaultClient.setBasePath("https://api.trymetafab.com");
 
     CurrenciesApi apiInstance = new CurrenciesApi(defaultClient);
-    String currencyId = "currencyId_example"; // String | Any currency id within the MetaFab ecosystem.
+    String currencyId = "currencyId_example"; // String | Any currency id within the MetaFab platform.
     String address = "0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D"; // String | A valid EVM based address. For example, `0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D`.
-    String walletId = "walletId_example"; // String | Any wallet id within the MetaFab ecosystem.
+    String walletId = "walletId_example"; // String | Any wallet id within the MetaFab platform.
     try {
       BigDecimal result = apiInstance.getCurrencyBalance(currencyId, address, walletId);
       System.out.println(result);
@@ -333,9 +333,9 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **currencyId** | **String**| Any currency id within the MetaFab ecosystem. | |
+| **currencyId** | **String**| Any currency id within the MetaFab platform. | |
 | **address** | **String**| A valid EVM based address. For example, &#x60;0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D&#x60;. | [optional] |
-| **walletId** | **String**| Any wallet id within the MetaFab ecosystem. | [optional] |
+| **walletId** | **String**| Any wallet id within the MetaFab platform. | [optional] |
 
 ### Return type
 
@@ -379,7 +379,7 @@ public class Example {
     defaultClient.setBasePath("https://api.trymetafab.com");
 
     CurrenciesApi apiInstance = new CurrenciesApi(defaultClient);
-    String currencyId = "currencyId_example"; // String | Any currency id within the MetaFab ecosystem.
+    String currencyId = "currencyId_example"; // String | Any currency id within the MetaFab platform.
     try {
       GetCurrencyFees200Response result = apiInstance.getCurrencyFees(currencyId);
       System.out.println(result);
@@ -398,7 +398,7 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **currencyId** | **String**| Any currency id within the MetaFab ecosystem. | |
+| **currencyId** | **String**| Any currency id within the MetaFab platform. | |
 
 ### Return type
 
@@ -442,10 +442,10 @@ public class Example {
     defaultClient.setBasePath("https://api.trymetafab.com");
 
     CurrenciesApi apiInstance = new CurrenciesApi(defaultClient);
-    String currencyId = "currencyId_example"; // String | Any currency id within the MetaFab ecosystem.
+    String currencyId = "currencyId_example"; // String | Any currency id within the MetaFab platform.
     String role = "minter"; // String | A valid MetaFab role or bytes string representing a role, such as `0xc9eb32e43bf5ecbceacf00b32281dfc5d6d700a0db676ea26ccf938a385ac3b7`
     String address = "0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D"; // String | A valid EVM based address. For example, `0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D`.
-    String walletId = "walletId_example"; // String | Any wallet id within the MetaFab ecosystem.
+    String walletId = "walletId_example"; // String | Any wallet id within the MetaFab platform.
     try {
       Boolean result = apiInstance.getCurrencyRole(currencyId, role, address, walletId);
       System.out.println(result);
@@ -464,10 +464,10 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **currencyId** | **String**| Any currency id within the MetaFab ecosystem. | |
+| **currencyId** | **String**| Any currency id within the MetaFab platform. | |
 | **role** | **String**| A valid MetaFab role or bytes string representing a role, such as &#x60;0xc9eb32e43bf5ecbceacf00b32281dfc5d6d700a0db676ea26ccf938a385ac3b7&#x60; | |
 | **address** | **String**| A valid EVM based address. For example, &#x60;0x39cb70F972E0EE920088AeF97Dbe5c6251a9c25D&#x60;. | [optional] |
-| **walletId** | **String**| Any wallet id within the MetaFab ecosystem. | [optional] |
+| **walletId** | **String**| Any wallet id within the MetaFab platform. | [optional] |
 
 ### Return type
 
@@ -490,7 +490,7 @@ No authorization required
 
 <a name="grantCurrencyRole"></a>
 # **grantCurrencyRole**
-> TransactionModel grantCurrencyRole(currencyId, xAuthorization, xPassword, grantCurrencyRoleRequest)
+> TransactionModel grantCurrencyRole(currencyId, xAuthorization, xWalletDecryptKey, grantCurrencyRoleRequest)
 
 Grant currency role
 
@@ -511,12 +511,12 @@ public class Example {
     defaultClient.setBasePath("https://api.trymetafab.com");
 
     CurrenciesApi apiInstance = new CurrenciesApi(defaultClient);
-    String currencyId = "currencyId_example"; // String | Any currency id within the MetaFab ecosystem.
+    String currencyId = "currencyId_example"; // String | Any currency id within the MetaFab platform.
     String xAuthorization = "[\"game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP\",\"player_at_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP\"]"; // String | The `secretKey` of a specific game or the `accessToken` of a specific player.
-    String xPassword = "mySecurePassword"; // String | The password of the authenticating game or player. Required to decrypt and perform blockchain transactions with the game or player primary wallet.
+    String xWalletDecryptKey = "AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4="; // String | The `walletDecryptKey` of the authenticating game or player. Required to decrypt and perform blockchain transactions with the game or player primary wallet.
     GrantCurrencyRoleRequest grantCurrencyRoleRequest = new GrantCurrencyRoleRequest(); // GrantCurrencyRoleRequest | 
     try {
-      TransactionModel result = apiInstance.grantCurrencyRole(currencyId, xAuthorization, xPassword, grantCurrencyRoleRequest);
+      TransactionModel result = apiInstance.grantCurrencyRole(currencyId, xAuthorization, xWalletDecryptKey, grantCurrencyRoleRequest);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling CurrenciesApi#grantCurrencyRole");
@@ -533,9 +533,9 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **currencyId** | **String**| Any currency id within the MetaFab ecosystem. | |
+| **currencyId** | **String**| Any currency id within the MetaFab platform. | |
 | **xAuthorization** | **String**| The &#x60;secretKey&#x60; of a specific game or the &#x60;accessToken&#x60; of a specific player. | |
-| **xPassword** | **String**| The password of the authenticating game or player. Required to decrypt and perform blockchain transactions with the game or player primary wallet. | |
+| **xWalletDecryptKey** | **String**| The &#x60;walletDecryptKey&#x60; of the authenticating game or player. Required to decrypt and perform blockchain transactions with the game or player primary wallet. | |
 | **grantCurrencyRoleRequest** | [**GrantCurrencyRoleRequest**](GrantCurrencyRoleRequest.md)|  | |
 
 ### Return type
@@ -560,7 +560,7 @@ No authorization required
 
 <a name="mintCurrency"></a>
 # **mintCurrency**
-> TransactionModel mintCurrency(currencyId, xAuthorization, xPassword, mintCurrencyRequest)
+> TransactionModel mintCurrency(currencyId, xAuthorization, xWalletDecryptKey, mintCurrencyRequest)
 
 Mint currency
 
@@ -581,12 +581,12 @@ public class Example {
     defaultClient.setBasePath("https://api.trymetafab.com");
 
     CurrenciesApi apiInstance = new CurrenciesApi(defaultClient);
-    String currencyId = "currencyId_example"; // String | Any currency id within the MetaFab ecosystem.
+    String currencyId = "currencyId_example"; // String | Any currency id within the MetaFab platform.
     String xAuthorization = "game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP"; // String | The `secretKey` of the authenticating game.
-    String xPassword = "mySecurePassword"; // String | The password of the authenticating game. Required to decrypt and perform blockchain transactions with the game primary wallet.
+    String xWalletDecryptKey = "AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4="; // String | The `walletDecryptKey` of the authenticating game. Required to decrypt and perform blockchain transactions with the game primary wallet.
     MintCurrencyRequest mintCurrencyRequest = new MintCurrencyRequest(); // MintCurrencyRequest | 
     try {
-      TransactionModel result = apiInstance.mintCurrency(currencyId, xAuthorization, xPassword, mintCurrencyRequest);
+      TransactionModel result = apiInstance.mintCurrency(currencyId, xAuthorization, xWalletDecryptKey, mintCurrencyRequest);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling CurrenciesApi#mintCurrency");
@@ -603,9 +603,9 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **currencyId** | **String**| Any currency id within the MetaFab ecosystem. | |
+| **currencyId** | **String**| Any currency id within the MetaFab platform. | |
 | **xAuthorization** | **String**| The &#x60;secretKey&#x60; of the authenticating game. | |
-| **xPassword** | **String**| The password of the authenticating game. Required to decrypt and perform blockchain transactions with the game primary wallet. | |
+| **xWalletDecryptKey** | **String**| The &#x60;walletDecryptKey&#x60; of the authenticating game. Required to decrypt and perform blockchain transactions with the game primary wallet. | |
 | **mintCurrencyRequest** | [**MintCurrencyRequest**](MintCurrencyRequest.md)|  | |
 
 ### Return type
@@ -630,7 +630,7 @@ No authorization required
 
 <a name="revokeCurrencyRole"></a>
 # **revokeCurrencyRole**
-> TransactionModel revokeCurrencyRole(currencyId, xAuthorization, xPassword, revokeCollectionRoleRequest)
+> TransactionModel revokeCurrencyRole(currencyId, xAuthorization, xWalletDecryptKey, revokeCollectionRoleRequest)
 
 Revoke currency role
 
@@ -651,12 +651,12 @@ public class Example {
     defaultClient.setBasePath("https://api.trymetafab.com");
 
     CurrenciesApi apiInstance = new CurrenciesApi(defaultClient);
-    String currencyId = "currencyId_example"; // String | Any currency id within the MetaFab ecosystem.
+    String currencyId = "currencyId_example"; // String | Any currency id within the MetaFab platform.
     String xAuthorization = "[\"game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP\",\"player_at_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP\"]"; // String | The `secretKey` of a specific game or the `accessToken` of a specific player.
-    String xPassword = "mySecurePassword"; // String | The password of the authenticating game or player. Required to decrypt and perform blockchain transactions with the game or player primary wallet.
+    String xWalletDecryptKey = "AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4="; // String | The `walletDecryptKey` of the authenticating game or player. Required to decrypt and perform blockchain transactions with the game or player primary wallet.
     RevokeCollectionRoleRequest revokeCollectionRoleRequest = new RevokeCollectionRoleRequest(); // RevokeCollectionRoleRequest | 
     try {
-      TransactionModel result = apiInstance.revokeCurrencyRole(currencyId, xAuthorization, xPassword, revokeCollectionRoleRequest);
+      TransactionModel result = apiInstance.revokeCurrencyRole(currencyId, xAuthorization, xWalletDecryptKey, revokeCollectionRoleRequest);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling CurrenciesApi#revokeCurrencyRole");
@@ -673,9 +673,9 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **currencyId** | **String**| Any currency id within the MetaFab ecosystem. | |
+| **currencyId** | **String**| Any currency id within the MetaFab platform. | |
 | **xAuthorization** | **String**| The &#x60;secretKey&#x60; of a specific game or the &#x60;accessToken&#x60; of a specific player. | |
-| **xPassword** | **String**| The password of the authenticating game or player. Required to decrypt and perform blockchain transactions with the game or player primary wallet. | |
+| **xWalletDecryptKey** | **String**| The &#x60;walletDecryptKey&#x60; of the authenticating game or player. Required to decrypt and perform blockchain transactions with the game or player primary wallet. | |
 | **revokeCollectionRoleRequest** | [**RevokeCollectionRoleRequest**](RevokeCollectionRoleRequest.md)|  | |
 
 ### Return type
@@ -700,7 +700,7 @@ No authorization required
 
 <a name="setCurrencyFees"></a>
 # **setCurrencyFees**
-> TransactionModel setCurrencyFees(currencyId, xAuthorization, xPassword, setCurrencyFeesRequest)
+> TransactionModel setCurrencyFees(currencyId, xAuthorization, xWalletDecryptKey, setCurrencyFeesRequest)
 
 Set currency fees
 
@@ -721,12 +721,12 @@ public class Example {
     defaultClient.setBasePath("https://api.trymetafab.com");
 
     CurrenciesApi apiInstance = new CurrenciesApi(defaultClient);
-    String currencyId = "currencyId_example"; // String | Any currency id within the MetaFab ecosystem.
+    String currencyId = "currencyId_example"; // String | Any currency id within the MetaFab platform.
     String xAuthorization = "game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP"; // String | The `secretKey` of the authenticating game.
-    String xPassword = "mySecurePassword"; // String | The password of the authenticating game. Required to decrypt and perform blockchain transactions with the game primary wallet.
+    String xWalletDecryptKey = "AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4="; // String | The `walletDecryptKey` of the authenticating game. Required to decrypt and perform blockchain transactions with the game primary wallet.
     SetCurrencyFeesRequest setCurrencyFeesRequest = new SetCurrencyFeesRequest(); // SetCurrencyFeesRequest | 
     try {
-      TransactionModel result = apiInstance.setCurrencyFees(currencyId, xAuthorization, xPassword, setCurrencyFeesRequest);
+      TransactionModel result = apiInstance.setCurrencyFees(currencyId, xAuthorization, xWalletDecryptKey, setCurrencyFeesRequest);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling CurrenciesApi#setCurrencyFees");
@@ -743,9 +743,9 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **currencyId** | **String**| Any currency id within the MetaFab ecosystem. | |
+| **currencyId** | **String**| Any currency id within the MetaFab platform. | |
 | **xAuthorization** | **String**| The &#x60;secretKey&#x60; of the authenticating game. | |
-| **xPassword** | **String**| The password of the authenticating game. Required to decrypt and perform blockchain transactions with the game primary wallet. | |
+| **xWalletDecryptKey** | **String**| The &#x60;walletDecryptKey&#x60; of the authenticating game. Required to decrypt and perform blockchain transactions with the game primary wallet. | |
 | **setCurrencyFeesRequest** | [**SetCurrencyFeesRequest**](SetCurrencyFeesRequest.md)|  | |
 
 ### Return type
@@ -770,7 +770,7 @@ No authorization required
 
 <a name="transferCurrency"></a>
 # **transferCurrency**
-> TransactionModel transferCurrency(currencyId, xAuthorization, xPassword, transferCurrencyRequest)
+> TransactionModel transferCurrency(currencyId, xAuthorization, xWalletDecryptKey, transferCurrencyRequest)
 
 Transfer currency
 
@@ -791,12 +791,12 @@ public class Example {
     defaultClient.setBasePath("https://api.trymetafab.com");
 
     CurrenciesApi apiInstance = new CurrenciesApi(defaultClient);
-    String currencyId = "currencyId_example"; // String | Any currency id within the MetaFab ecosystem.
+    String currencyId = "currencyId_example"; // String | Any currency id within the MetaFab platform.
     String xAuthorization = "[\"game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP\",\"player_at_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP\"]"; // String | The `secretKey` of a specific game or the `accessToken` of a specific player.
-    String xPassword = "mySecurePassword"; // String | The password of the authenticating game or player. Required to decrypt and perform blockchain transactions with the game or player primary wallet.
+    String xWalletDecryptKey = "AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4="; // String | The `walletDecryptKey` of the authenticating game or player. Required to decrypt and perform blockchain transactions with the game or player primary wallet.
     TransferCurrencyRequest transferCurrencyRequest = new TransferCurrencyRequest(); // TransferCurrencyRequest | 
     try {
-      TransactionModel result = apiInstance.transferCurrency(currencyId, xAuthorization, xPassword, transferCurrencyRequest);
+      TransactionModel result = apiInstance.transferCurrency(currencyId, xAuthorization, xWalletDecryptKey, transferCurrencyRequest);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling CurrenciesApi#transferCurrency");
@@ -813,9 +813,9 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **currencyId** | **String**| Any currency id within the MetaFab ecosystem. | |
+| **currencyId** | **String**| Any currency id within the MetaFab platform. | |
 | **xAuthorization** | **String**| The &#x60;secretKey&#x60; of a specific game or the &#x60;accessToken&#x60; of a specific player. | |
-| **xPassword** | **String**| The password of the authenticating game or player. Required to decrypt and perform blockchain transactions with the game or player primary wallet. | |
+| **xWalletDecryptKey** | **String**| The &#x60;walletDecryptKey&#x60; of the authenticating game or player. Required to decrypt and perform blockchain transactions with the game or player primary wallet. | |
 | **transferCurrencyRequest** | [**TransferCurrencyRequest**](TransferCurrencyRequest.md)|  | |
 
 ### Return type

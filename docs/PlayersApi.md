@@ -174,7 +174,7 @@ public class Example {
     defaultClient.setBasePath("https://api.trymetafab.com");
 
     PlayersApi apiInstance = new PlayersApi(defaultClient);
-    String playerId = "playerId_example"; // String | Any player id within the MetaFab ecosystem.
+    String playerId = "playerId_example"; // String | Any player id within the MetaFab platform.
     try {
       PublicPlayer result = apiInstance.getPlayer(playerId);
       System.out.println(result);
@@ -193,7 +193,7 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **playerId** | **String**| Any player id within the MetaFab ecosystem. | |
+| **playerId** | **String**| Any player id within the MetaFab platform. | |
 
 ### Return type
 
@@ -237,7 +237,7 @@ public class Example {
     defaultClient.setBasePath("https://api.trymetafab.com");
 
     PlayersApi apiInstance = new PlayersApi(defaultClient);
-    String playerId = "playerId_example"; // String | Any player id within the MetaFab ecosystem.
+    String playerId = "playerId_example"; // String | Any player id within the MetaFab platform.
     try {
       GetPlayerData200Response result = apiInstance.getPlayerData(playerId);
       System.out.println(result);
@@ -256,7 +256,7 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **playerId** | **String**| Any player id within the MetaFab ecosystem. | |
+| **playerId** | **String**| Any player id within the MetaFab platform. | |
 
 ### Return type
 
@@ -363,8 +363,8 @@ public class Example {
     defaultClient.setBasePath("https://api.trymetafab.com");
 
     PlayersApi apiInstance = new PlayersApi(defaultClient);
-    String playerId = "playerId_example"; // String | Any player id within the MetaFab ecosystem.
-    String playerWalletId = "playerWalletId_example"; // String | Any player wallet id within the MetaFab ecosystem.
+    String playerId = "playerId_example"; // String | Any player id within the MetaFab platform.
+    String playerWalletId = "playerWalletId_example"; // String | Any player wallet id within the MetaFab platform.
     RemovePlayerConnectedWalletRequest removePlayerConnectedWalletRequest = new RemovePlayerConnectedWalletRequest(); // RemovePlayerConnectedWalletRequest | 
     try {
       apiInstance.removePlayerConnectedWallet(playerId, playerWalletId, removePlayerConnectedWalletRequest);
@@ -383,8 +383,8 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **playerId** | **String**| Any player id within the MetaFab ecosystem. | |
-| **playerWalletId** | **String**| Any player wallet id within the MetaFab ecosystem. | |
+| **playerId** | **String**| Any player id within the MetaFab platform. | |
+| **playerWalletId** | **String**| Any player wallet id within the MetaFab platform. | |
 | **removePlayerConnectedWalletRequest** | [**RemovePlayerConnectedWalletRequest**](RemovePlayerConnectedWalletRequest.md)|  | |
 
 ### Return type
@@ -430,7 +430,7 @@ public class Example {
     defaultClient.setBasePath("https://api.trymetafab.com");
 
     PlayersApi apiInstance = new PlayersApi(defaultClient);
-    String playerId = "playerId_example"; // String | Any player id within the MetaFab ecosystem.
+    String playerId = "playerId_example"; // String | The player id of the authenticating player.
     String xAuthorization = "player_at_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP"; // String | The `accessToken` of the authenticating player.
     SetPlayerConnectedWalletRequest setPlayerConnectedWalletRequest = new SetPlayerConnectedWalletRequest(); // SetPlayerConnectedWalletRequest | 
     try {
@@ -451,7 +451,7 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **playerId** | **String**| Any player id within the MetaFab ecosystem. | |
+| **playerId** | **String**| The player id of the authenticating player. | |
 | **xAuthorization** | **String**| The &#x60;accessToken&#x60; of the authenticating player. | |
 | **setPlayerConnectedWalletRequest** | [**SetPlayerConnectedWalletRequest**](SetPlayerConnectedWalletRequest.md)|  | |
 
@@ -498,7 +498,7 @@ public class Example {
     defaultClient.setBasePath("https://api.trymetafab.com");
 
     PlayersApi apiInstance = new PlayersApi(defaultClient);
-    String playerId = "playerId_example"; // String | Any player id within the MetaFab ecosystem.
+    String playerId = "playerId_example"; // String | Any player id within the MetaFab platform.
     String xAuthorization = "[\"game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP\",\"player_at_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP\"]"; // String | The `secretKey` of a specific game or the `accessToken` of a specific player.
     SetPlayerDataRequest setPlayerDataRequest = new SetPlayerDataRequest(); // SetPlayerDataRequest | 
     try {
@@ -519,7 +519,7 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **playerId** | **String**| Any player id within the MetaFab ecosystem. | |
+| **playerId** | **String**| Any player id within the MetaFab platform. | |
 | **xAuthorization** | **String**| The &#x60;secretKey&#x60; of a specific game or the &#x60;accessToken&#x60; of a specific player. | |
 | **setPlayerDataRequest** | [**SetPlayerDataRequest**](SetPlayerDataRequest.md)|  | |
 
@@ -544,7 +544,7 @@ No authorization required
 
 <a name="updatePlayer"></a>
 # **updatePlayer**
-> PlayerModel updatePlayer(playerId, xAuthorization, updatePlayerRequest)
+> UpdatePlayer200Response updatePlayer(playerId, xAuthorization, updatePlayerRequest)
 
 Update player
 
@@ -565,11 +565,11 @@ public class Example {
     defaultClient.setBasePath("https://api.trymetafab.com");
 
     PlayersApi apiInstance = new PlayersApi(defaultClient);
-    String playerId = "playerId_example"; // String | Any player id within the MetaFab ecosystem.
+    String playerId = "playerId_example"; // String | The player id of the authenticating player.
     String xAuthorization = "player_at_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP"; // String | The `accessToken` of the authenticating player.
     UpdatePlayerRequest updatePlayerRequest = new UpdatePlayerRequest(); // UpdatePlayerRequest | 
     try {
-      PlayerModel result = apiInstance.updatePlayer(playerId, xAuthorization, updatePlayerRequest);
+      UpdatePlayer200Response result = apiInstance.updatePlayer(playerId, xAuthorization, updatePlayerRequest);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling PlayersApi#updatePlayer");
@@ -586,13 +586,13 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **playerId** | **String**| Any player id within the MetaFab ecosystem. | |
+| **playerId** | **String**| The player id of the authenticating player. | |
 | **xAuthorization** | **String**| The &#x60;accessToken&#x60; of the authenticating player. | |
 | **updatePlayerRequest** | [**UpdatePlayerRequest**](UpdatePlayerRequest.md)|  | |
 
 ### Return type
 
-[**PlayerModel**](PlayerModel.md)
+[**UpdatePlayer200Response**](UpdatePlayer200Response.md)
 
 ### Authorization
 

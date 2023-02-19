@@ -30,7 +30,7 @@ public class Example {
     defaultClient.setBasePath("https://api.trymetafab.com");
 
     TransactionsApi apiInstance = new TransactionsApi(defaultClient);
-    String transactionId = "transactionId_example"; // String | Any transaction id within the MetaFab ecosystem.
+    String transactionId = "transactionId_example"; // String | Any transaction id within the MetaFab platform.
     try {
       TransactionModel result = apiInstance.getTransaction(transactionId);
       System.out.println(result);
@@ -49,7 +49,7 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **transactionId** | **String**| Any transaction id within the MetaFab ecosystem. | |
+| **transactionId** | **String**| Any transaction id within the MetaFab platform. | |
 
 ### Return type
 

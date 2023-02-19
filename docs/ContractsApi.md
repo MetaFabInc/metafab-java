@@ -164,7 +164,7 @@ public class Example {
     defaultClient.setBasePath("https://api.trymetafab.com");
 
     ContractsApi apiInstance = new ContractsApi(defaultClient);
-    String contractId = "contractId_example"; // String | Any contract id within the MetaFab ecosystem.
+    String contractId = "contractId_example"; // String | Any contract id within the MetaFab platform.
     String func = "func_example"; // String | A contract function name. This can be any valid function from the the ABI of the contract you are interacting with. For example, `balanceOf`.
     String args = "123,\"Hello\",false"; // String | A comma seperated list of basic data type arguments. This is optional and only necessary if the function being invoked requires arguments per the contract ABI. For example, `123,\"Hello\",false`.
     try {
@@ -185,7 +185,7 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **contractId** | **String**| Any contract id within the MetaFab ecosystem. | |
+| **contractId** | **String**| Any contract id within the MetaFab platform. | |
 | **func** | **String**| A contract function name. This can be any valid function from the the ABI of the contract you are interacting with. For example, &#x60;balanceOf&#x60;. | |
 | **args** | **String**| A comma seperated list of basic data type arguments. This is optional and only necessary if the function being invoked requires arguments per the contract ABI. For example, &#x60;123,\&quot;Hello\&quot;,false&#x60;. | [optional] |
 
@@ -210,7 +210,7 @@ No authorization required
 
 <a name="transferContractOwnership"></a>
 # **transferContractOwnership**
-> TransactionModel transferContractOwnership(contractId, xAuthorization, xPassword, transferContractOwnershipRequest)
+> TransactionModel transferContractOwnership(contractId, xAuthorization, xWalletDecryptKey, transferContractOwnershipRequest)
 
 Transfer contract ownership
 
@@ -231,12 +231,12 @@ public class Example {
     defaultClient.setBasePath("https://api.trymetafab.com");
 
     ContractsApi apiInstance = new ContractsApi(defaultClient);
-    String contractId = "contractId_example"; // String | Any contract id within the MetaFab ecosystem.
+    String contractId = "contractId_example"; // String | Any contract id within the MetaFab platform.
     String xAuthorization = "game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP"; // String | The `secretKey` of the authenticating game.
-    String xPassword = "mySecurePassword"; // String | The password of the authenticating game. Required to decrypt and perform blockchain transactions with the game primary wallet.
+    String xWalletDecryptKey = "AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4="; // String | The `walletDecryptKey` of the authenticating game. Required to decrypt and perform blockchain transactions with the game primary wallet.
     TransferContractOwnershipRequest transferContractOwnershipRequest = new TransferContractOwnershipRequest(); // TransferContractOwnershipRequest | 
     try {
-      TransactionModel result = apiInstance.transferContractOwnership(contractId, xAuthorization, xPassword, transferContractOwnershipRequest);
+      TransactionModel result = apiInstance.transferContractOwnership(contractId, xAuthorization, xWalletDecryptKey, transferContractOwnershipRequest);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling ContractsApi#transferContractOwnership");
@@ -253,9 +253,9 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **contractId** | **String**| Any contract id within the MetaFab ecosystem. | |
+| **contractId** | **String**| Any contract id within the MetaFab platform. | |
 | **xAuthorization** | **String**| The &#x60;secretKey&#x60; of the authenticating game. | |
-| **xPassword** | **String**| The password of the authenticating game. Required to decrypt and perform blockchain transactions with the game primary wallet. | |
+| **xWalletDecryptKey** | **String**| The &#x60;walletDecryptKey&#x60; of the authenticating game. Required to decrypt and perform blockchain transactions with the game primary wallet. | |
 | **transferContractOwnershipRequest** | [**TransferContractOwnershipRequest**](TransferContractOwnershipRequest.md)|  | |
 
 ### Return type
@@ -280,7 +280,7 @@ No authorization required
 
 <a name="upgradeContractTrustedForwarder"></a>
 # **upgradeContractTrustedForwarder**
-> TransactionModel upgradeContractTrustedForwarder(contractId, xAuthorization, xPassword, upgradeContractTrustedForwarderRequest)
+> TransactionModel upgradeContractTrustedForwarder(contractId, xAuthorization, xWalletDecryptKey, upgradeContractTrustedForwarderRequest)
 
 Upgrade contract trusted forwarder
 
@@ -301,12 +301,12 @@ public class Example {
     defaultClient.setBasePath("https://api.trymetafab.com");
 
     ContractsApi apiInstance = new ContractsApi(defaultClient);
-    String contractId = "contractId_example"; // String | Any contract id within the MetaFab ecosystem.
+    String contractId = "contractId_example"; // String | Any contract id within the MetaFab platform.
     String xAuthorization = "game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP"; // String | The `secretKey` of the authenticating game.
-    String xPassword = "mySecurePassword"; // String | The password of the authenticating game. Required to decrypt and perform blockchain transactions with the game primary wallet.
+    String xWalletDecryptKey = "AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4="; // String | The `walletDecryptKey` of the authenticating game. Required to decrypt and perform blockchain transactions with the game primary wallet.
     UpgradeContractTrustedForwarderRequest upgradeContractTrustedForwarderRequest = new UpgradeContractTrustedForwarderRequest(); // UpgradeContractTrustedForwarderRequest | 
     try {
-      TransactionModel result = apiInstance.upgradeContractTrustedForwarder(contractId, xAuthorization, xPassword, upgradeContractTrustedForwarderRequest);
+      TransactionModel result = apiInstance.upgradeContractTrustedForwarder(contractId, xAuthorization, xWalletDecryptKey, upgradeContractTrustedForwarderRequest);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling ContractsApi#upgradeContractTrustedForwarder");
@@ -323,9 +323,9 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **contractId** | **String**| Any contract id within the MetaFab ecosystem. | |
+| **contractId** | **String**| Any contract id within the MetaFab platform. | |
 | **xAuthorization** | **String**| The &#x60;secretKey&#x60; of the authenticating game. | |
-| **xPassword** | **String**| The password of the authenticating game. Required to decrypt and perform blockchain transactions with the game primary wallet. | |
+| **xWalletDecryptKey** | **String**| The &#x60;walletDecryptKey&#x60; of the authenticating game. Required to decrypt and perform blockchain transactions with the game primary wallet. | |
 | **upgradeContractTrustedForwarderRequest** | [**UpgradeContractTrustedForwarderRequest**](UpgradeContractTrustedForwarderRequest.md)|  | |
 
 ### Return type
@@ -350,7 +350,7 @@ No authorization required
 
 <a name="writeContract"></a>
 # **writeContract**
-> TransactionModel writeContract(contractId, xAuthorization, xPassword, writeContractRequest)
+> TransactionModel writeContract(contractId, xAuthorization, xWalletDecryptKey, writeContractRequest)
 
 Write contract data
 
@@ -371,12 +371,12 @@ public class Example {
     defaultClient.setBasePath("https://api.trymetafab.com");
 
     ContractsApi apiInstance = new ContractsApi(defaultClient);
-    String contractId = "contractId_example"; // String | Any contract id within the MetaFab ecosystem.
+    String contractId = "contractId_example"; // String | Any contract id within the MetaFab platform.
     String xAuthorization = "[\"game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP\",\"player_at_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP\"]"; // String | The `secretKey` of a specific game or the `accessToken` of a specific player.
-    String xPassword = "mySecurePassword"; // String | The password of the authenticating game or player. Required to decrypt and perform blockchain transactions with the game or player primary wallet.
+    String xWalletDecryptKey = "AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4="; // String | The `walletDecryptKey` of the authenticating game or player. Required to decrypt and perform blockchain transactions with the game or player primary wallet.
     WriteContractRequest writeContractRequest = new WriteContractRequest(); // WriteContractRequest | 
     try {
-      TransactionModel result = apiInstance.writeContract(contractId, xAuthorization, xPassword, writeContractRequest);
+      TransactionModel result = apiInstance.writeContract(contractId, xAuthorization, xWalletDecryptKey, writeContractRequest);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling ContractsApi#writeContract");
@@ -393,9 +393,9 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **contractId** | **String**| Any contract id within the MetaFab ecosystem. | |
+| **contractId** | **String**| Any contract id within the MetaFab platform. | |
 | **xAuthorization** | **String**| The &#x60;secretKey&#x60; of a specific game or the &#x60;accessToken&#x60; of a specific player. | |
-| **xPassword** | **String**| The password of the authenticating game or player. Required to decrypt and perform blockchain transactions with the game or player primary wallet. | |
+| **xWalletDecryptKey** | **String**| The &#x60;walletDecryptKey&#x60; of the authenticating game or player. Required to decrypt and perform blockchain transactions with the game or player primary wallet. | |
 | **writeContractRequest** | [**WriteContractRequest**](WriteContractRequest.md)|  | |
 
 ### Return type

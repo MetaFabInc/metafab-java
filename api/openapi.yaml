@@ -4,10 +4,10 @@ info:
     email: metafabproject@gmail.com
     name: MetaFab Team
     url: https://trymetafab.com
-  description: " Complete MetaFab API references and guides can be found at: https://trymetafab.com"
+  description: "Complete MetaFab API references and guides can be found at: https://trymetafab.com"
   termsOfService: https://trymetafab.com
   title: MetaFab API
-  version: 1.4.1
+  version: 1.5.1
 servers:
 - description: MetaFab API Server
   url: https://api.trymetafab.com
@@ -83,12 +83,12 @@ paths:
         schema:
           type: string
         style: simple
-      - description: The password of the authenticating game. Required to decrypt
-          and perform blockchain transactions with the game primary wallet.
-        example: mySecurePassword
+      - description: The `walletDecryptKey` of the authenticating game. Required to
+          decrypt and perform blockchain transactions with the game primary wallet.
+        example: AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4=
         explode: false
         in: header
-        name: X-Password
+        name: X-Wallet-Decrypt-Key
         required: true
         schema:
           type: string
@@ -135,7 +135,7 @@ paths:
         by the address or address associated with the provided walletId.
       operationId: getCollectionApproval
       parameters:
-      - description: Any collection id within the MetaFab ecosystem.
+      - description: Any collection id within the MetaFab platform.
         explode: false
         in: path
         name: collectionId
@@ -161,7 +161,7 @@ paths:
         schema:
           type: string
         style: form
-      - description: Any wallet id within the MetaFab ecosystem.
+      - description: Any wallet id within the MetaFab platform.
         explode: true
         in: query
         name: walletId
@@ -198,7 +198,7 @@ paths:
         authenticated game or player's wallet address.
       operationId: setCollectionApproval
       parameters:
-      - description: Any collection id within the MetaFab ecosystem.
+      - description: Any collection id within the MetaFab platform.
         explode: false
         in: path
         name: collectionId
@@ -218,13 +218,13 @@ paths:
         schema:
           type: string
         style: simple
-      - description: The password of the authenticating game or player. Required to
-          decrypt and perform blockchain transactions with the game or player primary
-          wallet.
-        example: mySecurePassword
+      - description: The `walletDecryptKey` of the authenticating game or player.
+          Required to decrypt and perform blockchain transactions with the game or
+          player primary wallet.
+        example: AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4=
         explode: false
         in: header
-        name: X-Password
+        name: X-Wallet-Decrypt-Key
         required: true
         schema:
           type: string
@@ -272,7 +272,7 @@ paths:
         the provided walletId.
       operationId: getCollectionItemBalances
       parameters:
-      - description: Any collection id within the MetaFab ecosystem.
+      - description: Any collection id within the MetaFab platform.
         explode: false
         in: path
         name: collectionId
@@ -289,7 +289,7 @@ paths:
         schema:
           type: string
         style: form
-      - description: Any wallet id within the MetaFab ecosystem.
+      - description: Any wallet id within the MetaFab platform.
         explode: true
         in: query
         name: walletId
@@ -329,7 +329,7 @@ paths:
         walletId.
       operationId: batchMintCollectionItems
       parameters:
-      - description: Any collection id within the MetaFab ecosystem.
+      - description: Any collection id within the MetaFab platform.
         explode: false
         in: path
         name: collectionId
@@ -346,12 +346,12 @@ paths:
         schema:
           type: string
         style: simple
-      - description: The password of the authenticating game. Required to decrypt
-          and perform blockchain transactions with the game primary wallet.
-        example: mySecurePassword
+      - description: The `walletDecryptKey` of the authenticating game. Required to
+          decrypt and perform blockchain transactions with the game primary wallet.
+        example: AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4=
         explode: false
         in: header
-        name: X-Password
+        name: X-Wallet-Decrypt-Key
         required: true
         schema:
           type: string
@@ -399,7 +399,7 @@ paths:
         one request.
       operationId: batchTransferCollectionItems
       parameters:
-      - description: Any collection id within the MetaFab ecosystem.
+      - description: Any collection id within the MetaFab platform.
         explode: false
         in: path
         name: collectionId
@@ -419,13 +419,13 @@ paths:
         schema:
           type: string
         style: simple
-      - description: The password of the authenticating game or player. Required to
-          decrypt and perform blockchain transactions with the game or player primary
-          wallet.
-        example: mySecurePassword
+      - description: The `walletDecryptKey` of the authenticating game or player.
+          Required to decrypt and perform blockchain transactions with the game or
+          player primary wallet.
+        example: AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4=
         explode: false
         in: header
-        name: X-Password
+        name: X-Wallet-Decrypt-Key
         required: true
         schema:
           type: string
@@ -470,7 +470,7 @@ paths:
       description: Returns all collection items as an array of metadata objects.
       operationId: getCollectionItems
       parameters:
-      - description: Any collection id within the MetaFab ecosystem.
+      - description: Any collection id within the MetaFab platform.
         explode: false
         in: path
         name: collectionId
@@ -484,7 +484,7 @@ paths:
             application/json:
               schema:
                 items:
-                  type: object
+                  $ref: '#/components/schemas/CollectionItem'
                 type: array
           description: Successfully retrieved collection items metadata.
         "400":
@@ -499,17 +499,15 @@ paths:
       - Items
       x-accepts: application/json
     post:
-      description: "Creates a new item type. Item type creation associates all of\
-        \ the relevant item data to a specific itemId. Such as item name, image, description,\
-        \ attributes, any arbitrary data such as 2D or 3D model resolver URLs, and\
-        \ more. It is recommended, but not required, that you create a new item type\
-        \ through this endpoint before minting any quantity of the related itemId.\n\
-        \nAny itemId provided will have its existing item type overriden if it already\
-        \ exists.\n\nItem type data is uploaded to, and resolved through IPFS for\
-        \ decentralized persistence."
+      description: |-
+        Creates a new item type. Item type creation associates all of the relevant item data to a specific itemId. Such as item name, image, description, attributes, any arbitrary data such as 2D or 3D model resolver URLs, and more. It is recommended, but not required, that you create a new item type through this endpoint before minting any quantity of the related itemId.
+
+        Any itemId provided will have its existing item type overriden if it already exists.
+
+        Item type data is uploaded to, and resolved through IPFS for decentralized persistence.
       operationId: createCollectionItem
       parameters:
-      - description: Any collection id within the MetaFab ecosystem.
+      - description: Any collection id within the MetaFab platform.
         explode: false
         in: path
         name: collectionId
@@ -526,12 +524,12 @@ paths:
         schema:
           type: string
         style: simple
-      - description: The password of the authenticating game. Required to decrypt
-          and perform blockchain transactions with the game primary wallet.
-        example: mySecurePassword
+      - description: The `walletDecryptKey` of the authenticating game. Required to
+          decrypt and perform blockchain transactions with the game primary wallet.
+        example: AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4=
         explode: false
         in: header
-        name: X-Password
+        name: X-Wallet-Decrypt-Key
         required: true
         schema:
           type: string
@@ -575,7 +573,7 @@ paths:
       description: Returns a metadata object for the provided collectionItemId.
       operationId: getCollectionItem
       parameters:
-      - description: Any collection id within the MetaFab ecosystem.
+      - description: Any collection id within the MetaFab platform.
         explode: false
         in: path
         name: collectionId
@@ -596,7 +594,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/schemas/CollectionItem'
           description: Successfully retrieved collection item metadata.
         "400":
           content:
@@ -616,7 +614,7 @@ paths:
         provided walletId.
       operationId: getCollectionItemBalance
       parameters:
-      - description: Any collection id within the MetaFab ecosystem.
+      - description: Any collection id within the MetaFab platform.
         explode: false
         in: path
         name: collectionId
@@ -641,7 +639,7 @@ paths:
         schema:
           type: string
         style: form
-      - description: Any wallet id within the MetaFab ecosystem.
+      - description: Any wallet id within the MetaFab platform.
         explode: true
         in: query
         name: walletId
@@ -676,7 +674,7 @@ paths:
         from the circulating supply of the item.
       operationId: burnCollectionItem
       parameters:
-      - description: Any collection id within the MetaFab ecosystem.
+      - description: Any collection id within the MetaFab platform.
         explode: false
         in: path
         name: collectionId
@@ -704,13 +702,13 @@ paths:
         schema:
           type: string
         style: simple
-      - description: The password of the authenticating game or player. Required to
-          decrypt and perform blockchain transactions with the game or player primary
-          wallet.
-        example: mySecurePassword
+      - description: The `walletDecryptKey` of the authenticating game or player.
+          Required to decrypt and perform blockchain transactions with the game or
+          player primary wallet.
+        example: AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4=
         explode: false
         in: header
-        name: X-Password
+        name: X-Wallet-Decrypt-Key
         required: true
         schema:
           type: string
@@ -757,7 +755,7 @@ paths:
         walletId.
       operationId: mintCollectionItem
       parameters:
-      - description: Any collection id within the MetaFab ecosystem.
+      - description: Any collection id within the MetaFab platform.
         explode: false
         in: path
         name: collectionId
@@ -782,12 +780,12 @@ paths:
         schema:
           type: string
         style: simple
-      - description: The password of the authenticating game. Required to decrypt
-          and perform blockchain transactions with the game primary wallet.
-        example: mySecurePassword
+      - description: The `walletDecryptKey` of the authenticating game. Required to
+          decrypt and perform blockchain transactions with the game primary wallet.
+        example: AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4=
         explode: false
         in: header
-        name: X-Password
+        name: X-Wallet-Decrypt-Key
         required: true
         schema:
           type: string
@@ -832,7 +830,7 @@ paths:
       description: Returns the current circulating supply of the provided collectionItemId.
       operationId: getCollectionItemSupply
       parameters:
-      - description: Any collection id within the MetaFab ecosystem.
+      - description: Any collection id within the MetaFab platform.
         explode: false
         in: path
         name: collectionId
@@ -857,7 +855,7 @@ paths:
         schema:
           type: string
         style: form
-      - description: Any wallet id within the MetaFab ecosystem.
+      - description: Any wallet id within the MetaFab platform.
         explode: true
         in: query
         name: walletId
@@ -892,7 +890,7 @@ paths:
         from being transferred until the set timelock timestamp has been surpassed.
       operationId: getCollectionItemTimelock
       parameters:
-      - description: Any collection id within the MetaFab ecosystem.
+      - description: Any collection id within the MetaFab platform.
         explode: false
         in: path
         name: collectionId
@@ -937,7 +935,7 @@ paths:
         \ on the itemId and it can be freely transferred, traded, etc."
       operationId: setCollectionItemTimelock
       parameters:
-      - description: Any collection id within the MetaFab ecosystem.
+      - description: Any collection id within the MetaFab platform.
         explode: false
         in: path
         name: collectionId
@@ -962,12 +960,12 @@ paths:
         schema:
           type: string
         style: simple
-      - description: The password of the authenticating game. Required to decrypt
-          and perform blockchain transactions with the game primary wallet.
-        example: mySecurePassword
+      - description: The `walletDecryptKey` of the authenticating game. Required to
+          decrypt and perform blockchain transactions with the game primary wallet.
+        example: AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4=
         explode: false
         in: header
-        name: X-Password
+        name: X-Wallet-Decrypt-Key
         required: true
         schema:
           type: string
@@ -1012,7 +1010,7 @@ paths:
         or wallet address associated with the provided walletId.
       operationId: transferCollectionItem
       parameters:
-      - description: Any collection id within the MetaFab ecosystem.
+      - description: Any collection id within the MetaFab platform.
         explode: false
         in: path
         name: collectionId
@@ -1040,13 +1038,13 @@ paths:
         schema:
           type: string
         style: simple
-      - description: The password of the authenticating game or player. Required to
-          decrypt and perform blockchain transactions with the game or player primary
-          wallet.
-        example: mySecurePassword
+      - description: The `walletDecryptKey` of the authenticating game or player.
+          Required to decrypt and perform blockchain transactions with the game or
+          player primary wallet.
+        example: AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4=
         explode: false
         in: header
-        name: X-Password
+        name: X-Wallet-Decrypt-Key
         required: true
         schema:
           type: string
@@ -1092,7 +1090,7 @@ paths:
         or address associated with the provided walletId.
       operationId: revokeCollectionRole
       parameters:
-      - description: Any collection id within the MetaFab ecosystem.
+      - description: Any collection id within the MetaFab platform.
         explode: false
         in: path
         name: collectionId
@@ -1112,13 +1110,13 @@ paths:
         schema:
           type: string
         style: simple
-      - description: The password of the authenticating game or player. Required to
-          decrypt and perform blockchain transactions with the game or player primary
-          wallet.
-        example: mySecurePassword
+      - description: The `walletDecryptKey` of the authenticating game or player.
+          Required to decrypt and perform blockchain transactions with the game or
+          player primary wallet.
+        example: AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4=
         explode: false
         in: header
-        name: X-Password
+        name: X-Wallet-Decrypt-Key
         required: true
         schema:
           type: string
@@ -1164,7 +1162,7 @@ paths:
         with the provided walletId.
       operationId: getCollectionRole
       parameters:
-      - description: Any collection id within the MetaFab ecosystem.
+      - description: Any collection id within the MetaFab platform.
         explode: false
         in: path
         name: collectionId
@@ -1191,7 +1189,7 @@ paths:
         schema:
           type: string
         style: form
-      - description: Any wallet id within the MetaFab ecosystem.
+      - description: Any wallet id within the MetaFab platform.
         explode: true
         in: query
         name: walletId
@@ -1225,7 +1223,7 @@ paths:
         \ or contracts to perform different types of permissioned collection operations."
       operationId: grantCollectionRole
       parameters:
-      - description: Any collection id within the MetaFab ecosystem.
+      - description: Any collection id within the MetaFab platform.
         explode: false
         in: path
         name: collectionId
@@ -1245,13 +1243,13 @@ paths:
         schema:
           type: string
         style: simple
-      - description: The password of the authenticating game or player. Required to
-          decrypt and perform blockchain transactions with the game or player primary
-          wallet.
-        example: mySecurePassword
+      - description: The `walletDecryptKey` of the authenticating game or player.
+          Required to decrypt and perform blockchain transactions with the game or
+          player primary wallet.
+        example: AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4=
         explode: false
         in: header
-        name: X-Password
+        name: X-Wallet-Decrypt-Key
         required: true
         schema:
           type: string
@@ -1295,7 +1293,7 @@ paths:
       description: Returns the currency circulating supply of all collection items.
       operationId: getCollectionItemSupplies
       parameters:
-      - description: Any collection id within the MetaFab ecosystem.
+      - description: Any collection id within the MetaFab platform.
         explode: false
         in: path
         name: collectionId
@@ -1423,7 +1421,7 @@ paths:
         \ function."
       operationId: upgradeContractTrustedForwarder
       parameters:
-      - description: Any contract id within the MetaFab ecosystem.
+      - description: Any contract id within the MetaFab platform.
         explode: false
         in: path
         name: contractId
@@ -1440,12 +1438,12 @@ paths:
         schema:
           type: string
         style: simple
-      - description: The password of the authenticating game. Required to decrypt
-          and perform blockchain transactions with the game primary wallet.
-        example: mySecurePassword
+      - description: The `walletDecryptKey` of the authenticating game. Required to
+          decrypt and perform blockchain transactions with the game primary wallet.
+        example: AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4=
         explode: false
         in: header
-        name: X-Password
+        name: X-Wallet-Decrypt-Key
         required: true
         schema:
           type: string
@@ -1486,25 +1484,15 @@ paths:
       x-accepts: application/json
   /v1/contracts/{contractId}/owners:
     post:
-      description: "Transfer ownership and control of a MetaFab deployed smart contract\
-        \ to another wallet you control. Transferring control does not disrupt your\
-        \ usage of MetaFab APIs and can be done so without causing any service outages\
-        \ for your game. The new owner wallet will have full control over any relevant\
-        \ item collections and marketplace related pages this contract may be associated\
-        \ with, such as for MetaFab item or NFT contracts.\n\nYour game's custodial\
-        \ wallet will retain a `MANAGER_ROLE` on your contracts, allowing you to still\
-        \ use MetaFab APIs without issue while you retain full contract ownership\
-        \ and the contract's administrator role. If ever you want eject from using\
-        \ the MetaFab APIs but still retain your deployed smart contracts, you can\
-        \ revoke the `MANAGER_ROLE` from your game's custodial wallet address for\
-        \ your contract. We do not lock you into our systems.\n\nPlease be certain\
-        \ that the wallet address you transfer ownership to is one you control. Once\
-        \ ownership and admin permissions are transferred, your game's custodial wallet\
-        \ no longer has permission to reassign ownership or administrative priveleges\
-        \ for your contract."
+      description: |-
+        Transfer ownership and control of a MetaFab deployed smart contract to another wallet you control. Transferring control does not disrupt your usage of MetaFab APIs and can be done so without causing any service outages for your game. The new owner wallet will have full control over any relevant item collections and marketplace related pages this contract may be associated with, such as for MetaFab item or NFT contracts.
+
+        Your game's custodial wallet will retain a `MANAGER_ROLE` on your contracts, allowing you to still use MetaFab APIs without issue while you retain full contract ownership and the contract's administrator role. If ever you want eject from using the MetaFab APIs but still retain your deployed smart contracts, you can revoke the `MANAGER_ROLE` from your game's custodial wallet address for your contract. We do not lock you into our systems.
+
+        Please be certain that the wallet address you transfer ownership to is one you control. Once ownership and admin permissions are transferred, your game's custodial wallet no longer has permission to reassign ownership or administrative priveleges for your contract.
       operationId: transferContractOwnership
       parameters:
-      - description: Any contract id within the MetaFab ecosystem.
+      - description: Any contract id within the MetaFab platform.
         explode: false
         in: path
         name: contractId
@@ -1521,12 +1509,12 @@ paths:
         schema:
           type: string
         style: simple
-      - description: The password of the authenticating game. Required to decrypt
-          and perform blockchain transactions with the game primary wallet.
-        example: mySecurePassword
+      - description: The `walletDecryptKey` of the authenticating game. Required to
+          decrypt and perform blockchain transactions with the game primary wallet.
+        example: AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4=
         explode: false
         in: header
-        name: X-Password
+        name: X-Wallet-Decrypt-Key
         required: true
         schema:
           type: string
@@ -1567,15 +1555,13 @@ paths:
       x-accepts: application/json
   /v1/contracts/{contractId}/reads:
     get:
-      description: "Oftentimes you'll want to query and retrieve some data from a\
-        \ contract. This is incredibly easy to do for any contract deployed through\
-        \ MetaFab.\n\nUsing this endpoint, you can get the data returned by any readable\
-        \ function listed in a contracts ABI. This could be things like querying the\
-        \ totalSupply of a currency contract, the number of owners of an items contract,\
-        \ and more."
+      description: |-
+        Oftentimes you'll want to query and retrieve some data from a contract. This is incredibly easy to do for any contract deployed through MetaFab.
+
+        Using this endpoint, you can get the data returned by any readable function listed in a contracts ABI. This could be things like querying the totalSupply of a currency contract, the number of owners of an items contract, and more.
       operationId: readContract
       parameters:
-      - description: Any contract id within the MetaFab ecosystem.
+      - description: Any contract id within the MetaFab platform.
         explode: false
         in: path
         name: contractId
@@ -1623,21 +1609,15 @@ paths:
       x-accepts: application/json
   /v1/contracts/{contractId}/writes:
     post:
-      description: "MetaFab's convenience endpoints for contract interactions may\
-        \ not be flexible enough depending on your use case. For these situations,\
-        \ you can interact with contracts and create transactions directly.\n\nUsing\
-        \ this endpoint, you can execute a transaction for any writeable contract\
-        \ method as defined in the contract's ABI for the MetaFab contractId provided.\
-        \ Both Games and Player resources have authority to use this endpoint to execute\
-        \ transactions against any valid MetaFab contractId.\n\nAdditionally, MetaFab\
-        \ will automatically attempt to perform a gasless transaction for players\
-        \ interacting with a contract through this endpoint. Gasless transactions\
-        \ by players through this endpoint will only work if the target contract was\
-        \ deployed through MetaFab or supports MetaFab's ERC2771 trusted forwarder\
-        \ contract."
+      description: |-
+        MetaFab's convenience endpoints for contract interactions may not be flexible enough depending on your use case. For these situations, you can interact with contracts and create transactions directly.
+
+        Using this endpoint, you can execute a transaction for any writeable contract method as defined in the contract's ABI for the MetaFab contractId provided. Both Games and Player resources have authority to use this endpoint to execute transactions against any valid MetaFab contractId.
+
+        Additionally, MetaFab will automatically attempt to perform a gasless transaction for players interacting with a contract through this endpoint. Gasless transactions by players through this endpoint will only work if the target contract was deployed through MetaFab or supports MetaFab's ERC2771 trusted forwarder contract.
       operationId: writeContract
       parameters:
-      - description: Any contract id within the MetaFab ecosystem.
+      - description: Any contract id within the MetaFab platform.
         explode: false
         in: path
         name: contractId
@@ -1657,13 +1637,13 @@ paths:
         schema:
           type: string
         style: simple
-      - description: The password of the authenticating game or player. Required to
-          decrypt and perform blockchain transactions with the game or player primary
-          wallet.
-        example: mySecurePassword
+      - description: The `walletDecryptKey` of the authenticating game or player.
+          Required to decrypt and perform blockchain transactions with the game or
+          player primary wallet.
+        example: AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4=
         explode: false
         in: header
-        name: X-Password
+        name: X-Wallet-Decrypt-Key
         required: true
         schema:
           type: string
@@ -1756,12 +1736,12 @@ paths:
         schema:
           type: string
         style: simple
-      - description: The password of the authenticating game. Required to decrypt
-          and perform blockchain transactions with the game primary wallet.
-        example: mySecurePassword
+      - description: The `walletDecryptKey` of the authenticating game. Required to
+          decrypt and perform blockchain transactions with the game primary wallet.
+        example: AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4=
         explode: false
         in: header
-        name: X-Password
+        name: X-Wallet-Decrypt-Key
         required: true
         schema:
           type: string
@@ -1807,7 +1787,7 @@ paths:
         or or the wallet address associated with the provided walletId.
       operationId: getCurrencyBalance
       parameters:
-      - description: Any currency id within the MetaFab ecosystem.
+      - description: Any currency id within the MetaFab platform.
         explode: false
         in: path
         name: currencyId
@@ -1824,7 +1804,7 @@ paths:
         schema:
           type: string
         style: form
-      - description: Any wallet id within the MetaFab ecosystem.
+      - description: Any wallet id within the MetaFab platform.
         explode: true
         in: query
         name: walletId
@@ -1853,16 +1833,13 @@ paths:
       x-accepts: application/json
   /v1/currencies/{currencyId}/batchTransfers:
     post:
-      description: "Transfers multiple amounts of currency to multiple provided wallet\
-        \ addresses or wallet addresses associated with the provided walletIds. You\
-        \ may also provide a combination of addresses and walletIds in one request,\
-        \ the proper receipients will be automatically determined, with `addresses`\
-        \ getting `amounts` order priority first.\n\nOptional references may be included\
-        \ for the transfer. References are useful for identifying transfers intended\
-        \ to pay for items, trades, services and more."
+      description: |-
+        Transfers multiple amounts of currency to multiple provided wallet addresses or wallet addresses associated with the provided walletIds. You may also provide a combination of addresses and walletIds in one request, the proper receipients will be automatically determined, with `addresses` getting `amounts` order priority first.
+
+        Optional references may be included for the transfer. References are useful for identifying transfers intended to pay for items, trades, services and more.
       operationId: batchTransferCurrency
       parameters:
-      - description: Any currency id within the MetaFab ecosystem.
+      - description: Any currency id within the MetaFab platform.
         explode: false
         in: path
         name: currencyId
@@ -1882,13 +1859,13 @@ paths:
         schema:
           type: string
         style: simple
-      - description: The password of the authenticating game or player. Required to
-          decrypt and perform blockchain transactions with the game or player primary
-          wallet.
-        example: mySecurePassword
+      - description: The `walletDecryptKey` of the authenticating game or player.
+          Required to decrypt and perform blockchain transactions with the game or
+          player primary wallet.
+        example: AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4=
         explode: false
         in: header
-        name: X-Password
+        name: X-Wallet-Decrypt-Key
         required: true
         schema:
           type: string
@@ -1935,7 +1912,7 @@ paths:
         circulating supply of the currency.
       operationId: burnCurrency
       parameters:
-      - description: Any currency id within the MetaFab ecosystem.
+      - description: Any currency id within the MetaFab platform.
         explode: false
         in: path
         name: currencyId
@@ -1955,13 +1932,13 @@ paths:
         schema:
           type: string
         style: simple
-      - description: The password of the authenticating game or player. Required to
-          decrypt and perform blockchain transactions with the game or player primary
-          wallet.
-        example: mySecurePassword
+      - description: The `walletDecryptKey` of the authenticating game or player.
+          Required to decrypt and perform blockchain transactions with the game or
+          player primary wallet.
+        example: AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4=
         explode: false
         in: header
-        name: X-Password
+        name: X-Wallet-Decrypt-Key
         required: true
         schema:
           type: string
@@ -2007,7 +1984,7 @@ paths:
         performed by default by players.
       operationId: getCurrencyFees
       parameters:
-      - description: Any currency id within the MetaFab ecosystem.
+      - description: Any currency id within the MetaFab platform.
         explode: false
         in: path
         name: currencyId
@@ -2039,7 +2016,7 @@ paths:
         \ amount for a currency's fees."
       operationId: setCurrencyFees
       parameters:
-      - description: Any currency id within the MetaFab ecosystem.
+      - description: Any currency id within the MetaFab platform.
         explode: false
         in: path
         name: currencyId
@@ -2056,12 +2033,12 @@ paths:
         schema:
           type: string
         style: simple
-      - description: The password of the authenticating game. Required to decrypt
-          and perform blockchain transactions with the game primary wallet.
-        example: mySecurePassword
+      - description: The `walletDecryptKey` of the authenticating game. Required to
+          decrypt and perform blockchain transactions with the game primary wallet.
+        example: AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4=
         explode: false
         in: header
-        name: X-Password
+        name: X-Wallet-Decrypt-Key
         required: true
         schema:
           type: string
@@ -2106,7 +2083,7 @@ paths:
         wallet address or wallet address associated with the provided walletId.
       operationId: mintCurrency
       parameters:
-      - description: Any currency id within the MetaFab ecosystem.
+      - description: Any currency id within the MetaFab platform.
         explode: false
         in: path
         name: currencyId
@@ -2123,12 +2100,12 @@ paths:
         schema:
           type: string
         style: simple
-      - description: The password of the authenticating game. Required to decrypt
-          and perform blockchain transactions with the game primary wallet.
-        example: mySecurePassword
+      - description: The `walletDecryptKey` of the authenticating game. Required to
+          decrypt and perform blockchain transactions with the game primary wallet.
+        example: AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4=
         explode: false
         in: header
-        name: X-Password
+        name: X-Wallet-Decrypt-Key
         required: true
         schema:
           type: string
@@ -2174,7 +2151,7 @@ paths:
         or address associated with the provided walletId.
       operationId: revokeCurrencyRole
       parameters:
-      - description: Any currency id within the MetaFab ecosystem.
+      - description: Any currency id within the MetaFab platform.
         explode: false
         in: path
         name: currencyId
@@ -2194,13 +2171,13 @@ paths:
         schema:
           type: string
         style: simple
-      - description: The password of the authenticating game or player. Required to
-          decrypt and perform blockchain transactions with the game or player primary
-          wallet.
-        example: mySecurePassword
+      - description: The `walletDecryptKey` of the authenticating game or player.
+          Required to decrypt and perform blockchain transactions with the game or
+          player primary wallet.
+        example: AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4=
         explode: false
         in: header
-        name: X-Password
+        name: X-Wallet-Decrypt-Key
         required: true
         schema:
           type: string
@@ -2246,7 +2223,7 @@ paths:
         with the provided walletId.
       operationId: getCurrencyRole
       parameters:
-      - description: Any currency id within the MetaFab ecosystem.
+      - description: Any currency id within the MetaFab platform.
         explode: false
         in: path
         name: currencyId
@@ -2273,7 +2250,7 @@ paths:
         schema:
           type: string
         style: form
-      - description: Any wallet id within the MetaFab ecosystem.
+      - description: Any wallet id within the MetaFab platform.
         explode: true
         in: query
         name: walletId
@@ -2307,7 +2284,7 @@ paths:
         \ or contracts to perform different types of permissioned currency operations."
       operationId: grantCurrencyRole
       parameters:
-      - description: Any currency id within the MetaFab ecosystem.
+      - description: Any currency id within the MetaFab platform.
         explode: false
         in: path
         name: currencyId
@@ -2327,13 +2304,13 @@ paths:
         schema:
           type: string
         style: simple
-      - description: The password of the authenticating game or player. Required to
-          decrypt and perform blockchain transactions with the game or player primary
-          wallet.
-        example: mySecurePassword
+      - description: The `walletDecryptKey` of the authenticating game or player.
+          Required to decrypt and perform blockchain transactions with the game or
+          player primary wallet.
+        example: AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4=
         explode: false
         in: header
-        name: X-Password
+        name: X-Wallet-Decrypt-Key
         required: true
         schema:
           type: string
@@ -2374,16 +2351,13 @@ paths:
       x-accepts: application/json
   /v1/currencies/{currencyId}/transfers:
     post:
-      description: "Transfers an amount of currency to the provided wallet address\
-        \ or wallet address associated with the provided walletId. If you want to\
-        \ transfer to multiple wallets with different amounts and optional references\
-        \ in one API request, please see the Batch transfer currency documentation.\n\
-        \nAn optional reference may be included for the transfer. References are useful\
-        \ for identifying transfers intended to pay for items, trades, services and\
-        \ more."
+      description: |-
+        Transfers an amount of currency to the provided wallet address or wallet address associated with the provided walletId. If you want to transfer to multiple wallets with different amounts and optional references in one API request, please see the Batch transfer currency documentation.
+
+        An optional reference may be included for the transfer. References are useful for identifying transfers intended to pay for items, trades, services and more.
       operationId: transferCurrency
       parameters:
-      - description: Any currency id within the MetaFab ecosystem.
+      - description: Any currency id within the MetaFab platform.
         explode: false
         in: path
         name: currencyId
@@ -2403,13 +2377,13 @@ paths:
         schema:
           type: string
         style: simple
-      - description: The password of the authenticating game or player. Required to
-          decrypt and perform blockchain transactions with the game or player primary
-          wallet.
-        example: mySecurePassword
+      - description: The `walletDecryptKey` of the authenticating game or player.
+          Required to decrypt and perform blockchain transactions with the game or
+          player primary wallet.
+        example: AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4=
         explode: false
         in: header
-        name: X-Password
+        name: X-Wallet-Decrypt-Key
         required: true
         schema:
           type: string
@@ -2448,6 +2422,350 @@ paths:
       tags:
       - Currencies
       x-content-type: application/json
+      x-accepts: application/json
+  /v1/ecosystems/auth:
+    get:
+      description: Returns an existing ecosystem object containing authorization keys
+        when provided a valid email (in place of username) and password login using
+        Basic Auth.
+      operationId: authEcosystem
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EcosystemModel'
+          description: Succesfully authorized the request and retrieved an ecosystem
+            object containing authorization keys and credentials.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      security:
+      - basicAuth: []
+      summary: Authenticate ecosystem
+      tags:
+      - Ecosystems
+      x-accepts: application/json
+  /v1/ecosystems/{ecosystemId}:
+    get:
+      description: Returns a ecosystem object for the provided ecosystem id.
+      operationId: getEcosystem
+      parameters:
+      - description: Any ecosystem id within the MetaFab platform.
+        explode: false
+        in: path
+        name: ecosystemId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicEcosystem'
+          description: Successfully retrieved ecosystem.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+      summary: Get ecosystem
+      tags:
+      - Ecosystems
+      x-accepts: application/json
+    patch:
+      description: "Update various fields specific to an ecosystem. Such as changing\
+        \ its password, resetting its published or secret key, or updating its approved\
+        \ games."
+      operationId: updateEcosystem
+      parameters:
+      - description: The ecosystem id of the authenticating ecosystem.
+        explode: false
+        in: path
+        name: ecosystemId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The `secretKey` of the authenticating ecosystem.
+        example: ecosystem_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateEcosystem_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EcosystemModel'
+          description: Returns the updated ecosystem object.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Update ecosystem
+      tags:
+      - Ecosystems
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/ecosystems:
+    post:
+      description: Create a new ecosystem. An ecosystem is a parent entity that many
+        profiles live under for a given ecosystem of games. Ecosystems allow your
+        players to create one profile within your ecosystem that allows a single account
+        and wallet to be used across all of the approved games in your ecosystem that
+        they play.
+      operationId: createEcosystem
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createEcosystem_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EcosystemModel'
+          description: Successfully created a new ecosystem. Returns an ecosystem
+            object.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Create ecosystem
+      tags:
+      - Ecosystems
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/ecosystems/{ecosystemId}/games:
+    get:
+      description: Returns an array of games the ecosystem has approved.
+      operationId: getEcosystemGames
+      parameters:
+      - description: Any ecosystem id within the MetaFab platform.
+        explode: false
+        in: path
+        name: ecosystemId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/PublicGame'
+                type: array
+          description: Successfully retrieved an array of approved games.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+      summary: Get ecosystem games
+      tags:
+      - Ecosystems
+      x-accepts: application/json
+    post:
+      description: "Approves a game for an ecosystem. By approving a game, it allows\
+        \ that game to integrate the ability for profile accounts from an ecosystem\
+        \ to login directly to the approved game and play. This also allows games\
+        \ to request access to assets held at the profile level for the game to frictionlessly\
+        \ interact with on behalf of the profile."
+      operationId: approveEcosystemGame
+      parameters:
+      - description: The ecosystem id of the authenticating ecosystem.
+        explode: false
+        in: path
+        name: ecosystemId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The `secretKey` of the authenticating ecosystem.
+        example: ecosystem_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/approveEcosystemGame_request'
+        required: true
+      responses:
+        "204":
+          description: Successfully approved the game for the ecosystem.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Approve ecosystem game
+      tags:
+      - Ecosystems
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/ecosystems/{ecosystemId}/games/{gameId}:
+    delete:
+      description: Unapproves a game for an ecosystem. The game will no longer be
+        able to allow profiles from the ecosystem to login. All profile permissions
+        approved for the game will also be revoked.
+      operationId: unapproveEcosystemGame
+      parameters:
+      - description: The ecosystem id of the authenticating ecosystem.
+        explode: false
+        in: path
+        name: ecosystemId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Any game id within the MetaFab platform.
+        explode: false
+        in: path
+        name: gameId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The `secretKey` of the authenticating ecosystem.
+        example: ecosystem_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: Successfully approved the game for the ecosystem.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Unapprove ecosystem game
+      tags:
+      - Ecosystems
+      x-accepts: application/json
+    get:
+      description: Returns a game object for the provided game id that the ecosystem
+        has approved.
+      operationId: getEcosystemGame
+      parameters:
+      - description: Any ecosystem id within the MetaFab platform.
+        explode: false
+        in: path
+        name: ecosystemId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Any game id within the MetaFab platform.
+        explode: false
+        in: path
+        name: gameId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicGame'
+          description: Successfully retrieved an approved game.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+      summary: Get ecosystem game
+      tags:
+      - Ecosystems
       x-accepts: application/json
   /v1/games/auth:
     get:
@@ -2489,7 +2807,7 @@ paths:
       description: Returns a game object for the provided game id.
       operationId: getGame
       parameters:
-      - description: Any game id within the MetaFab ecosystem.
+      - description: Any game id within the MetaFab platform.
         explode: false
         in: path
         name: gameId
@@ -2520,7 +2838,7 @@ paths:
         \ password, resetting its published or secret key, or updating its RPCs."
       operationId: updateGame
       parameters:
-      - description: Any game id within the MetaFab ecosystem.
+      - description: The game id of the authenticating game.
         explode: false
         in: path
         name: gameId
@@ -2548,7 +2866,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GameModel'
+                $ref: '#/components/schemas/updateGame_200_response'
           description: Returns the updated game object.
         "400":
           content:
@@ -2572,14 +2890,12 @@ paths:
       x-accepts: application/json
   /v1/games:
     post:
-      description: "Create a new game. A game is the root entity required for all\
-        \ API interactions. Contracts, currencies, items and more are deployed by\
-        \ games, player accounts are created and registered to games, etc.\n\nTo use\
-        \ any of MetaFab's services, you must first create a game through this endpoint.\n\
-        \nAfter creating your game through this endpoint, a verification email will\
-        \ be sent to the email address used. Before you can access any of MetaFab's\
-        \ features, you'll need to click the link contained in the verification email\
-        \ to verify your account."
+      description: |-
+        Create a new game. A game is the root entity required for all API interactions. Contracts, currencies, items and more are deployed by games, player accounts are created and registered to games, etc.
+
+        To use any of MetaFab's services, you must first create a game through this endpoint.
+
+        After creating your game through this endpoint, a verification email will be sent to the email address used. Before you can access any of MetaFab's features, you'll need to click the link contained in the verification email to verify your account.
       operationId: createGame
       requestBody:
         content:
@@ -2674,12 +2990,12 @@ paths:
         schema:
           type: string
         style: simple
-      - description: The password of the authenticating game. Required to decrypt
-          and perform blockchain transactions with the game primary wallet.
-        example: mySecurePassword
+      - description: The `walletDecryptKey` of the authenticating game. Required to
+          decrypt and perform blockchain transactions with the game primary wallet.
+        example: AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4=
         explode: false
         in: header
-        name: X-Password
+        name: X-Wallet-Decrypt-Key
         required: true
         schema:
           type: string
@@ -2724,7 +3040,7 @@ paths:
       description: Returns all lootbox manager lootboxes as an array of lootbox objects.
       operationId: getLootboxManagerLootboxes
       parameters:
-      - description: Any lootbox manager id within the MetaFab ecosystem.
+      - description: Any lootbox manager id within the MetaFab platform.
         explode: false
         in: path
         name: lootboxManagerId
@@ -2753,15 +3069,13 @@ paths:
       - Lootboxes
       x-accepts: application/json
     post:
-      description: "Sets a new lootbox manager lootbox or updates an existing one\
-        \ for the provided id. Lootboxes allow item(s) to be burned to receive a random\
-        \ set of possible item(s) based on probability weight.\n\nLootboxes can require\
-        \ any number of unique types of items and quantities to open a created lootbox\
-        \ type within the system. A common pattern with lootboxes is to create a lootbox\
-        \ item type within an item collection, and require it as the input item type."
+      description: |-
+        Sets a new lootbox manager lootbox or updates an existing one for the provided id. Lootboxes allow item(s) to be burned to receive a random set of possible item(s) based on probability weight.
+
+        Lootboxes can require any number of unique types of items and quantities to open a created lootbox type within the system. A common pattern with lootboxes is to create a lootbox item type within an item collection, and require it as the input item type.
       operationId: setLootboxManagerLootbox
       parameters:
-      - description: Any lootbox manager id within the MetaFab ecosystem.
+      - description: Any lootbox manager id within the MetaFab platform.
         explode: false
         in: path
         name: lootboxManagerId
@@ -2778,12 +3092,12 @@ paths:
         schema:
           type: string
         style: simple
-      - description: The password of the authenticating game. Required to decrypt
-          and perform blockchain transactions with the game primary wallet.
-        example: mySecurePassword
+      - description: The `walletDecryptKey` of the authenticating game. Required to
+          decrypt and perform blockchain transactions with the game primary wallet.
+        example: AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4=
         explode: false
         in: header
-        name: X-Password
+        name: X-Wallet-Decrypt-Key
         required: true
         schema:
           type: string
@@ -2828,7 +3142,7 @@ paths:
         manager. Removed lootboxes can no longer be used.
       operationId: removeLootboxManagerLootbox
       parameters:
-      - description: Any lootbox manager id within the MetaFab ecosystem.
+      - description: Any lootbox manager id within the MetaFab platform.
         explode: false
         in: path
         name: lootboxManagerId
@@ -2836,7 +3150,7 @@ paths:
         schema:
           type: string
         style: simple
-      - description: Any lootbox manager lootbox id within the MetaFab ecosystem.
+      - description: Any lootbox manager lootbox id within the MetaFab platform.
         explode: false
         in: path
         name: lootboxManagerLootboxId
@@ -2853,12 +3167,12 @@ paths:
         schema:
           type: string
         style: simple
-      - description: The password of the authenticating game. Required to decrypt
-          and perform blockchain transactions with the game primary wallet.
-        example: mySecurePassword
+      - description: The `walletDecryptKey` of the authenticating game. Required to
+          decrypt and perform blockchain transactions with the game primary wallet.
+        example: AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4=
         explode: false
         in: header
-        name: X-Password
+        name: X-Wallet-Decrypt-Key
         required: true
         schema:
           type: string
@@ -2894,7 +3208,7 @@ paths:
       description: Returns a lootbox manager lootbox object for the provided lootboxManagerLootboxId.
       operationId: getLootboxManagerLootbox
       parameters:
-      - description: Any lootbox manager id within the MetaFab ecosystem.
+      - description: Any lootbox manager id within the MetaFab platform.
         explode: false
         in: path
         name: lootboxManagerId
@@ -2902,7 +3216,7 @@ paths:
         schema:
           type: string
         style: simple
-      - description: Any lootbox manager lootbox id within the MetaFab ecosystem.
+      - description: Any lootbox manager lootbox id within the MetaFab platform.
         explode: false
         in: path
         name: lootboxManagerLootboxId
@@ -2935,7 +3249,7 @@ paths:
         item(s) are given to the wallet or player wallet opening the lootbox.
       operationId: openLootboxManagerLootbox
       parameters:
-      - description: Any lootbox manager id within the MetaFab ecosystem.
+      - description: Any lootbox manager id within the MetaFab platform.
         explode: false
         in: path
         name: lootboxManagerId
@@ -2943,7 +3257,7 @@ paths:
         schema:
           type: string
         style: simple
-      - description: Any lootbox manager lootbox id within the MetaFab ecosystem.
+      - description: Any lootbox manager lootbox id within the MetaFab platform.
         explode: false
         in: path
         name: lootboxManagerLootboxId
@@ -2963,13 +3277,13 @@ paths:
         schema:
           type: string
         style: simple
-      - description: The password of the authenticating game or player. Required to
-          decrypt and perform blockchain transactions with the game or player primary
-          wallet.
-        example: mySecurePassword
+      - description: The `walletDecryptKey` of the authenticating game or player.
+          Required to decrypt and perform blockchain transactions with the game or
+          player primary wallet.
+        example: AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4=
         explode: false
         in: header
-        name: X-Password
+        name: X-Wallet-Decrypt-Key
         required: true
         schema:
           type: string
@@ -3087,12 +3401,10 @@ paths:
       - Players
       x-accepts: application/json
     post:
-      description: "Create a new player for a game. Players are automatically associated\
-        \ with an internally managed wallet.\n\nPlayer access tokens can be used to\
-        \ directly interact with any MetaFab managed contracts, currencies, items\
-        \ collections, marketplaces and more. Player interactions are also gasless\
-        \ by default, completely removing all crypto friction for players to engage\
-        \ with your MetaFab supported games."
+      description: |-
+        Create a new player for a game. Players are automatically associated with an internally managed wallet.
+
+        Player access tokens can be used to directly interact with any MetaFab managed contracts, currencies, items collections, marketplaces and more. Player interactions are also gasless by default, completely removing all crypto friction for players to engage with your MetaFab supported games.
       operationId: createPlayer
       parameters:
       - description: "The `publishedKey` of a specific game. This can be shared or\
@@ -3144,7 +3456,7 @@ paths:
       description: Returns a player object for the provided player id.
       operationId: getPlayer
       parameters:
-      - description: Any player id within the MetaFab ecosystem.
+      - description: Any player id within the MetaFab platform.
         explode: false
         in: path
         name: playerId
@@ -3175,7 +3487,7 @@ paths:
         password and resetting its access token.
       operationId: updatePlayer
       parameters:
-      - description: Any player id within the MetaFab ecosystem.
+      - description: The player id of the authenticating player.
         explode: false
         in: path
         name: playerId
@@ -3203,7 +3515,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PlayerModel'
+                $ref: '#/components/schemas/updatePlayer_200_response'
           description: Returns the updated player object.
         "400":
           content:
@@ -3231,7 +3543,7 @@ paths:
         provided playerId.
       operationId: getPlayerData
       parameters:
-      - description: Any player id within the MetaFab ecosystem.
+      - description: Any player id within the MetaFab platform.
         explode: false
         in: path
         name: playerId
@@ -3259,19 +3571,13 @@ paths:
       - Players
       x-accepts: application/json
     post:
-      description: "Creates or updates public and/or protected data for the provided\
-        \ playerId. Data updates are performed using deep merging. This means that\
-        \ when you update any top level or nested properties specific to player public\
-        \ or protected data, you only need to include the properties you are making\
-        \ changes to. Any existing properties not included in request body arguments\
-        \ will be retained on the player data object.\n\nPlease note, When writing\
-        \ an array type for a player, arrays do not follow the deep merge approach.\
-        \ If you add or remove an item from an array, the entire array must be passed\
-        \ as an argument when updating the related property for player public or protected\
-        \ data."
+      description: |-
+        Creates or updates public and/or protected data for the provided playerId. Data updates are performed using deep merging. This means that when you update any top level or nested properties specific to player public or protected data, you only need to include the properties you are making changes to. Any existing properties not included in request body arguments will be retained on the player data object.
+
+        Please note, When writing an array type for a player, arrays do not follow the deep merge approach. If you add or remove an item from an array, the entire array must be passed as an argument when updating the related property for player public or protected data.
       operationId: setPlayerData
       parameters:
-      - description: Any player id within the MetaFab ecosystem.
+      - description: Any player id within the MetaFab platform.
         explode: false
         in: path
         name: playerId
@@ -3319,26 +3625,15 @@ paths:
       x-accepts: application/json
   /v1/players/{playerId}/wallets:
     post:
-      description: "Sets an external wallet as the wallet for a player account. The\
-        \ set wallet can transact gaslessly with all MetaFab related systems through\
-        \ the same MetaFab API calls as custodial wallets without requiring transaction\
-        \ signing or private keys.\n\nThis is done through an internal system MetaFab\
-        \ has created that allows an external connected wallet to delegate transaction\
-        \ signing for a specific game's set of contracts to a player's password protected\
-        \ custodial wallet. This allow the custodial wallet to sign and submit transactions\
-        \ to a specific game's related contracts as if they were signed and submitted\
-        \ by the connected external wallet. This also means that all earned tokens,\
-        \ purchased items and any interactions happen and are recorded on chain as\
-        \ the external connected wallet. No additional logic needs to be writted by\
-        \ developers to support both custodial and external wallets, everything just\
-        \ works.\n\nFinally, this endpoint is meant for advanced users. The majority\
-        \ of developers who want to implement external wallet support for their game\
-        \ can do so without any extra work through our whitelabeled wallet connection\
-        \ feature that implements this endpoint underneath the hood without any required\
-        \ work."
+      description: |-
+        Sets an external wallet as the wallet for a player account. The set wallet can transact gaslessly with all MetaFab related systems through the same MetaFab API calls as custodial wallets without requiring transaction signing or private keys.
+
+        This is done through an internal system MetaFab has created that allows an external connected wallet to delegate transaction signing for a specific game's set of contracts to a player's password protected custodial wallet. This allow the custodial wallet to sign and submit transactions to a specific game's related contracts as if they were signed and submitted by the connected external wallet. This also means that all earned tokens, purchased items and any interactions happen and are recorded on chain as the external connected wallet. No additional logic needs to be writted by developers to support both custodial and external wallets, everything just works.
+
+        Finally, this endpoint is meant for advanced users. The majority of developers who want to implement external wallet support for their game can do so without any extra work through our whitelabeled wallet connection feature that implements this endpoint underneath the hood without any required work.
       operationId: setPlayerConnectedWallet
       parameters:
-      - description: Any player id within the MetaFab ecosystem.
+      - description: The player id of the authenticating player.
         explode: false
         in: path
         name: playerId
@@ -3395,7 +3690,7 @@ paths:
         wallet is reverted to their custodial wallet.
       operationId: removePlayerConnectedWallet
       parameters:
-      - description: Any player id within the MetaFab ecosystem.
+      - description: Any player id within the MetaFab platform.
         explode: false
         in: path
         name: playerId
@@ -3403,7 +3698,7 @@ paths:
         schema:
           type: string
         style: simple
-      - description: Any player wallet id within the MetaFab ecosystem.
+      - description: Any player wallet id within the MetaFab platform.
         explode: false
         in: path
         name: playerWalletId
@@ -3439,6 +3734,507 @@ paths:
       summary: Remove player connected wallet
       tags:
       - Players
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/profiles/auth:
+    get:
+      description: "Returns an existing profile object containing access token, wallet,\
+        \ and other details when provided a valid profile username and password login\
+        \ using Basic Auth."
+      operationId: authProfile
+      parameters:
+      - description: "The `publishedKey` of a specific ecosystem. This can be shared\
+          \ or included in clients, websites, etc."
+        example: ecosystem_pk_a5sFpDi8pQdnQgfCOBW29qR8YmwOhxVPz5iHoMgUEJLDdPXgwLuHqZf8ewo2GajZ
+        explode: false
+        in: header
+        name: X-Ecosystem-Key
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/authProfile_200_response'
+          description: "Succesfully authorized the request and retrieved a profile\
+            \ object containing access token, wallet, and other details."
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      security:
+      - basicAuth: []
+      summary: Authenticate profile
+      tags:
+      - Ecosystems
+      x-accepts: application/json
+  /v1/profiles:
+    post:
+      description: |-
+        Create a new profile. Profiles are automatically associated with an internally managed wallet. Profiles can be thought of as a umbrella account that can be used to sign into and create player accounts across many games and have a singular asset store wallet at the profile level that can be used across all connected player accounts for games those player accounts are a part of.
+
+        Profiles are associated to a parent ecosystem of games. This allows an ecosystem to approve a permissioned set of games that can request authorized wallet permissions from profiles of players for their game.
+      operationId: createProfile
+      parameters:
+      - description: "The `publishedKey` of a specific ecosystem. This can be shared\
+          \ or included in clients, websites, etc."
+        example: ecosystem_pk_a5sFpDi8pQdnQgfCOBW29qR8YmwOhxVPz5iHoMgUEJLDdPXgwLuHqZf8ewo2GajZ
+        explode: false
+        in: header
+        name: X-Ecosystem-Key
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createProfile_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/authProfile_200_response'
+          description: "Successfully created a new profile. Returns a profile object\
+            \ containing a wallet (used to interact with contracts, currencies, etc)."
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Create profile
+      tags:
+      - Ecosystems
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/profiles/{profileId}:
+    patch:
+      description: Update various fields specific to a profile. Such as changing its
+        password and resetting its access token.
+      operationId: updateProfile
+      parameters:
+      - description: The profile id of the authenticating profile.
+        explode: false
+        in: path
+        name: profileId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The `accessToken` of the authenticating profile.
+        example: profile_at_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateProfile_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileModel'
+          description: Returns the updated profile object.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Update profile
+      tags:
+      - Ecosystems
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/profiles/{profileId}/games:
+    get:
+      description: Returns an array of games the authorized profile has connected
+        player accounts for.
+      operationId: getProfileGames
+      parameters:
+      - description: The profile id of the authenticating profile.
+        explode: false
+        in: path
+        name: profileId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The `accessToken` of the authenticating profile.
+        example: profile_at_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/getProfileGames_200_response_inner'
+                type: array
+          description: Successfully retrieved array of games this profile has connected
+            player accounts for.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Get profile games
+      tags:
+      - Ecosystems
+      x-accepts: application/json
+  /v1/profiles/{profileId}/games/{gameId}:
+    get:
+      description: Returns a game this profile has connected player accounts for.
+      operationId: getProfileGame
+      parameters:
+      - description: The profile id of the authenticating profile.
+        explode: false
+        in: path
+        name: profileId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Any game id within the MetaFab platform.
+        explode: false
+        in: path
+        name: gameId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The `accessToken` of the authenticating profile.
+        example: profile_at_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getProfileGames_200_response_inner'
+          description: Successfully retrieved array of games this profile has connected
+            player accounts for.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Get profile game
+      tags:
+      - Ecosystems
+      x-accepts: application/json
+  /v1/profiles/{profileId}/games/{gameId}/players/auth:
+    get:
+      description: "Returns an existing player object containing access token, wallet,\
+        \ wallet decrypt key, profile authorization and other details for a game when\
+        \ provided profile authentication and the player's username."
+      operationId: authProfilePlayer
+      parameters:
+      - description: The profile id of the authenticating profile.
+        explode: false
+        in: path
+        name: profileId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Any game id within the MetaFab platform.
+        explode: false
+        in: path
+        name: gameId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The `accessToken` of the authenticating profile.
+        example: profile_at_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The `walletDecryptKey` of the authenticating profile. Required
+          to decrypt and perform blockchain transactions with the profile wallet.
+        example: AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4=
+        explode: false
+        in: header
+        name: X-Wallet-Decrypt-Key
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The username of a player.
+        example: arkdev
+        explode: false
+        in: header
+        name: X-Username
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/authPlayer_200_response'
+          description: "Succesfully authorized the request and retrieved a player\
+            \ object containing access token, wallet, profile authorization, and other\
+            \ details."
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Authenticate profile player
+      tags:
+      - Ecosystems
+      x-accepts: application/json
+  /v1/profiles/{profileId}/games/{gameId}/players:
+    post:
+      description: "Creates a new player account for the provided game id linked to\
+        \ the authenticating profile. The created player account will default to using\
+        \ the parent profile's wallet for any transactions, wallet content balance\
+        \ checks and verifications, and more."
+      operationId: createProfilePlayer
+      parameters:
+      - description: The profile id of the authenticating profile.
+        explode: false
+        in: path
+        name: profileId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Any game id within the MetaFab platform.
+        explode: false
+        in: path
+        name: gameId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The `accessToken` of the authenticating profile.
+        example: profile_at_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The `walletDecryptKey` of the authenticating profile. Required
+          to decrypt and perform blockchain transactions with the profile wallet.
+        example: AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4=
+        explode: false
+        in: header
+        name: X-Wallet-Decrypt-Key
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createProfilePlayer_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/authPlayer_200_response'
+          description: Successfully created a new player linked to the authenticating
+            profile. Returns a player object.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Create profile player
+      tags:
+      - Ecosystems
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/profiles/{profileId}/games/{gameId}/players/{playerId}:
+    patch:
+      description: Update various fields specific to a player. Such as changing its
+        permissions.
+      operationId: updateProfilePlayer
+      parameters:
+      - description: The profile id of the authenticating profile.
+        explode: false
+        in: path
+        name: profileId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Any game id within the MetaFab platform.
+        explode: false
+        in: path
+        name: gameId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Any player id within the MetaFab platform.
+        explode: false
+        in: path
+        name: playerId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The `accessToken` of the authenticating profile.
+        example: profile_at_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The `walletDecryptKey` of the authenticating profile. Required
+          to decrypt and perform blockchain transactions with the profile wallet.
+        example: AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4=
+        explode: false
+        in: header
+        name: X-Wallet-Decrypt-Key
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateProfilePlayer_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/updateProfilePlayer_200_response'
+          description: Successfully updated the player. Returns a player object.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Update profile player
+      tags:
+      - Ecosystems
       x-content-type: application/json
       x-accepts: application/json
   /v1/shops:
@@ -3496,12 +4292,12 @@ paths:
         schema:
           type: string
         style: simple
-      - description: The password of the authenticating game. Required to decrypt
-          and perform blockchain transactions with the game primary wallet.
-        example: mySecurePassword
+      - description: The `walletDecryptKey` of the authenticating game. Required to
+          decrypt and perform blockchain transactions with the game primary wallet.
+        example: AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4=
         explode: false
         in: header
-        name: X-Password
+        name: X-Wallet-Decrypt-Key
         required: true
         schema:
           type: string
@@ -3546,7 +4342,7 @@ paths:
       description: Returns all shop offers as an array of shop offer objects.
       operationId: getShopOffers
       parameters:
-      - description: Any shop id within the MetaFab ecosystem.
+      - description: Any shop id within the MetaFab platform.
         explode: false
         in: path
         name: shopId
@@ -3575,19 +4371,15 @@ paths:
       - Shops
       x-accepts: application/json
     post:
-      description: "Sets a new shop offer or updates an existing one for the provided\
-        \ id. Shop offers allow currency to item, item to currency or item to item\
-        \ exchanges.\n\nAll request fields besides `id` are optional. Any optional\
-        \ fields omitted will not be used for the offer. This allows you to create\
-        \ many different combinations of offers. For example, you can create an offer\
-        \ that may require 3 unique item ids of specified quantities from a given\
-        \ item collection and gives the user 1 new unique item id in exchange.\n\n\
-        Another example, you may want to make a shop offer from one ERC20 token to\
-        \ another. This is also possible - simple set the input and output currency\
-        \ fields and leave the others blank."
+      description: |-
+        Sets a new shop offer or updates an existing one for the provided id. Shop offers allow currency to item, item to currency or item to item exchanges.
+
+        All request fields besides `id` are optional. Any optional fields omitted will not be used for the offer. This allows you to create many different combinations of offers. For example, you can create an offer that may require 3 unique item ids of specified quantities from a given item collection and gives the user 1 new unique item id in exchange.
+
+        Another example, you may want to make a shop offer from one ERC20 token to another. This is also possible - simple set the input and output currency fields and leave the others blank.
       operationId: setShopOffer
       parameters:
-      - description: Any shop id within the MetaFab ecosystem.
+      - description: Any shop id within the MetaFab platform.
         explode: false
         in: path
         name: shopId
@@ -3604,12 +4396,12 @@ paths:
         schema:
           type: string
         style: simple
-      - description: The password of the authenticating game. Required to decrypt
-          and perform blockchain transactions with the game primary wallet.
-        example: mySecurePassword
+      - description: The `walletDecryptKey` of the authenticating game. Required to
+          decrypt and perform blockchain transactions with the game primary wallet.
+        example: AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4=
         explode: false
         in: header
-        name: X-Password
+        name: X-Wallet-Decrypt-Key
         required: true
         schema:
           type: string
@@ -3648,12 +4440,79 @@ paths:
       - Shops
       x-content-type: application/json
       x-accepts: application/json
-  /v1/shops/{shopId}/items/{shopOfferId}:
+  /v1/shops/{shopId}/offers/{shopOfferId}:
+    delete:
+      description: Removes the provided offer by offerId from the provided shop. Removed
+        offers can no longer be used.
+      operationId: removeShopOffer
+      parameters:
+      - description: Any shop id within the MetaFab platform.
+        explode: false
+        in: path
+        name: shopId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: "Any offer id for the shop. Zero, or a positive integer."
+        explode: false
+        in: path
+        name: shopOfferId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The `secretKey` of the authenticating game.
+        example: game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+        explode: false
+        in: header
+        name: X-Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The `walletDecryptKey` of the authenticating game. Required to
+          decrypt and perform blockchain transactions with the game primary wallet.
+        example: AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4=
+        explode: false
+        in: header
+        name: X-Wallet-Decrypt-Key
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionModel'
+          description: Successfully removed the provided offer from the provided shop.
+            Returns a transaction object.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Remove shop offer
+      tags:
+      - Shops
+      x-accepts: application/json
     get:
       description: Returns a shop offer object for the provided shopOfferId.
       operationId: getShopOffer
       parameters:
-      - description: Any shop id within the MetaFab ecosystem.
+      - description: Any shop id within the MetaFab platform.
         explode: false
         in: path
         name: shopId
@@ -3687,74 +4546,6 @@ paths:
       tags:
       - Shops
       x-accepts: application/json
-  /v1/shops/{shopId}/offers/{shopOfferId}:
-    delete:
-      description: Removes the provided offer by offerId from the provided shop. Removed
-        offers can no longer be used.
-      operationId: removeShopOffer
-      parameters:
-      - description: Any shop id within the MetaFab ecosystem.
-        explode: false
-        in: path
-        name: shopId
-        required: true
-        schema:
-          type: string
-        style: simple
-      - description: "Any offer id for the shop. Zero, or a positive integer."
-        explode: false
-        in: path
-        name: shopOfferId
-        required: true
-        schema:
-          type: string
-        style: simple
-      - description: The `secretKey` of the authenticating game.
-        example: game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
-        explode: false
-        in: header
-        name: X-Authorization
-        required: true
-        schema:
-          type: string
-        style: simple
-      - description: The password of the authenticating game. Required to decrypt
-          and perform blockchain transactions with the game primary wallet.
-        example: mySecurePassword
-        explode: false
-        in: header
-        name: X-Password
-        required: true
-        schema:
-          type: string
-        style: simple
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TransactionModel'
-          description: Successfully removed the provided offer from the provided shop.
-            Returns a transaction object.
-        "400":
-          content:
-            application/json:
-              schema:
-                type: string
-          description: An API level error occurred. This is often due to problematic
-            data being provided by you.
-        "401":
-          content:
-            application/json:
-              schema:
-                type: string
-          description: "An authorization error occured. This is often due to incorrect\
-            \ tokens or keys being provided, or accessing a resource that the provided\
-            \ tokens or keys do not have access to."
-      summary: Remove shop offer
-      tags:
-      - Shops
-      x-accepts: application/json
   /v1/shops/{shopId}/offers/{shopOfferId}/uses:
     post:
       description: Uses a shop offer. The required (input) item(s) and/or currency
@@ -3763,7 +4554,7 @@ paths:
         offer.
       operationId: useShopOffer
       parameters:
-      - description: Any shop id within the MetaFab ecosystem.
+      - description: Any shop id within the MetaFab platform.
         explode: false
         in: path
         name: shopId
@@ -3791,13 +4582,13 @@ paths:
         schema:
           type: string
         style: simple
-      - description: The password of the authenticating game or player. Required to
-          decrypt and perform blockchain transactions with the game or player primary
-          wallet.
-        example: mySecurePassword
+      - description: The `walletDecryptKey` of the authenticating game or player.
+          Required to decrypt and perform blockchain transactions with the game or
+          player primary wallet.
+        example: AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4=
         explode: false
         in: header
-        name: X-Password
+        name: X-Wallet-Decrypt-Key
         required: true
         schema:
           type: string
@@ -3837,7 +4628,7 @@ paths:
         \ when the offer is used. These can be withdrawn to any other address."
       operationId: withdrawFromShop
       parameters:
-      - description: Any shop id within the MetaFab ecosystem.
+      - description: Any shop id within the MetaFab platform.
         explode: false
         in: path
         name: shopId
@@ -3854,12 +4645,12 @@ paths:
         schema:
           type: string
         style: simple
-      - description: The password of the authenticating game. Required to decrypt
-          and perform blockchain transactions with the game primary wallet.
-        example: mySecurePassword
+      - description: The `walletDecryptKey` of the authenticating game. Required to
+          decrypt and perform blockchain transactions with the game primary wallet.
+        example: AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4=
         explode: false
         in: header
-        name: X-Password
+        name: X-Wallet-Decrypt-Key
         required: true
         schema:
           type: string
@@ -3906,7 +4697,7 @@ paths:
         \ items and other MetaFab resources."
       operationId: getTransaction
       parameters:
-      - description: Any transaction id within the MetaFab ecosystem.
+      - description: Any transaction id within the MetaFab platform.
         explode: false
         in: path
         name: transactionId
@@ -3933,6 +4724,37 @@ paths:
       tags:
       - Transactions
       x-accepts: application/json
+  /v1/wallets/{walletId}:
+    get:
+      description: Returns a wallet object for the provided walletId.
+      operationId: getWallet
+      parameters:
+      - description: Any wallet id within the MetaFab platform.
+        explode: false
+        in: path
+        name: walletId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WalletModel'
+          description: Successfully retrieved a wallet object for the provided walletId.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+      summary: Get wallet
+      tags:
+      - Wallets
+      x-accepts: application/json
   /v1/wallets/{walletId}/balances:
     get:
       description: "Returns the current native token balance for all chains supported\
@@ -3940,7 +4762,7 @@ paths:
         \ and other native tokens from chains MetaFab supports."
       operationId: getWalletBalances
       parameters:
-      - description: Any wallet id within the MetaFab ecosystem.
+      - description: Any wallet id within the MetaFab platform.
         explode: false
         in: path
         name: walletId
@@ -3969,6 +4791,64 @@ paths:
       tags:
       - Wallets
       x-accepts: application/json
+  /v1/wallets/{walletId}/signatures:
+    post:
+      description: Creates a wallet signature from a plaintext message using the wallet
+        for the provided walletId and walletDecryptKey. Wallet signatures cannot be
+        generated for EOA wallets.
+      operationId: createWalletSignature
+      parameters:
+      - description: Any wallet id within the MetaFab platform.
+        explode: false
+        in: path
+        name: walletId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The `walletDecryptKey` for the provided `walletId`.
+        example: AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4=
+        explode: false
+        in: header
+        name: X-Wallet-Decrypt-Key
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createWalletSignature_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: Successfully created a wallet signature from the provided message
+            using the provided wallet.
+        "400":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: An API level error occurred. This is often due to problematic
+            data being provided by you.
+        "401":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: "An authorization error occured. This is often due to incorrect\
+            \ tokens or keys being provided, or accessing a resource that the provided\
+            \ tokens or keys do not have access to."
+      summary: Create wallet signature
+      tags:
+      - Wallets
+      x-content-type: application/json
+      x-accepts: application/json
   /v1/wallets/{walletId}/transactions:
     get:
       description: Returns an array of MetaFab initiated transactions performed by
@@ -3976,7 +4856,7 @@ paths:
         newest to oldest.
       operationId: getWalletTransactions
       parameters:
-      - description: Any wallet id within the MetaFab ecosystem.
+      - description: Any wallet id within the MetaFab platform.
         explode: false
         in: path
         name: walletId
@@ -4007,6 +4887,17 @@ paths:
       x-accepts: application/json
 components:
   parameters:
+    headerEcosystemKey:
+      description: "The `publishedKey` of a specific ecosystem. This can be shared\
+        \ or included in clients, websites, etc."
+      example: ecosystem_pk_a5sFpDi8pQdnQgfCOBW29qR8YmwOhxVPz5iHoMgUEJLDdPXgwLuHqZf8ewo2GajZ
+      explode: false
+      in: header
+      name: X-Ecosystem-Key
+      required: true
+      schema:
+        type: string
+      style: simple
     headerGameKey:
       description: "The `publishedKey` of a specific game. This can be shared or included\
         \ in game clients, websites, etc."
@@ -4014,6 +4905,16 @@ components:
       explode: false
       in: header
       name: X-Game-Key
+      required: true
+      schema:
+        type: string
+      style: simple
+    headerAuthorizationEcosystem:
+      description: The `secretKey` of the authenticating ecosystem.
+      example: ecosystem_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+      explode: false
+      in: header
+      name: X-Authorization
       required: true
       schema:
         type: string
@@ -4038,6 +4939,16 @@ components:
       schema:
         type: string
       style: simple
+    headerAuthorizationProfile:
+      description: The `accessToken` of the authenticating profile.
+      example: profile_at_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP
+      explode: false
+      in: header
+      name: X-Authorization
+      required: true
+      schema:
+        type: string
+      style: simple
     headerAuthorizationGameOrPlayer:
       description: The `secretKey` of a specific game or the `accessToken` of a specific
         player.
@@ -4051,42 +4962,73 @@ components:
       schema:
         type: string
       style: simple
-    headerPasswordGame:
-      description: The password of the authenticating game. Required to decrypt and
-        perform blockchain transactions with the game primary wallet.
-      example: mySecurePassword
+    headerUsername:
+      description: The username of a player.
+      example: arkdev
       explode: false
       in: header
-      name: X-Password
+      name: X-Username
       required: true
       schema:
         type: string
       style: simple
-    headerPasswordPlayer:
-      description: The password of the authenticating player. Required to decrypt
-        and perform blockchain transactions with the player primary wallet.
-      example: mySecurePassword
+    headerWalletDecryptKey:
+      description: The `walletDecryptKey` for the provided `walletId`.
+      example: AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4=
       explode: false
       in: header
-      name: X-Password
+      name: X-Wallet-Decrypt-Key
       required: true
       schema:
         type: string
       style: simple
-    headerPasswordGameOrPlayer:
-      description: The password of the authenticating game or player. Required to
-        decrypt and perform blockchain transactions with the game or player primary
+    headerWalletDecryptKeyGame:
+      description: The `walletDecryptKey` of the authenticating game. Required to
+        decrypt and perform blockchain transactions with the game primary wallet.
+      example: AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4=
+      explode: false
+      in: header
+      name: X-Wallet-Decrypt-Key
+      required: true
+      schema:
+        type: string
+      style: simple
+    headerWalletDecryptKeyPlayer:
+      description: The `walletDecryptKey` of the authenticating player. Required to
+        decrypt and perform blockchain transactions with the player primary wallet.
+      example: AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4=
+      explode: false
+      in: header
+      name: X-Wallet-Decrypt-Key
+      required: true
+      schema:
+        type: string
+      style: simple
+    headerWalletDecryptKeyGameOrPlayer:
+      description: The `walletDecryptKey` of the authenticating game or player. Required
+        to decrypt and perform blockchain transactions with the game or player primary
         wallet.
-      example: mySecurePassword
+      example: AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4=
       explode: false
       in: header
-      name: X-Password
+      name: X-Wallet-Decrypt-Key
+      required: true
+      schema:
+        type: string
+      style: simple
+    headerWalletDecryptKeyProfile:
+      description: The `walletDecryptKey` of the authenticating profile. Required
+        to decrypt and perform blockchain transactions with the profile wallet.
+      example: AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4=
+      explode: false
+      in: header
+      name: X-Wallet-Decrypt-Key
       required: true
       schema:
         type: string
       style: simple
     pathCollectionId:
-      description: Any collection id within the MetaFab ecosystem.
+      description: Any collection id within the MetaFab platform.
       explode: false
       in: path
       name: collectionId
@@ -4104,7 +5046,7 @@ components:
         type: number
       style: simple
     pathContractId:
-      description: Any contract id within the MetaFab ecosystem.
+      description: Any contract id within the MetaFab platform.
       explode: false
       in: path
       name: contractId
@@ -4113,7 +5055,7 @@ components:
         type: string
       style: simple
     pathCurrencyId:
-      description: Any currency id within the MetaFab ecosystem.
+      description: Any currency id within the MetaFab platform.
       explode: false
       in: path
       name: currencyId
@@ -4121,8 +5063,35 @@ components:
       schema:
         type: string
       style: simple
+    pathEcosystemId:
+      description: Any ecosystem id within the MetaFab platform.
+      explode: false
+      in: path
+      name: ecosystemId
+      required: true
+      schema:
+        type: string
+      style: simple
+    pathEcosystemIdAuthenticated:
+      description: The ecosystem id of the authenticating ecosystem.
+      explode: false
+      in: path
+      name: ecosystemId
+      required: true
+      schema:
+        type: string
+      style: simple
     pathGameId:
-      description: Any game id within the MetaFab ecosystem.
+      description: Any game id within the MetaFab platform.
+      explode: false
+      in: path
+      name: gameId
+      required: true
+      schema:
+        type: string
+      style: simple
+    pathGameIdAuthenticated:
+      description: The game id of the authenticating game.
       explode: false
       in: path
       name: gameId
@@ -4131,7 +5100,7 @@ components:
         type: string
       style: simple
     pathShopId:
-      description: Any shop id within the MetaFab ecosystem.
+      description: Any shop id within the MetaFab platform.
       explode: false
       in: path
       name: shopId
@@ -4149,7 +5118,7 @@ components:
         type: string
       style: simple
     pathLootboxManagerId:
-      description: Any lootbox manager id within the MetaFab ecosystem.
+      description: Any lootbox manager id within the MetaFab platform.
       explode: false
       in: path
       name: lootboxManagerId
@@ -4158,7 +5127,7 @@ components:
         type: string
       style: simple
     pathLootboxManagerLootboxId:
-      description: Any lootbox manager lootbox id within the MetaFab ecosystem.
+      description: Any lootbox manager lootbox id within the MetaFab platform.
       explode: false
       in: path
       name: lootboxManagerLootboxId
@@ -4167,7 +5136,7 @@ components:
         type: string
       style: simple
     pathTransactionId:
-      description: Any transaction id within the MetaFab ecosystem.
+      description: Any transaction id within the MetaFab platform.
       explode: false
       in: path
       name: transactionId
@@ -4176,7 +5145,7 @@ components:
         type: string
       style: simple
     pathPlayerId:
-      description: Any player id within the MetaFab ecosystem.
+      description: Any player id within the MetaFab platform.
       explode: false
       in: path
       name: playerId
@@ -4184,8 +5153,35 @@ components:
       schema:
         type: string
       style: simple
+    pathPlayerIdAuthenticated:
+      description: The player id of the authenticating player.
+      explode: false
+      in: path
+      name: playerId
+      required: true
+      schema:
+        type: string
+      style: simple
+    pathProfileId:
+      description: Any profile id within the MetaFab platform.
+      explode: false
+      in: path
+      name: profileId
+      required: true
+      schema:
+        type: string
+      style: simple
+    pathProfileIdAuthenticated:
+      description: The profile id of the authenticating profile.
+      explode: false
+      in: path
+      name: profileId
+      required: true
+      schema:
+        type: string
+      style: simple
     pathWalletId:
-      description: Any wallet id within the MetaFab ecosystem.
+      description: Any wallet id within the MetaFab platform.
       explode: false
       in: path
       name: walletId
@@ -4194,7 +5190,7 @@ components:
         type: string
       style: simple
     pathPlayerWalletId:
-      description: Any player wallet id within the MetaFab ecosystem.
+      description: Any player wallet id within the MetaFab platform.
       explode: false
       in: path
       name: playerWalletId
@@ -4256,7 +5252,7 @@ components:
         type: string
       style: form
     queryWalletId:
-      description: Any wallet id within the MetaFab ecosystem.
+      description: Any wallet id within the MetaFab platform.
       explode: true
       in: query
       name: walletId
@@ -4282,22 +5278,6 @@ components:
         \ tokens or keys do not have access to."
   schemas:
     GameModel:
-      example:
-        walletId: walletId
-        secretKey: secretKey
-        iconImageUrl: iconImageUrl
-        coverImageUrl: coverImageUrl
-        verified: true
-        publishedKey: publishedKey
-        primaryColorHex: primaryColorHex
-        redirectUris: "{}"
-        createdAt: createdAt
-        name: name
-        id: id
-        rpcs: "{}"
-        fundingWalletId: fundingWalletId
-        email: email
-        updatedAt: updatedAt
       properties:
         id:
           description: This field has not had a description added.
@@ -4346,20 +5326,53 @@ components:
           type: string
       type: object
     PlayerModel:
+      properties:
+        id:
+          description: This field has not had a description added.
+          type: string
+        gameId:
+          description: This field has not had a description added.
+          type: string
+        walletId:
+          description: This field has not had a description added.
+          type: string
+        connectedWalletId:
+          description: This field has not had a description added.
+          type: string
+        profileId:
+          description: This field has not had a description added.
+          type: string
+        username:
+          description: This field has not had a description added.
+          type: string
+        accessToken:
+          description: This field has not had a description added.
+          type: string
+        profilePermissions:
+          description: This field has not had a description added.
+          type: object
+        updatedAt:
+          description: This field has not had a description added.
+          type: string
+        createdAt:
+          description: This field has not had a description added.
+          type: string
+      type: object
+    ProfileModel:
       example:
-        gameId: gameId
         walletId: walletId
         createdAt: createdAt
         connectedWalletId: connectedWalletId
         id: id
         accessToken: accessToken
+        ecosystemId: ecosystemId
         username: username
         updatedAt: updatedAt
       properties:
         id:
           description: This field has not had a description added.
           type: string
-        gameId:
+        ecosystemId:
           description: This field has not had a description added.
           type: string
         walletId:
@@ -4381,7 +5394,72 @@ components:
           description: This field has not had a description added.
           type: string
       type: object
+    EcosystemModel:
+      example:
+        createdAt: createdAt
+        secretKey: secretKey
+        iconImageUrl: iconImageUrl
+        coverImageUrl: coverImageUrl
+        name: name
+        publishedKey: publishedKey
+        id: id
+        primaryColorHex: primaryColorHex
+        email: email
+        updatedAt: updatedAt
+      properties:
+        id:
+          description: This field has not had a description added.
+          type: string
+        email:
+          description: This field has not had a description added.
+          type: string
+        name:
+          description: This field has not had a description added.
+          type: string
+        iconImageUrl:
+          description: This field has not had a description added.
+          type: string
+        coverImageUrl:
+          description: This field has not had a description added.
+          type: string
+        primaryColorHex:
+          description: This field has not had a description added.
+          type: string
+        publishedKey:
+          description: This field has not had a description added.
+          type: string
+        secretKey:
+          description: This field has not had a description added.
+          type: string
+        updatedAt:
+          description: This field has not had a description added.
+          type: string
+        createdAt:
+          description: This field has not had a description added.
+          type: string
+      type: object
+    EcosystemGameModel:
+      properties:
+        id:
+          description: This field has not had a description added.
+          type: string
+        ecosystemId:
+          description: This field has not had a description added.
+          type: string
+        gameId:
+          description: This field has not had a description added.
+          type: string
+        updatedAt:
+          description: This field has not had a description added.
+          type: string
+        createdAt:
+          description: This field has not had a description added.
+          type: string
+      type: object
     WalletModel:
+      example:
+        address: address
+        id: id
       properties:
         id:
           description: This field has not had a description added.
@@ -4399,6 +5477,9 @@ components:
           description: This field has not had a description added.
           type: string
         contractId:
+          description: This field has not had a description added.
+          type: string
+        name:
           description: This field has not had a description added.
           type: string
         updatedAt:
@@ -4486,6 +5567,9 @@ components:
         contractId:
           description: This field has not had a description added.
           type: string
+        name:
+          description: This field has not had a description added.
+          type: string
         updatedAt:
           description: This field has not had a description added.
           type: string
@@ -4502,6 +5586,9 @@ components:
           description: This field has not had a description added.
           type: string
         contractId:
+          description: This field has not had a description added.
+          type: string
+        name:
           description: This field has not had a description added.
           type: string
         updatedAt:
@@ -4546,6 +5633,44 @@ components:
         createdAt:
           description: This field has not had a description added.
           type: string
+      type: object
+    CollectionItem:
+      example:
+        image: image
+        externalUrl: externalUrl
+        data: "{}"
+        name: name
+        description: description
+        attributes:
+        - value: null
+          trait_type: trait_type
+        - value: null
+          trait_type: trait_type
+        id: id
+      properties:
+        id:
+          description: This field has not had a description added.
+          type: string
+        image:
+          description: This field has not had a description added.
+          type: string
+        name:
+          description: This field has not had a description added.
+          type: string
+        description:
+          description: This field has not had a description added.
+          type: string
+        externalUrl:
+          description: This field has not had a description added.
+          type: string
+        attributes:
+          description: This field has not had a description added.
+          items:
+            $ref: '#/components/schemas/CollectionItem_attributes_inner'
+          type: array
+        data:
+          description: This field has not had a description added.
+          type: object
       type: object
     LootboxManagerLootbox:
       example:
@@ -4620,6 +5745,48 @@ components:
             offer was set or updated.
           type: integer
       type: object
+    ProfilePermissions:
+      additionalProperties:
+        $ref: '#/components/schemas/ProfilePermissions_value'
+      description: A properly formatted permissions object that validates against
+        the MetaFab profile permissions schema.
+      type: object
+    PublicEcosystem:
+      example:
+        createdAt: createdAt
+        iconImageUrl: iconImageUrl
+        coverImageUrl: coverImageUrl
+        name: name
+        publishedKey: publishedKey
+        id: id
+        primaryColorHex: primaryColorHex
+        updatedAt: updatedAt
+      properties:
+        id:
+          description: This field has not had a description added.
+          type: string
+        name:
+          description: This field has not had a description added.
+          type: string
+        publishedKey:
+          description: This field has not had a description added.
+          type: string
+        iconImageUrl:
+          description: This field has not had a description added.
+          type: string
+        coverImageUrl:
+          description: This field has not had a description added.
+          type: string
+        primaryColorHex:
+          description: This field has not had a description added.
+          type: string
+        updatedAt:
+          description: This field has not had a description added.
+          type: string
+        createdAt:
+          description: This field has not had a description added.
+          type: string
+      type: object
     PublicGame:
       example:
         createdAt: createdAt
@@ -4669,7 +5836,12 @@ components:
         gameId: gameId
         walletId: walletId
         createdAt: createdAt
+        connectedWalletId: connectedWalletId
         wallet:
+          address: address
+          id: id
+        profileId: profileId
+        custodialWallet:
           address: address
           id: id
         id: id
@@ -4685,6 +5857,12 @@ components:
         walletId:
           description: This field has not had a description added.
           type: string
+        connectedWalletId:
+          description: This field has not had a description added.
+          type: string
+        profileId:
+          description: This field has not had a description added.
+          type: string
         username:
           description: This field has not had a description added.
           type: string
@@ -4694,8 +5872,32 @@ components:
         createdAt:
           description: This field has not had a description added.
           type: string
+        custodialWallet:
+          $ref: '#/components/schemas/PublicPlayer_custodialWallet'
         wallet:
-          $ref: '#/components/schemas/PublicPlayer_wallet'
+          $ref: '#/components/schemas/PublicPlayer_custodialWallet'
+      type: object
+    PublicProfile:
+      properties:
+        id:
+          description: This field has not had a description added.
+          type: string
+        walletId:
+          description: This field has not had a description added.
+          type: string
+        username:
+          description: This field has not had a description added.
+          type: string
+        updatedAt:
+          description: This field has not had a description added.
+          type: string
+        createdAt:
+          description: This field has not had a description added.
+          type: string
+        custodialWallet:
+          $ref: '#/components/schemas/PublicPlayer_custodialWallet'
+        wallet:
+          $ref: '#/components/schemas/PublicPlayer_custodialWallet'
       type: object
     ShopOffer:
       example:
@@ -4796,16 +5998,28 @@ components:
       - $ref: '#/components/schemas/getCollections_200_response_inner_allOf'
     createCollection_request:
       properties:
+        name:
+          description: "The name of this item collection. This can be anything, such\
+            \ as `Production - Item Collection`, `Testing - My Game Item Collection`,\
+            \ etc."
+          type: string
         chain:
           description: The blockchain you want to deploy this item collection on.
             Support for new blockchains are added over time.
           enum:
+          - ARBITRUM
+          - ARBITRUMGOERLI
+          - ARBITRUMNOVA
+          - AVALANCHE
+          - AVALANCHEFUJI
           - ETHEREUM
+          - FANTOM
+          - FANTOMTEST
           - GOERLI
           - MATIC
           - MATICMUMBAI
-          - ARBITRUM
-          - ARBITRUMGOERLI
+          - THUNDERCORE
+          - THUNDERCORETESTNET
           example: SELECT ONE
           type: string
       required:
@@ -4922,11 +6136,10 @@ components:
     createCollectionItem_request:
       properties:
         id:
-          description: "A unique itemId to use for this item within the collection.\
-            \ If an existing itemId is used, the current metadata will be overriden.\
-            \ Any number may be used.\n\nThe terms `itemId` and `collectionItemId`\
-            \ are used interchangeably and equivalent to one another throughout MetaFab\
-            \ documentation."
+          description: |-
+            A unique itemId to use for this item within the collection. If an existing itemId is used, the current metadata will be overriden. Any number may be used.
+
+            The terms `itemId` and `collectionItemId` are used interchangeably and equivalent to one another throughout MetaFab documentation.
           example: 1337
           type: integer
         name:
@@ -4942,6 +6155,44 @@ components:
             \ or `imageUrl` must be provided. Supported image formats are `jpg`, `jpeg`,\
             \ `png`, `gif`. Recommended size of 1:1 aspect ratio and no more than\
             \ 1500x1500 pixels."
+          example: !!binary |-
+            aVZCT1J3MEtHZ29BQUFBTlNVaEVVZ0FBQUNBQUFBQWdDQUlBQUFEOEdPMmpBQUFBR1hSRldIUlRi
+            MlowZDJGeVpRQkJaRzlpWlNCSmJXRm5aVkpsWVdSNWNjbGxQQUFBQTRScFZGaDBXRTFNT21OdmJT
+            NWhaRzlpWlM1NGJYQUFBQUFBQUR3L2VIQmhZMnRsZENCaVpXZHBiajBpNzd1L0lpQnBaRDBpVnpW
+            Tk1FMXdRMlZvYVVoNmNtVlRlazVVWTNwcll6bGtJajgrSUR4NE9uaHRjRzFsZEdFZ2VHMXNibk02
+            ZUQwaVlXUnZZbVU2Ym5NNmJXVjBZUzhpSUhnNmVHMXdkR3M5SWtGa2IySmxJRmhOVUNCRGIzSmxJ
+            RFV1Tmkxak1UUTFJRGM1TGpFMk16UTVPU3dnTWpBeE9DOHdPQzh4TXkweE5qbzBNRG95TWlBZ0lD
+            QWdJQ0FnSWo0Z1BISmtaanBTUkVZZ2VHMXNibk02Y21SbVBTSm9kSFJ3T2k4dmQzZDNMbmN6TG05
+            eVp5OHhPVGs1THpBeUx6SXlMWEprWmkxemVXNTBZWGd0Ym5NaklqNGdQSEprWmpwRVpYTmpjbWx3
+            ZEdsdmJpQnlaR1k2WVdKdmRYUTlJaUlnZUcxc2JuTTZlRzF3VFUwOUltaDBkSEE2THk5dWN5NWha
+            RzlpWlM1amIyMHZlR0Z3THpFdU1DOXRiUzhpSUhodGJHNXpPbk4wVW1WbVBTSm9kSFJ3T2k4dmJu
+            TXVZV1J2WW1VdVkyOXRMM2hoY0M4eExqQXZjMVI1Y0dVdlVtVnpiM1Z5WTJWU1pXWWpJaUI0Yld4
+            dWN6cDRiWEE5SW1oMGRIQTZMeTl1Y3k1aFpHOWlaUzVqYjIwdmVHRndMekV1TUM4aUlIaHRjRTFO
+            T2s5eWFXZHBibUZzUkc5amRXMWxiblJKUkQwaWVHMXdMbVJwWkRwak1qbGlaVE5rWXkwM1lXVTFM
+            VFF5TkRJdFlUSmtaUzFrT1RjelltVm1OakU1TUdZaUlIaHRjRTFOT2tSdlkzVnRaVzUwU1VROUlu
+            aHRjQzVrYVdRNk5VUXpSa1V3UmtRd01UUkNNVEZGUXpsQ1JEaERSa1UzTVRKQlJFUkZRellpSUho
+            dGNFMU5Pa2x1YzNSaGJtTmxTVVE5SW5odGNDNXBhV1E2TlVRelJrVXdSa013TVRSQ01URkZRemxD
+            UkRoRFJrVTNNVEpCUkVSRlF6WWlJSGh0Y0RwRGNtVmhkRzl5Vkc5dmJEMGlRV1J2WW1VZ1VHaHZk
+            Rzl6YUc5d0lFTkRJREl3TVRrZ0tGZHBibVJ2ZDNNcElqNGdQSGh0Y0UxTk9rUmxjbWwyWldSR2Nt
+            OXRJSE4wVW1WbU9tbHVjM1JoYm1ObFNVUTlJbmh0Y0M1cGFXUTZZemxpTlRJME1UZ3RNakF3Wmkw
+            M09UUTJMVGxqWkdNdE5EWmtabVkxTTJVek56VXhJaUJ6ZEZKbFpqcGtiMk4xYldWdWRFbEVQU0po
+            Wkc5aVpUcGtiMk5wWkRwd2FHOTBiM05vYjNBNk9XRTFOV1ZrTUdNdE5UZzJOeTFtT0RRNUxXSTBO
+            RGt0TXpCbU0yRTBaRFJsT0RZNElpOCtJRHd2Y21SbU9rUmxjMk55YVhCMGFXOXVQaUE4TDNKa1pq
+            cFNSRVkrSUR3dmVEcDRiWEJ0WlhSaFBpQThQM2h3WVdOclpYUWdaVzVrUFNKeUlqOCtBdE9HS1FB
+            QUFocEpSRUZVZU5waWREUFdaYUFsWUtLUnVmY3ZYNE13V0VqU2R1SEtOUU1kTFZ4bVFZQ2lMb29D
+            RnVLTkJwSVEwOUZNWERKSjlNcVZYK2ZPdndleVg3MWl1QUNXaFZ2RFFxVHBMYzJldXlidHV3aldm
+            T01PMDVsdHdtK2ZmYnR3L1BQNUJ3d3hlYStSUXh0b3RFTnl6b0c1VXlCY1JvS1JERFE5TmxydDRh
+            NkhLNC85M2ptSEUyam8wMjhNdTA1RGpYdjM1NSt4b1E2eWVtVFRpZlVCMFBUa2RORUZYWitCNFFB
+            MEdtd29OQVFVVVZXaW1RNEV6TXBTNG5pTTNuWDJzb2lNL0ozdi85ZHVmeUhNOGdOb09qQUVwQ1RG
+            c0NvT2FaKzByYnVSaEdRS05OM2UzdjdEaC9ldjM3d0JoZ1BFZEZ5S2dhYXZxY3pERkdmQll6by9Q
+            LytEQnc4L2Z2d0lpU2M4cGxkdTN0L3U2MGhDUm9PNFhVQkE4T0hEQndSVEFSN1RzZmdBa3Q3bDVS
+            VXVYTGdBZHp2WnBxUDdBSklpN1VUWnYzMzlRaFhUVVN5QTVDWklpdnozN2kxQjA1ZWN2RVRRZEhR
+            ZkFQTXFNRGM5ZS9rNXdwTGg3UGtyK0UyUE1kY2pvVFNGbEdJWFgvMEU1bFZJYmtMTG4rU1pqb2hr
+            ZUJrSkxBbndwL2VkWnk2NW0rZ1JYd0F6SVplNndGSU1XTTRBU3dKcW1ZNGVCOEF5RWsvZ0FFT0dW
+            TlBSTFFDV3dGUUpkNXdXYk4zN21icW1vMXNBckk4d0l3Q1ltOGcySFdFQk1JYUJOZCtGaCtnUlFF
+            eGVKZFlId0hvVnN3U20wSFFVQ3lDMU5zSHluVHJ0SW1xWmptSUJNSWJoOVNxMVRFZHBhd0JqR0sz
+            RlFmMm1JOVZOaDdhTDdxTzJ4YWdMV0dobk5HMWIxM0FBRUdBQVhvTWpUQjd2N0dRQUFBQUFTVVZP
+            Uks1Q1lJST0=
           format: byte
           type: string
         imageUrl:
@@ -5076,12 +6327,19 @@ components:
           description: The blockchain you want to deploy this currency on. Support
             for new blockchains are added over time.
           enum:
+          - ARBITRUM
+          - ARBITRUMGOERLI
+          - ARBITRUMNOVA
+          - AVALANCHE
+          - AVALANCHEFUJI
           - ETHEREUM
+          - FANTOM
+          - FANTOMTEST
           - GOERLI
           - MATIC
           - MATICMUMBAI
-          - ARBITRUM
-          - ARBITRUMGOERLI
+          - THUNDERCORE
+          - THUNDERCORETESTNET
           example: SELECT ONE
           type: string
       required:
@@ -5153,12 +6411,19 @@ components:
           description: The blockchain you want to deploy this currency on. Support
             for new blockchains are added over time.
           enum:
+          - ARBITRUM
+          - ARBITRUMGOERLI
+          - ARBITRUMNOVA
+          - AVALANCHE
+          - AVALANCHEFUJI
           - ETHEREUM
+          - FANTOM
+          - FANTOMTEST
           - GOERLI
           - MATIC
           - MATICMUMBAI
-          - ARBITRUM
-          - ARBITRUMGOERLI
+          - THUNDERCORE
+          - THUNDERCORETESTNET
           example: SELECT ONE
           type: string
       required:
@@ -5325,13 +6590,91 @@ components:
       required:
       - amount
       type: object
+    updateEcosystem_request:
+      properties:
+        name:
+          description: A new name. Replaces the ecosystem's current name.
+          type: string
+        email:
+          description: A new email address. The ecosystem's old email will no longer
+            be valid for account authentication. `currentPassword` must also be provided.
+          format: email
+          type: string
+        currentPassword:
+          description: The ecosystem's current password. Must be provided if setting
+            `newPassword` or `email`.
+          format: password
+          type: string
+        newPassword:
+          description: A new password. The ecosystem's old password will no longer
+            be valid.
+          format: password
+          type: string
+        iconImageBase64:
+          description: "A base64 string of the icon image for this ecosystem. Supported\
+            \ image formats are `jpg`, `jpeg`, `png`, `gif` Recommended size is 512x512\
+            \ pixels, or 1:1 aspect ratio. This image is used for your profile authorization\
+            \ flow and other MetaFab features for your ecosystem."
+          type: string
+        coverImageBase64:
+          description: "A base64 string of the cover image for this ecosystem. Supported\
+            \ image formats are `jpg`, `jpeg`, `png`, `gif`. Recommended size is 1600x1000\
+            \ pixels, or 16:10 aspect ratio.  This image is used as the background\
+            \ image for your profile authorization flow and other MetaFab features\
+            \ for your ecosystem."
+          type: string
+        primaryColorHex:
+          description: A valid hex color code. This color is used for your profile
+            authorization flow to control the color of buttons and other brandable
+            MetaFab features for your ecosystem.
+          type: string
+          example: null
+        resetPublishedKey:
+          description: Revokes the ecosystem's previous published key and returns
+            a new one if true.
+          type: boolean
+        resetSecretKey:
+          description: Revokes the ecosystem's previous secret key and returns a new
+            on if true.
+          type: boolean
+      type: object
+    createEcosystem_request:
+      properties:
+        name:
+          description: The name of the ecosystem you're creating.
+          example: NFT Worlds
+          type: string
+        email:
+          description: The email address associated with this ecosystem and used to
+            login/authenticate as the ecosystem.
+          example: dev@nftworlds.com
+          format: email
+          type: string
+        password:
+          description: The password to authenticate as the ecosystem.
+          example: aReallyStrongPassword123!
+          format: password
+          type: string
+      required:
+      - email
+      - name
+      - password
+      type: object
+    approveEcosystemGame_request:
+      properties:
+        gameId:
+          description: The id of the game being approved.
+          type: string
+      required:
+      - gameId
+      type: object
     authGame_200_response_allOf:
       properties:
+        walletDecryptKey:
+          description: This field has not had a description added.
+          type: string
         wallet:
           $ref: '#/components/schemas/WalletModel'
-      type: object
-    authGame_200_response_allOf_1:
-      properties:
         fundingWallet:
           $ref: '#/components/schemas/WalletModel'
       type: object
@@ -5339,7 +6682,6 @@ components:
       allOf:
       - $ref: '#/components/schemas/GameModel'
       - $ref: '#/components/schemas/authGame_200_response_allOf'
-      - $ref: '#/components/schemas/authGame_200_response_allOf_1'
     updateGame_request:
       properties:
         name:
@@ -5362,23 +6704,20 @@ components:
         rpcs:
           additionalProperties:
             type: string
-          description: "Sets a custom RPC for your game to use instead of MetaFab's\
-            \ default RPCs for the chain(s) you specify.\n\nExpects a JSON object\
-            \ containing key value pairs of supported `chain` -> `rpc url`. Only the\
-            \ chain names provided as keys in the object will be explicitly overriden.\
-            \ To delete a custom RPC for your game, provide the chain name to delete\
-            \ as a key in the provided object and `null` as the value.\n\nSet RPC\
-            \ example, `{ MATIC: 'https://polygon-rpc.com' }`\nDelete RPC example,\
-            \ `{ MATIC: null }`"
+          description: |-
+            Sets a custom RPC for your game to use instead of MetaFab's default RPCs for the chain(s) you specify.
+
+            Expects a JSON object containing key value pairs of supported `chain` -> `rpc url`. Only the chain names provided as keys in the object will be explicitly overriden. To delete a custom RPC for your game, provide the chain name to delete as a key in the provided object and `null` as the value.
+
+            Set RPC example, `{ MATIC: 'https://polygon-rpc.com' }`
+            Delete RPC example, `{ MATIC: null }`
           example: https://polygon-rpc.com
           type: object
         redirectUris:
-          description: "An array of valid base redirect uris or exact uris that can\
-            \ be used for the redirect uri of various MetaFab features such as player\
-            \ login/registration and wallet connection.\n\nExpects base or exact uris.\
-            \ For example, you could use include a uri of `https://trymetafab.com`\
-            \ and it would allow redirection to any valid uri on the domain, such\
-            \ as `https://trymetafab.com/play/game`."
+          description: |-
+            An array of valid base redirect uris or exact uris that can be used for the redirect uri of various MetaFab features such as player login/registration and wallet connection.
+
+            Expects base or exact uris. For example, you could use include a uri of `https://trymetafab.com` and it would allow redirection to any valid uri on the domain, such as `https://trymetafab.com/play/game`.
           items:
             example: http://localhost
             type: string
@@ -5401,6 +6740,7 @@ components:
             wallet flow to control the color of buttons and other brandable MetaFab
             features for your game.
           type: string
+          example: null
         resetPublishedKey:
           description: Revokes the game's previous published key and returns a new
             one if true.
@@ -5410,6 +6750,16 @@ components:
             if true.
           type: boolean
       type: object
+    updateGame_200_response_allOf:
+      properties:
+        walletDecryptKey:
+          description: This field has not had a description added.
+          type: string
+      type: object
+    updateGame_200_response:
+      allOf:
+      - $ref: '#/components/schemas/GameModel'
+      - $ref: '#/components/schemas/updateGame_200_response_allOf'
     createGame_request:
       properties:
         name:
@@ -5441,16 +6791,28 @@ components:
       - $ref: '#/components/schemas/getCollections_200_response_inner_allOf'
     createLootboxManager_request:
       properties:
+        name:
+          description: "The name of this item collection. This can be anything, such\
+            \ as `Production - Lootbox Manager`, `Testing - My Game Lootbox Manager`,\
+            \ etc."
+          type: string
         chain:
           description: The blockchain you want to deploy this lootbox manager on.
             Support for new blockchains are added over time.
           enum:
+          - ARBITRUM
+          - ARBITRUMGOERLI
+          - ARBITRUMNOVA
+          - AVALANCHE
+          - AVALANCHEFUJI
           - ETHEREUM
+          - FANTOM
+          - FANTOMTEST
           - GOERLI
           - MATIC
           - MATICMUMBAI
-          - ARBITRUM
-          - ARBITRUMGOERLI
+          - THUNDERCORE
+          - THUNDERCORETESTNET
           example: SELECT ONE
           type: string
       required:
@@ -5543,10 +6905,20 @@ components:
       required:
       - id
       type: object
+    authPlayer_200_response_allOf:
+      properties:
+        walletDecryptKey:
+          description: This field has not had a description added.
+          type: string
+        wallet:
+          $ref: '#/components/schemas/WalletModel'
+        custodialWallet:
+          $ref: '#/components/schemas/WalletModel'
+      type: object
     authPlayer_200_response:
       allOf:
       - $ref: '#/components/schemas/PlayerModel'
-      - $ref: '#/components/schemas/authGame_200_response_allOf'
+      - $ref: '#/components/schemas/authPlayer_200_response_allOf'
     createPlayer_request:
       properties:
         username:
@@ -5583,6 +6955,10 @@ components:
             one if true.
           type: boolean
       type: object
+    updatePlayer_200_response:
+      allOf:
+      - $ref: '#/components/schemas/PlayerModel'
+      - $ref: '#/components/schemas/updateGame_200_response_allOf'
     getPlayerData_200_response:
       example:
         protectedData: "{}"
@@ -5596,22 +6972,16 @@ components:
     setPlayerData_request:
       properties:
         protectedData:
-          description: "protectedData can only be set if `X-Authorization` includes\
-            \ credentials for the game the target player is a part of. Expects an\
-            \ arbitrary object allowed to contain any set of properties and nested\
-            \ data within those properties, including arrays.\n\nprotectedData is\
-            \ great for storing sensitive player data like tracking experience points,\
-            \ off-chain inventories, save states, and more - things that players shouldn't\
-            \ have the ability to directly change themselves."
+          description: |-
+            protectedData can only be set if `X-Authorization` includes credentials for the game the target player is a part of. Expects an arbitrary object allowed to contain any set of properties and nested data within those properties, including arrays.
+
+            protectedData is great for storing sensitive player data like tracking experience points, off-chain inventories, save states, and more - things that players shouldn't have the ability to directly change themselves.
           type: object
         publicData:
-          description: "publicData can be set if `X-Authorization` includes credentials\
-            \ for the target player or game the player is a part of. Expects an arbitrary\
-            \ object allowed to contain any set of properties and nested data within\
-            \ those properties, including arrays.\n\npublicData is great for storing\
-            \ player preferences like in-game settings, non-sensitive data and more.\
-            \ Anything that a player should have the ability to directly change themselves\
-            \ without client or server verification can be stored in publicData."
+          description: |-
+            publicData can be set if `X-Authorization` includes credentials for the target player or game the player is a part of. Expects an arbitrary object allowed to contain any set of properties and nested data within those properties, including arrays.
+
+            publicData is great for storing player preferences like in-game settings, non-sensitive data and more. Anything that a player should have the ability to directly change themselves without client or server verification can be stored in publicData.
           type: object
       type: object
     setPlayerConnectedWallet_request:
@@ -5637,12 +7007,19 @@ components:
             \ using different `chain` arguments. Support for new blockchains are added\
             \ over time."
           enum:
+          - ARBITRUM
+          - ARBITRUMGOERLI
+          - ARBITRUMNOVA
+          - AVALANCHE
+          - AVALANCHEFUJI
           - ETHEREUM
+          - FANTOM
+          - FANTOMTEST
           - GOERLI
           - MATIC
           - MATICMUMBAI
-          - ARBITRUM
-          - ARBITRUMGOERLI
+          - THUNDERCORE
+          - THUNDERCORETESTNET
           example: SELECT ONE
           type: string
       required:
@@ -5695,12 +7072,19 @@ components:
             \ using different `chain` arguments. Support for new blockchains are added\
             \ over time."
           enum:
+          - ARBITRUM
+          - ARBITRUMGOERLI
+          - ARBITRUMNOVA
+          - AVALANCHE
+          - AVALANCHEFUJI
           - ETHEREUM
+          - FANTOM
+          - FANTOMTEST
           - GOERLI
           - MATIC
           - MATICMUMBAI
-          - ARBITRUM
-          - ARBITRUMGOERLI
+          - THUNDERCORE
+          - THUNDERCORETESTNET
           example: SELECT ONE
           type: string
       required:
@@ -5709,22 +7093,165 @@ components:
       - nonce
       - signature
       type: object
+    authProfile_200_response:
+      allOf:
+      - $ref: '#/components/schemas/ProfileModel'
+      - $ref: '#/components/schemas/authPlayer_200_response_allOf'
+    createProfile_request:
+      properties:
+        username:
+          description: "The profile's username, used to authenticate the profile.\
+            \ Profile usernames are globally unique across MetaFab. There cannot be\
+            \ 2 profiles with the same username created."
+          type: string
+        password:
+          description: "The password to authenticate as the profile. Additionally,\
+            \ this password is used to encrypt/decrypt a profile's primary wallet\
+            \ and must be provided anytime this profile makes blockchain interactions\
+            \ through various endpoints."
+          example: aReallyStrongPassword123
+          format: password
+          type: string
+      required:
+      - password
+      - username
+      type: object
+    updateProfile_request:
+      properties:
+        currentPassword:
+          description: The profile's current password. Must be provided if setting
+            `newPassword`.
+          format: password
+          type: string
+        newPassword:
+          description: A new password. The profile's old password will no longer be
+            valid.
+          format: password
+          type: string
+        resetAccessToken:
+          description: Revokes the profile's previous access token and returns a new
+            one if true.
+          type: boolean
+      type: object
+    getProfileGames_200_response_inner:
+      example:
+        createdAt: createdAt
+        iconImageUrl: iconImageUrl
+        coverImageUrl: coverImageUrl
+        players:
+        - gameId: gameId
+          walletId: walletId
+          createdAt: createdAt
+          connectedWalletId: connectedWalletId
+          wallet:
+            address: address
+            id: id
+          profileId: profileId
+          custodialWallet:
+            address: address
+            id: id
+          id: id
+          username: username
+          updatedAt: updatedAt
+        - gameId: gameId
+          walletId: walletId
+          createdAt: createdAt
+          connectedWalletId: connectedWalletId
+          wallet:
+            address: address
+            id: id
+          profileId: profileId
+          custodialWallet:
+            address: address
+            id: id
+          id: id
+          username: username
+          updatedAt: updatedAt
+        name: name
+        publishedKey: publishedKey
+        id: id
+        primaryColorHex: primaryColorHex
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        publishedKey:
+          type: string
+        iconImageUrl:
+          type: string
+        coverImageUrl:
+          type: string
+        primaryColorHex:
+          type: string
+        createdAt:
+          type: string
+        players:
+          items:
+            $ref: '#/components/schemas/PublicPlayer'
+          type: array
+      type: object
+    createProfilePlayer_request:
+      properties:
+        username:
+          description: The username to assign to the created player.
+          type: string
+        permissions:
+          additionalProperties:
+            $ref: '#/components/schemas/ProfilePermissions_value'
+          description: A properly formatted permissions object that validates against
+            the MetaFab profile permissions schema.
+          type: object
+      required:
+      - username
+      type: object
+    updateProfilePlayer_request:
+      properties:
+        permissions:
+          additionalProperties:
+            $ref: '#/components/schemas/ProfilePermissions_value'
+          description: A properly formatted permissions object that validates against
+            the MetaFab profile permissions schema.
+          type: object
+      type: object
+    updateProfilePlayer_200_response_allOf:
+      properties:
+        wallet:
+          $ref: '#/components/schemas/WalletModel'
+        custodialWallet:
+          $ref: '#/components/schemas/WalletModel'
+      type: object
+    updateProfilePlayer_200_response:
+      allOf:
+      - $ref: '#/components/schemas/PlayerModel'
+      - $ref: '#/components/schemas/updateProfilePlayer_200_response_allOf'
     getShops_200_response_inner:
       allOf:
       - $ref: '#/components/schemas/ShopModel'
       - $ref: '#/components/schemas/getCollections_200_response_inner_allOf'
     createShop_request:
       properties:
+        name:
+          description: "The name of this item collection. This can be anything, such\
+            \ as `Production - Game Shop`, `Testing - My Game Shop`, etc."
+          type: string
         chain:
           description: The blockchain you want to deploy this shop on. Support for
             new blockchains are added over time.
           enum:
+          - ARBITRUM
+          - ARBITRUMGOERLI
+          - ARBITRUMNOVA
+          - AVALANCHE
+          - AVALANCHEFUJI
           - ETHEREUM
+          - FANTOM
+          - FANTOMTEST
           - GOERLI
           - MATIC
           - MATICMUMBAI
-          - ARBITRUM
-          - ARBITRUMGOERLI
+          - THUNDERCORE
+          - THUNDERCORETESTNET
           example: SELECT ONE
           type: string
       required:
@@ -5869,7 +7396,60 @@ components:
             type: integer
           type: array
       type: object
-    PublicPlayer_wallet:
+    createWalletSignature_request:
+      properties:
+        message:
+          description: The plaintext message to sign.
+          type: string
+      required:
+      - message
+      type: object
+    CollectionItem_attributes_inner_value:
+      anyOf:
+      - type: string
+      - type: number
+      description: This field has not had a description added.
+    CollectionItem_attributes_inner:
+      example:
+        value: null
+        trait_type: trait_type
+      properties:
+        trait_type:
+          description: This field has not had a description added.
+          type: string
+        value:
+          $ref: '#/components/schemas/CollectionItem_attributes_inner_value'
+      type: object
+    ProfilePermissions_value:
+      description: "Key should be the contract address, value is the permissions object\
+        \ request for the contract."
+      properties:
+        chain:
+          description: The target chain for the contract and related permissions.
+          type: string
+        scopes:
+          description: An optional array of valid permissioning scopes.
+          items:
+            type: string
+          type: array
+        functions:
+          description: An optional array of contract functions to request permission
+            for.
+          items:
+            type: string
+          type: array
+        erc20Limit:
+          description: A maximum lifetime limit of erc20 that can be tranferred for
+            this contract address.
+          type: integer
+        erc1155Limits:
+          additionalProperties:
+            type: integer
+          description: An object mapping erc1155 ids to maximum lifetime transfer
+            limits of each permitted item id supplied for this contract address.
+          type: object
+      type: object
+    PublicPlayer_custodialWallet:
       example:
         address: address
         id: id

@@ -1,10 +1,10 @@
 # metafab-java
 
 MetaFab API
-- API version: 1.4.1
-  - Build date: 2023-01-02T19:20:23.322985-08:00[America/Los_Angeles]
+- API version: 1.5.1
+  - Build date: 2023-02-19T17:38:27.237153-05:00[America/New_York]
 
- Complete MetaFab API references and guides can be found at: https://trymetafab.com
+Complete MetaFab API references and guides can be found at: https://trymetafab.com
 
   For more information, please visit [https://trymetafab.com](https://trymetafab.com)
 
@@ -41,7 +41,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>org.metafab</groupId>
   <artifactId>metafab-java</artifactId>
-  <version>1.4.1</version>
+  <version>1.5.1</version>
   <scope>compile</scope>
 </dependency>
 ```
@@ -57,7 +57,7 @@ Add this dependency to your project's build file:
   }
 
   dependencies {
-     implementation "org.metafab:metafab-java:1.4.1"
+     implementation "org.metafab:metafab-java:1.5.1"
   }
 ```
 
@@ -71,7 +71,7 @@ mvn clean package
 
 Then manually install the following JARs:
 
-* `target/metafab-java-1.4.1.jar`
+* `target/metafab-java-1.5.1.jar`
 * `target/lib/*.jar`
 
 ## Getting Started
@@ -134,6 +134,22 @@ Class | Method | HTTP request | Description
 *CurrenciesApi* | [**revokeCurrencyRole**](docs/CurrenciesApi.md#revokeCurrencyRole) | **DELETE** /v1/currencies/{currencyId}/roles | Revoke currency role
 *CurrenciesApi* | [**setCurrencyFees**](docs/CurrenciesApi.md#setCurrencyFees) | **POST** /v1/currencies/{currencyId}/fees | Set currency fees
 *CurrenciesApi* | [**transferCurrency**](docs/CurrenciesApi.md#transferCurrency) | **POST** /v1/currencies/{currencyId}/transfers | Transfer currency
+*EcosystemsApi* | [**approveEcosystemGame**](docs/EcosystemsApi.md#approveEcosystemGame) | **POST** /v1/ecosystems/{ecosystemId}/games | Approve ecosystem game
+*EcosystemsApi* | [**authEcosystem**](docs/EcosystemsApi.md#authEcosystem) | **GET** /v1/ecosystems/auth | Authenticate ecosystem
+*EcosystemsApi* | [**authProfile**](docs/EcosystemsApi.md#authProfile) | **GET** /v1/profiles/auth | Authenticate profile
+*EcosystemsApi* | [**authProfilePlayer**](docs/EcosystemsApi.md#authProfilePlayer) | **GET** /v1/profiles/{profileId}/games/{gameId}/players/auth | Authenticate profile player
+*EcosystemsApi* | [**createEcosystem**](docs/EcosystemsApi.md#createEcosystem) | **POST** /v1/ecosystems | Create ecosystem
+*EcosystemsApi* | [**createProfile**](docs/EcosystemsApi.md#createProfile) | **POST** /v1/profiles | Create profile
+*EcosystemsApi* | [**createProfilePlayer**](docs/EcosystemsApi.md#createProfilePlayer) | **POST** /v1/profiles/{profileId}/games/{gameId}/players | Create profile player
+*EcosystemsApi* | [**getEcosystem**](docs/EcosystemsApi.md#getEcosystem) | **GET** /v1/ecosystems/{ecosystemId} | Get ecosystem
+*EcosystemsApi* | [**getEcosystemGame**](docs/EcosystemsApi.md#getEcosystemGame) | **GET** /v1/ecosystems/{ecosystemId}/games/{gameId} | Get ecosystem game
+*EcosystemsApi* | [**getEcosystemGames**](docs/EcosystemsApi.md#getEcosystemGames) | **GET** /v1/ecosystems/{ecosystemId}/games | Get ecosystem games
+*EcosystemsApi* | [**getProfileGame**](docs/EcosystemsApi.md#getProfileGame) | **GET** /v1/profiles/{profileId}/games/{gameId} | Get profile game
+*EcosystemsApi* | [**getProfileGames**](docs/EcosystemsApi.md#getProfileGames) | **GET** /v1/profiles/{profileId}/games | Get profile games
+*EcosystemsApi* | [**unapproveEcosystemGame**](docs/EcosystemsApi.md#unapproveEcosystemGame) | **DELETE** /v1/ecosystems/{ecosystemId}/games/{gameId} | Unapprove ecosystem game
+*EcosystemsApi* | [**updateEcosystem**](docs/EcosystemsApi.md#updateEcosystem) | **PATCH** /v1/ecosystems/{ecosystemId} | Update ecosystem
+*EcosystemsApi* | [**updateProfile**](docs/EcosystemsApi.md#updateProfile) | **PATCH** /v1/profiles/{profileId} | Update profile
+*EcosystemsApi* | [**updateProfilePlayer**](docs/EcosystemsApi.md#updateProfilePlayer) | **PATCH** /v1/profiles/{profileId}/games/{gameId}/players/{playerId} | Update profile player
 *GamesApi* | [**authGame**](docs/GamesApi.md#authGame) | **GET** /v1/games/auth | Authenticate game
 *GamesApi* | [**createGame**](docs/GamesApi.md#createGame) | **POST** /v1/games | Create game
 *GamesApi* | [**getGame**](docs/GamesApi.md#getGame) | **GET** /v1/games/{gameId} | Get game
@@ -176,7 +192,7 @@ Class | Method | HTTP request | Description
 *PlayersApi* | [**setPlayerData**](docs/PlayersApi.md#setPlayerData) | **POST** /v1/players/{playerId}/data | Set player data
 *PlayersApi* | [**updatePlayer**](docs/PlayersApi.md#updatePlayer) | **PATCH** /v1/players/{playerId} | Update player
 *ShopsApi* | [**createShop**](docs/ShopsApi.md#createShop) | **POST** /v1/shops | Create shop
-*ShopsApi* | [**getShopOffer**](docs/ShopsApi.md#getShopOffer) | **GET** /v1/shops/{shopId}/items/{shopOfferId} | Get shop offer
+*ShopsApi* | [**getShopOffer**](docs/ShopsApi.md#getShopOffer) | **GET** /v1/shops/{shopId}/offers/{shopOfferId} | Get shop offer
 *ShopsApi* | [**getShopOffers**](docs/ShopsApi.md#getShopOffers) | **GET** /v1/shops/{shopId}/offers | Get shop offers
 *ShopsApi* | [**getShops**](docs/ShopsApi.md#getShops) | **GET** /v1/shops | Get shops
 *ShopsApi* | [**removeShopOffer**](docs/ShopsApi.md#removeShopOffer) | **DELETE** /v1/shops/{shopId}/offers/{shopOfferId} | Remove shop offer
@@ -184,21 +200,28 @@ Class | Method | HTTP request | Description
 *ShopsApi* | [**useShopOffer**](docs/ShopsApi.md#useShopOffer) | **POST** /v1/shops/{shopId}/offers/{shopOfferId}/uses | Use shop offer
 *ShopsApi* | [**withdrawFromShop**](docs/ShopsApi.md#withdrawFromShop) | **POST** /v1/shops/{shopId}/withdrawals | Withdraw from shop
 *TransactionsApi* | [**getTransaction**](docs/TransactionsApi.md#getTransaction) | **GET** /v1/transactions/{transactionId} | Get transaction
+*WalletsApi* | [**createWalletSignature**](docs/WalletsApi.md#createWalletSignature) | **POST** /v1/wallets/{walletId}/signatures | Create wallet signature
+*WalletsApi* | [**getWallet**](docs/WalletsApi.md#getWallet) | **GET** /v1/wallets/{walletId} | Get wallet
 *WalletsApi* | [**getWalletBalances**](docs/WalletsApi.md#getWalletBalances) | **GET** /v1/wallets/{walletId}/balances | Get wallet balances
 *WalletsApi* | [**getWalletTransactions**](docs/WalletsApi.md#getWalletTransactions) | **GET** /v1/wallets/{walletId}/transactions | Get wallet transactions
 
 
 ## Documentation for Models
 
+ - [ApproveEcosystemGameRequest](docs/ApproveEcosystemGameRequest.md)
  - [AuthGame200Response](docs/AuthGame200Response.md)
  - [AuthGame200ResponseAllOf](docs/AuthGame200ResponseAllOf.md)
- - [AuthGame200ResponseAllOf1](docs/AuthGame200ResponseAllOf1.md)
  - [AuthPlayer200Response](docs/AuthPlayer200Response.md)
+ - [AuthPlayer200ResponseAllOf](docs/AuthPlayer200ResponseAllOf.md)
+ - [AuthProfile200Response](docs/AuthProfile200Response.md)
  - [BatchMintCollectionItemsRequest](docs/BatchMintCollectionItemsRequest.md)
  - [BatchTransferCollectionItemsRequest](docs/BatchTransferCollectionItemsRequest.md)
  - [BatchTransferCurrencyRequest](docs/BatchTransferCurrencyRequest.md)
  - [BurnCollectionItemRequest](docs/BurnCollectionItemRequest.md)
  - [BurnCurrencyRequest](docs/BurnCurrencyRequest.md)
+ - [CollectionItem](docs/CollectionItem.md)
+ - [CollectionItemAttributesInner](docs/CollectionItemAttributesInner.md)
+ - [CollectionItemAttributesInnerValue](docs/CollectionItemAttributesInnerValue.md)
  - [CollectionModel](docs/CollectionModel.md)
  - [ContractModel](docs/ContractModel.md)
  - [CreateCollection200Response](docs/CreateCollection200Response.md)
@@ -211,13 +234,19 @@ Class | Method | HTTP request | Description
  - [CreateContractRequest](docs/CreateContractRequest.md)
  - [CreateCurrency200Response](docs/CreateCurrency200Response.md)
  - [CreateCurrencyRequest](docs/CreateCurrencyRequest.md)
+ - [CreateEcosystemRequest](docs/CreateEcosystemRequest.md)
  - [CreateGameRequest](docs/CreateGameRequest.md)
  - [CreateLootboxManager200Response](docs/CreateLootboxManager200Response.md)
  - [CreateLootboxManagerRequest](docs/CreateLootboxManagerRequest.md)
  - [CreatePlayerRequest](docs/CreatePlayerRequest.md)
+ - [CreateProfilePlayerRequest](docs/CreateProfilePlayerRequest.md)
+ - [CreateProfileRequest](docs/CreateProfileRequest.md)
  - [CreateShop200Response](docs/CreateShop200Response.md)
  - [CreateShopRequest](docs/CreateShopRequest.md)
+ - [CreateWalletSignatureRequest](docs/CreateWalletSignatureRequest.md)
  - [CurrencyModel](docs/CurrencyModel.md)
+ - [EcosystemGameModel](docs/EcosystemGameModel.md)
+ - [EcosystemModel](docs/EcosystemModel.md)
  - [GameModel](docs/GameModel.md)
  - [GetCollections200ResponseInner](docs/GetCollections200ResponseInner.md)
  - [GetCollections200ResponseInnerAllOf](docs/GetCollections200ResponseInnerAllOf.md)
@@ -225,6 +254,7 @@ Class | Method | HTTP request | Description
  - [GetCurrencyFees200Response](docs/GetCurrencyFees200Response.md)
  - [GetLootboxManagers200ResponseInner](docs/GetLootboxManagers200ResponseInner.md)
  - [GetPlayerData200Response](docs/GetPlayerData200Response.md)
+ - [GetProfileGames200ResponseInner](docs/GetProfileGames200ResponseInner.md)
  - [GetShops200ResponseInner](docs/GetShops200ResponseInner.md)
  - [GrantCollectionRoleRequest](docs/GrantCollectionRoleRequest.md)
  - [GrantCurrencyRoleRequest](docs/GrantCurrencyRoleRequest.md)
@@ -233,9 +263,13 @@ Class | Method | HTTP request | Description
  - [MintCollectionItemRequest](docs/MintCollectionItemRequest.md)
  - [MintCurrencyRequest](docs/MintCurrencyRequest.md)
  - [PlayerModel](docs/PlayerModel.md)
+ - [ProfileModel](docs/ProfileModel.md)
+ - [ProfilePermissionsValue](docs/ProfilePermissionsValue.md)
+ - [PublicEcosystem](docs/PublicEcosystem.md)
  - [PublicGame](docs/PublicGame.md)
  - [PublicPlayer](docs/PublicPlayer.md)
- - [PublicPlayerWallet](docs/PublicPlayerWallet.md)
+ - [PublicPlayerCustodialWallet](docs/PublicPlayerCustodialWallet.md)
+ - [PublicProfile](docs/PublicProfile.md)
  - [RemovePlayerConnectedWalletRequest](docs/RemovePlayerConnectedWalletRequest.md)
  - [RevokeCollectionRoleRequest](docs/RevokeCollectionRoleRequest.md)
  - [SetCollectionApprovalRequest](docs/SetCollectionApprovalRequest.md)
@@ -252,8 +286,16 @@ Class | Method | HTTP request | Description
  - [TransferCollectionItemRequest](docs/TransferCollectionItemRequest.md)
  - [TransferContractOwnershipRequest](docs/TransferContractOwnershipRequest.md)
  - [TransferCurrencyRequest](docs/TransferCurrencyRequest.md)
+ - [UpdateEcosystemRequest](docs/UpdateEcosystemRequest.md)
+ - [UpdateGame200Response](docs/UpdateGame200Response.md)
+ - [UpdateGame200ResponseAllOf](docs/UpdateGame200ResponseAllOf.md)
  - [UpdateGameRequest](docs/UpdateGameRequest.md)
+ - [UpdatePlayer200Response](docs/UpdatePlayer200Response.md)
  - [UpdatePlayerRequest](docs/UpdatePlayerRequest.md)
+ - [UpdateProfilePlayer200Response](docs/UpdateProfilePlayer200Response.md)
+ - [UpdateProfilePlayer200ResponseAllOf](docs/UpdateProfilePlayer200ResponseAllOf.md)
+ - [UpdateProfilePlayerRequest](docs/UpdateProfilePlayerRequest.md)
+ - [UpdateProfileRequest](docs/UpdateProfileRequest.md)
  - [UpgradeContractTrustedForwarderRequest](docs/UpgradeContractTrustedForwarderRequest.md)
  - [WalletModel](docs/WalletModel.md)
  - [WithdrawFromShopRequest](docs/WithdrawFromShopRequest.md)

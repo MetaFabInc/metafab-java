@@ -5,7 +5,7 @@ All URIs are relative to *https://api.trymetafab.com*
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
 | [**createShop**](ShopsApi.md#createShop) | **POST** /v1/shops | Create shop |
-| [**getShopOffer**](ShopsApi.md#getShopOffer) | **GET** /v1/shops/{shopId}/items/{shopOfferId} | Get shop offer |
+| [**getShopOffer**](ShopsApi.md#getShopOffer) | **GET** /v1/shops/{shopId}/offers/{shopOfferId} | Get shop offer |
 | [**getShopOffers**](ShopsApi.md#getShopOffers) | **GET** /v1/shops/{shopId}/offers | Get shop offers |
 | [**getShops**](ShopsApi.md#getShops) | **GET** /v1/shops | Get shops |
 | [**removeShopOffer**](ShopsApi.md#removeShopOffer) | **DELETE** /v1/shops/{shopId}/offers/{shopOfferId} | Remove shop offer |
@@ -16,7 +16,7 @@ All URIs are relative to *https://api.trymetafab.com*
 
 <a name="createShop"></a>
 # **createShop**
-> CreateShop200Response createShop(xAuthorization, xPassword, createShopRequest)
+> CreateShop200Response createShop(xAuthorization, xWalletDecryptKey, createShopRequest)
 
 Create shop
 
@@ -38,10 +38,10 @@ public class Example {
 
     ShopsApi apiInstance = new ShopsApi(defaultClient);
     String xAuthorization = "game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP"; // String | The `secretKey` of the authenticating game.
-    String xPassword = "mySecurePassword"; // String | The password of the authenticating game. Required to decrypt and perform blockchain transactions with the game primary wallet.
+    String xWalletDecryptKey = "AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4="; // String | The `walletDecryptKey` of the authenticating game. Required to decrypt and perform blockchain transactions with the game primary wallet.
     CreateShopRequest createShopRequest = new CreateShopRequest(); // CreateShopRequest | 
     try {
-      CreateShop200Response result = apiInstance.createShop(xAuthorization, xPassword, createShopRequest);
+      CreateShop200Response result = apiInstance.createShop(xAuthorization, xWalletDecryptKey, createShopRequest);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling ShopsApi#createShop");
@@ -59,7 +59,7 @@ public class Example {
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
 | **xAuthorization** | **String**| The &#x60;secretKey&#x60; of the authenticating game. | |
-| **xPassword** | **String**| The password of the authenticating game. Required to decrypt and perform blockchain transactions with the game primary wallet. | |
+| **xWalletDecryptKey** | **String**| The &#x60;walletDecryptKey&#x60; of the authenticating game. Required to decrypt and perform blockchain transactions with the game primary wallet. | |
 | **createShopRequest** | [**CreateShopRequest**](CreateShopRequest.md)|  | |
 
 ### Return type
@@ -105,7 +105,7 @@ public class Example {
     defaultClient.setBasePath("https://api.trymetafab.com");
 
     ShopsApi apiInstance = new ShopsApi(defaultClient);
-    String shopId = "shopId_example"; // String | Any shop id within the MetaFab ecosystem.
+    String shopId = "shopId_example"; // String | Any shop id within the MetaFab platform.
     String shopOfferId = "shopOfferId_example"; // String | Any offer id for the shop. Zero, or a positive integer.
     try {
       ShopOffer result = apiInstance.getShopOffer(shopId, shopOfferId);
@@ -125,7 +125,7 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **shopId** | **String**| Any shop id within the MetaFab ecosystem. | |
+| **shopId** | **String**| Any shop id within the MetaFab platform. | |
 | **shopOfferId** | **String**| Any offer id for the shop. Zero, or a positive integer. | |
 
 ### Return type
@@ -170,7 +170,7 @@ public class Example {
     defaultClient.setBasePath("https://api.trymetafab.com");
 
     ShopsApi apiInstance = new ShopsApi(defaultClient);
-    String shopId = "shopId_example"; // String | Any shop id within the MetaFab ecosystem.
+    String shopId = "shopId_example"; // String | Any shop id within the MetaFab platform.
     try {
       List<ShopOffer> result = apiInstance.getShopOffers(shopId);
       System.out.println(result);
@@ -189,7 +189,7 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **shopId** | **String**| Any shop id within the MetaFab ecosystem. | |
+| **shopId** | **String**| Any shop id within the MetaFab platform. | |
 
 ### Return type
 
@@ -275,7 +275,7 @@ No authorization required
 
 <a name="removeShopOffer"></a>
 # **removeShopOffer**
-> TransactionModel removeShopOffer(shopId, shopOfferId, xAuthorization, xPassword)
+> TransactionModel removeShopOffer(shopId, shopOfferId, xAuthorization, xWalletDecryptKey)
 
 Remove shop offer
 
@@ -296,12 +296,12 @@ public class Example {
     defaultClient.setBasePath("https://api.trymetafab.com");
 
     ShopsApi apiInstance = new ShopsApi(defaultClient);
-    String shopId = "shopId_example"; // String | Any shop id within the MetaFab ecosystem.
+    String shopId = "shopId_example"; // String | Any shop id within the MetaFab platform.
     String shopOfferId = "shopOfferId_example"; // String | Any offer id for the shop. Zero, or a positive integer.
     String xAuthorization = "game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP"; // String | The `secretKey` of the authenticating game.
-    String xPassword = "mySecurePassword"; // String | The password of the authenticating game. Required to decrypt and perform blockchain transactions with the game primary wallet.
+    String xWalletDecryptKey = "AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4="; // String | The `walletDecryptKey` of the authenticating game. Required to decrypt and perform blockchain transactions with the game primary wallet.
     try {
-      TransactionModel result = apiInstance.removeShopOffer(shopId, shopOfferId, xAuthorization, xPassword);
+      TransactionModel result = apiInstance.removeShopOffer(shopId, shopOfferId, xAuthorization, xWalletDecryptKey);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling ShopsApi#removeShopOffer");
@@ -318,10 +318,10 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **shopId** | **String**| Any shop id within the MetaFab ecosystem. | |
+| **shopId** | **String**| Any shop id within the MetaFab platform. | |
 | **shopOfferId** | **String**| Any offer id for the shop. Zero, or a positive integer. | |
 | **xAuthorization** | **String**| The &#x60;secretKey&#x60; of the authenticating game. | |
-| **xPassword** | **String**| The password of the authenticating game. Required to decrypt and perform blockchain transactions with the game primary wallet. | |
+| **xWalletDecryptKey** | **String**| The &#x60;walletDecryptKey&#x60; of the authenticating game. Required to decrypt and perform blockchain transactions with the game primary wallet. | |
 
 ### Return type
 
@@ -345,7 +345,7 @@ No authorization required
 
 <a name="setShopOffer"></a>
 # **setShopOffer**
-> TransactionModel setShopOffer(shopId, xAuthorization, xPassword, setShopOfferRequest)
+> TransactionModel setShopOffer(shopId, xAuthorization, xWalletDecryptKey, setShopOfferRequest)
 
 Set shop offer
 
@@ -366,12 +366,12 @@ public class Example {
     defaultClient.setBasePath("https://api.trymetafab.com");
 
     ShopsApi apiInstance = new ShopsApi(defaultClient);
-    String shopId = "shopId_example"; // String | Any shop id within the MetaFab ecosystem.
+    String shopId = "shopId_example"; // String | Any shop id within the MetaFab platform.
     String xAuthorization = "game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP"; // String | The `secretKey` of the authenticating game.
-    String xPassword = "mySecurePassword"; // String | The password of the authenticating game. Required to decrypt and perform blockchain transactions with the game primary wallet.
+    String xWalletDecryptKey = "AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4="; // String | The `walletDecryptKey` of the authenticating game. Required to decrypt and perform blockchain transactions with the game primary wallet.
     SetShopOfferRequest setShopOfferRequest = new SetShopOfferRequest(); // SetShopOfferRequest | 
     try {
-      TransactionModel result = apiInstance.setShopOffer(shopId, xAuthorization, xPassword, setShopOfferRequest);
+      TransactionModel result = apiInstance.setShopOffer(shopId, xAuthorization, xWalletDecryptKey, setShopOfferRequest);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling ShopsApi#setShopOffer");
@@ -388,9 +388,9 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **shopId** | **String**| Any shop id within the MetaFab ecosystem. | |
+| **shopId** | **String**| Any shop id within the MetaFab platform. | |
 | **xAuthorization** | **String**| The &#x60;secretKey&#x60; of the authenticating game. | |
-| **xPassword** | **String**| The password of the authenticating game. Required to decrypt and perform blockchain transactions with the game primary wallet. | |
+| **xWalletDecryptKey** | **String**| The &#x60;walletDecryptKey&#x60; of the authenticating game. Required to decrypt and perform blockchain transactions with the game primary wallet. | |
 | **setShopOfferRequest** | [**SetShopOfferRequest**](SetShopOfferRequest.md)|  | |
 
 ### Return type
@@ -415,7 +415,7 @@ No authorization required
 
 <a name="useShopOffer"></a>
 # **useShopOffer**
-> TransactionModel useShopOffer(shopId, shopOfferId, xAuthorization, xPassword)
+> TransactionModel useShopOffer(shopId, shopOfferId, xAuthorization, xWalletDecryptKey)
 
 Use shop offer
 
@@ -436,12 +436,12 @@ public class Example {
     defaultClient.setBasePath("https://api.trymetafab.com");
 
     ShopsApi apiInstance = new ShopsApi(defaultClient);
-    String shopId = "shopId_example"; // String | Any shop id within the MetaFab ecosystem.
+    String shopId = "shopId_example"; // String | Any shop id within the MetaFab platform.
     String shopOfferId = "shopOfferId_example"; // String | Any offer id for the shop. Zero, or a positive integer.
     String xAuthorization = "[\"game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP\",\"player_at_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP\"]"; // String | The `secretKey` of a specific game or the `accessToken` of a specific player.
-    String xPassword = "mySecurePassword"; // String | The password of the authenticating game or player. Required to decrypt and perform blockchain transactions with the game or player primary wallet.
+    String xWalletDecryptKey = "AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4="; // String | The `walletDecryptKey` of the authenticating game or player. Required to decrypt and perform blockchain transactions with the game or player primary wallet.
     try {
-      TransactionModel result = apiInstance.useShopOffer(shopId, shopOfferId, xAuthorization, xPassword);
+      TransactionModel result = apiInstance.useShopOffer(shopId, shopOfferId, xAuthorization, xWalletDecryptKey);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling ShopsApi#useShopOffer");
@@ -458,10 +458,10 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **shopId** | **String**| Any shop id within the MetaFab ecosystem. | |
+| **shopId** | **String**| Any shop id within the MetaFab platform. | |
 | **shopOfferId** | **String**| Any offer id for the shop. Zero, or a positive integer. | |
 | **xAuthorization** | **String**| The &#x60;secretKey&#x60; of a specific game or the &#x60;accessToken&#x60; of a specific player. | |
-| **xPassword** | **String**| The password of the authenticating game or player. Required to decrypt and perform blockchain transactions with the game or player primary wallet. | |
+| **xWalletDecryptKey** | **String**| The &#x60;walletDecryptKey&#x60; of the authenticating game or player. Required to decrypt and perform blockchain transactions with the game or player primary wallet. | |
 
 ### Return type
 
@@ -485,7 +485,7 @@ No authorization required
 
 <a name="withdrawFromShop"></a>
 # **withdrawFromShop**
-> TransactionModel withdrawFromShop(shopId, xAuthorization, xPassword, withdrawFromShopRequest)
+> TransactionModel withdrawFromShop(shopId, xAuthorization, xWalletDecryptKey, withdrawFromShopRequest)
 
 Withdraw from shop
 
@@ -506,12 +506,12 @@ public class Example {
     defaultClient.setBasePath("https://api.trymetafab.com");
 
     ShopsApi apiInstance = new ShopsApi(defaultClient);
-    String shopId = "shopId_example"; // String | Any shop id within the MetaFab ecosystem.
+    String shopId = "shopId_example"; // String | Any shop id within the MetaFab platform.
     String xAuthorization = "game_sk_02z4Mv3c85Ig0gNowY9Dq0N2kjb1xwzr27ArLE0669RrRI6dLf822iPO26K1p1FP"; // String | The `secretKey` of the authenticating game.
-    String xPassword = "mySecurePassword"; // String | The password of the authenticating game. Required to decrypt and perform blockchain transactions with the game primary wallet.
+    String xWalletDecryptKey = "AXNP8MKb+5SbBtHWrZu5KHh5/BomXY/dMRG/BDUn7a4="; // String | The `walletDecryptKey` of the authenticating game. Required to decrypt and perform blockchain transactions with the game primary wallet.
     WithdrawFromShopRequest withdrawFromShopRequest = new WithdrawFromShopRequest(); // WithdrawFromShopRequest | 
     try {
-      TransactionModel result = apiInstance.withdrawFromShop(shopId, xAuthorization, xPassword, withdrawFromShopRequest);
+      TransactionModel result = apiInstance.withdrawFromShop(shopId, xAuthorization, xWalletDecryptKey, withdrawFromShopRequest);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling ShopsApi#withdrawFromShop");
@@ -528,9 +528,9 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **shopId** | **String**| Any shop id within the MetaFab ecosystem. | |
+| **shopId** | **String**| Any shop id within the MetaFab platform. | |
 | **xAuthorization** | **String**| The &#x60;secretKey&#x60; of the authenticating game. | |
-| **xPassword** | **String**| The password of the authenticating game. Required to decrypt and perform blockchain transactions with the game primary wallet. | |
+| **xWalletDecryptKey** | **String**| The &#x60;walletDecryptKey&#x60; of the authenticating game. Required to decrypt and perform blockchain transactions with the game primary wallet. | |
 | **withdrawFromShopRequest** | [**WithdrawFromShopRequest**](WithdrawFromShopRequest.md)|  | |
 
 ### Return type
